@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-08-24T19:05:01.701Z",
+        "reason": "Phase 1 master prompt §5 pins Inter for UI type; Bricolage Grotesque is the distinctive display face"
+      }
+    ]
+  }
+}
