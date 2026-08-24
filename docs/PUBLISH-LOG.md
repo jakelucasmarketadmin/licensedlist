@@ -9,3 +9,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
 | 2026-08-24 | Phase 2 content drop | +2 | `/for-businesses/why-verified`, `/owner` (noindex). 49 guides shipped as sections on existing hubs — no new indexable list URLs. |
 
 **Smoke 2026-08-24 22:10 UTC:** PASS — all 9 routes 200
+
+**Smoke 2026-08-24 23:31 UTC:** PASS — all 9 routes 200
