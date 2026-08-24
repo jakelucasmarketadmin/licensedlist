@@ -54,3 +54,12 @@ docs/*
 data/import-rejects.csv
 data/needs-verification.csv
 data/businesses-merge.csv
+data/verification/
+data/outreach-targets.csv
+!docs/VERIFICATION.md
+!docs/SEARCH-CONSOLE.md
+!docs/PRICING-PLANS.md
+!docs/REVIEWS.md
+!docs/PUBLISH-LOG.md
+!docs/outreach
+!docs/outreach/**

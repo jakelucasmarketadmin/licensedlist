@@ -12,15 +12,32 @@ const verifiedDate = licenseVerifiedAt
   ? new Date(licenseVerifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })
   : null;
 
-const config =
-  licenseStatus === "verified"
+// Verification is a snapshot: past 365 days the badge downgrades to an amber
+// "Verification due" until the registry is re-checked.
+const verifiedAgeDays = licenseVerifiedAt
+  ? (Date.now() - new Date(licenseVerifiedAt).getTime()) / 86400_000
+  : Infinity;
+const verificationDue = licenseStatus === "verified" && verifiedAgeDays > 365;
+
+// PA AG's own caveat travels with every PA registration badge.
+const paDisclaimer = /PA|HICPA|Attorney General|Pennsylvania/i.test(licenseSource ?? "")
+  ? " Note (PA Attorney General): registration is not an endorsement of the contractor's competency."
+  : "";
+
+const config = verificationDue
+  ? {
+      label: "Verification due",
+      cls: "bg-warn-wash text-warn",
+      title: `Last verified against ${licenseSource ?? "the official registry"} on ${verifiedDate} — re-check is overdue.${paDisclaimer}`,
+    }
+  : licenseStatus === "verified"
     ? {
         label: "License verified",
         cls: "bg-ok-wash text-ok",
         title:
-          licenseSource && verifiedDate
-            ? `License verified against ${licenseSource} on ${verifiedDate}`
-            : "License verified against the official registry",
+          (licenseSource && verifiedDate
+            ? `License verified against ${licenseSource} on ${verifiedDate}.`
+            : "License verified against the official registry.") + paDisclaimer,
       }
     : licenseStatus === "not-required"
       ? {
@@ -49,7 +66,7 @@ const config =
   ]}
   title={config.title}
 >
-  {licenseStatus === "verified" && (
+  {licenseStatus === "verified" && !verificationDue && (
     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
       <path d="m9 12 2 2 4-4"></path>
