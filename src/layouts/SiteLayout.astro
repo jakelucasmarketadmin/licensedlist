@@ -15,6 +15,11 @@ const origin = resolveOrigin();
 const canonical = `${origin}${seo.path === "/" ? "/" : seo.path}`;
 const robots = seo.robots ?? "index, follow";
 const isIndexable = !robots.includes("noindex");
+
+// Analytics load only when configured (PUBLIC_GA4_ID env). No other
+// third-party scripts ship; the footer "Privacy choices" link explains
+// analytics and how to opt out (see /privacy).
+const GA4_ID = import.meta.env.PUBLIC_GA4_ID;
 ---
 
 <html lang="en">
@@ -45,6 +50,16 @@ const isIndexable = !robots.includes("noindex");
     {jsonLd.map((node) => (
       <script type="application/ld+json" set:html={JSON.stringify(node)} />
     ))}
+
+    {GA4_ID && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+        <script
+          is:inline
+          set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4_ID}');`}
+        />
+      </>
+    )}
   </head>
   <body class="min-h-screen bg-paper text-ink font-sans">
     <a href="#main" class="skip-link">Skip to main content</a>
