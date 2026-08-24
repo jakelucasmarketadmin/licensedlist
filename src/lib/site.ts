@@ -8,11 +8,14 @@ export const SITE_NAME = "TriVetted";
 export const SITE_TAGLINE = "Vetted across NJ, NY & PA";
 
 /**
- * Production origin (no trailing slash) once a custom domain is connected.
- * While null, canonical URLs are derived from the request origin so they are
- * correct on the Wix-hosted preview domain too.
+ * Canonical origin (https, no trailing slash) — the single source for
+ * canonical URLs, og:url, JSON-LD ids, and the sitemap. Set PUBLIC_SITE_URL
+ * in the environment when the custom domain is connected; the fallback is the
+ * current Wix-hosted domain. Never derive canonicals from the request origin:
+ * behind Wix's proxy, Astro.url reports an internal http:// scheme.
  */
-export const SITE_URL: string | null = null;
+export const SITE_URL: string =
+  import.meta.env.PUBLIC_SITE_URL ?? "https://my-site-nf00gfth-tier201.wix-vibe-site.com";
 
 /** Contact for business onboarding until the claim flow ships (M4). */
 export const BUSINESS_CONTACT_EMAIL = "admin@tier201.com";

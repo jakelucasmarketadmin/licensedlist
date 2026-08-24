@@ -9,6 +9,8 @@ interface Props {
 const { what, where } = Astro.props;
 const hasQuery = Boolean(what || where);
 const queryLabel = [what, where].filter(Boolean).join(" in ");
+// `what` here is already resolved from either ?what= (the search form) or
+// ?q= (the WebSite SearchAction contract) by the router.
 ---
 
 <section class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">

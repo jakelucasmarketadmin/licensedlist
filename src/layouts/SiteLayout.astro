@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { seo, jsonLd = [] } = Astro.props;
-const origin = resolveOrigin(Astro.url.origin);
+const origin = resolveOrigin();
 const canonical = `${origin}${seo.path === "/" ? "/" : seo.path}`;
 const robots = seo.robots ?? "index, follow";
 const isIndexable = !robots.includes("noindex");

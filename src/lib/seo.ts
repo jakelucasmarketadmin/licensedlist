@@ -5,15 +5,17 @@ export interface PageSeo {
   /** Full <title> text (include the brand yourself where wanted). */
   title: string;
   description: string;
-  /** Path beginning with "/" — canonical is origin + this path. */
+  /** Path beginning with "/" — canonical is SITE_URL + this path. */
   path: string;
   robots?: string;
   ogType?: string;
+  /** Short label used for the breadcrumb trail (defaults derived from title). */
+  crumb?: string;
 }
 
-/** Resolve the canonical origin: pinned SITE_URL once a domain exists, else the request origin. */
-export function resolveOrigin(requestOrigin: string): string {
-  return SITE_URL ?? requestOrigin;
+/** The canonical origin. Always https — see SITE_URL in site.ts. */
+export function resolveOrigin(): string {
+  return SITE_URL;
 }
 
 export function organizationJsonLd(origin: string) {
@@ -45,9 +47,23 @@ export function webSiteJsonLd(origin: string) {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${origin}/search?what={search_term_string}`,
+        urlTemplate: `${origin}/search?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
+  };
+}
+
+/** BreadcrumbList from an ordered trail of {name, path}. Include Home first. */
+export function breadcrumbJsonLd(origin: string, trail: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((crumb, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: crumb.name,
+      item: `${origin}${crumb.path === "/" ? "/" : crumb.path}`,
+    })),
   };
 }

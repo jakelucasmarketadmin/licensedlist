@@ -3,6 +3,7 @@ import SiteLayout from "@/layouts/SiteLayout.astro";
 import HomeView from "@/views/HomeView.astro";
 import HowWeVerifyView from "@/views/HowWeVerifyView.astro";
 import ForBusinessesView from "@/views/ForBusinessesView.astro";
+import GetListedView from "@/views/GetListedView.astro";
 import AboutView from "@/views/AboutView.astro";
 import EditorialPolicyView from "@/views/EditorialPolicyView.astro";
 import PrivacyView from "@/views/PrivacyView.astro";
@@ -10,7 +11,14 @@ import TermsView from "@/views/TermsView.astro";
 import SearchView from "@/views/SearchView.astro";
 import NotFoundView from "@/views/NotFoundView.astro";
 import { SITE_NAME } from "@/lib/site";
-import { organizationJsonLd, webSiteJsonLd, resolveOrigin, type PageSeo } from "@/lib/seo";
+import { ROUTE_SEO } from "@/lib/routes";
+import {
+  organizationJsonLd,
+  webSiteJsonLd,
+  breadcrumbJsonLd,
+  resolveOrigin,
+  type PageSeo,
+} from "@/lib/seo";
 import "@wix/wix-vibe-plugins/plugins-vars.css";
 import "@wix/wix-vibe-plugins/plugins-theme.css";
 import "@/styles/global.css";
@@ -19,91 +27,58 @@ import "@/styles/global.css";
 const rawPath = new URL(Astro.request.url).pathname;
 const pathname = rawPath === "/" ? "/" : rawPath.replace(/\/+$/, "");
 
-// The route allow-list: unknown paths are a real 404 (status + noindex).
-// Pages are fully server-rendered — no client-side router.
-interface RouteEntry {
-  view: (props: Record<string, unknown>) => unknown;
-  seo: PageSeo;
-}
-
-const routes: Record<string, RouteEntry> = {
-  "/": {
-    view: HomeView,
-    seo: {
-      title: `${SITE_NAME} · Verified Local Pros in NJ, NY & PA`,
-      description:
-        "Find licensed, vetted local businesses across New Jersey, New York & Pennsylvania. Every verified badge names the official state registry it was checked against — and the date we checked.",
-      path: "/",
-    },
-  },
-  "/how-we-verify": {
-    view: HowWeVerifyView,
-    seo: {
-      title: `How We Verify Local Businesses · ${SITE_NAME}`,
-      description:
-        "The exact checks behind every badge: identity, license verification against official state registries, cross-platform review analysis, and responsiveness — plus how listings are ordered.",
-      path: "/how-we-verify",
-    },
-  },
-  "/for-businesses": {
-    view: ForBusinessesView,
-    seo: {
-      title: `List Your Business · ${SITE_NAME}`,
-      description:
-        "Claim your free listing and get your license verified against the official state registry. Paid placement is always labeled and never changes rankings or reviews.",
-      path: "/for-businesses",
-    },
-  },
-  "/about": {
-    view: AboutView,
-    seo: {
-      title: `About · ${SITE_NAME}`,
-      description:
-        "Why we built a local directory that verifies licenses against official state registries — and the disclosures that keep it honest.",
-      path: "/about",
-    },
-  },
-  "/editorial-policy": {
-    view: EditorialPolicyView,
-    seo: {
-      title: `Editorial Policy · ${SITE_NAME}`,
-      description:
-        "The rules we can't break: money never buys ranking, paid placement is always labeled, reviews are never gated, and every fact has a source.",
-      path: "/editorial-policy",
-    },
-  },
-  "/privacy": {
-    view: PrivacyView,
-    seo: {
-      title: `Privacy Policy · ${SITE_NAME}`,
-      description: `What ${SITE_NAME} collects, how quote requests are shared with local businesses, and the choices you have over your information.`,
-      path: "/privacy",
-    },
-  },
-  "/terms": {
-    view: TermsView,
-    seo: {
-      title: `Terms of Use · ${SITE_NAME}`,
-      description: `The terms for using ${SITE_NAME}: what verification means, review standards, and the rules for business listings.`,
-      path: "/terms",
-    },
-  },
-  "/search": {
-    view: SearchView,
-    seo: {
-      title: `Search · ${SITE_NAME}`,
-      description: `Search ${SITE_NAME} for verified local businesses in New Jersey, New York & Pennsylvania.`,
-      path: "/search",
-      robots: "noindex, follow",
-    },
-  },
+// Path → view. SEO for each path lives in src/lib/routes.ts (shared with the
+// sitemap endpoints). Unknown paths are a real 404 (status + noindex).
+const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
+  "/": HomeView,
+  "/how-we-verify": HowWeVerifyView,
+  "/for-businesses": ForBusinessesView,
+  "/for-businesses/get-listed": GetListedView,
+  "/about": AboutView,
+  "/editorial-policy": EditorialPolicyView,
+  "/privacy": PrivacyView,
+  "/terms": TermsView,
+  "/search": SearchView,
 };
 
-const entry = routes[pathname];
-const origin = resolveOrigin(Astro.url.origin);
-const homeJsonLd = [webSiteJsonLd(origin), organizationJsonLd(origin)];
+const seo = ROUTE_SEO[pathname];
+const View = seo ? VIEWS[pathname] : undefined;
+const origin = resolveOrigin();
 
-if (!entry) {
+// Temporary M2 probe (not in ROUTE_SEO → 404-path handled separately below):
+// verifies that CMS reads work server-side before hub pages are built on them.
+let probeResult: string | null = null;
+if (pathname === "/__data-probe") {
+  try {
+    const integrations = await import("@/integrations");
+    const result: any = await integrations.BaseCrudService.getAll("businesses");
+    const count = Array.isArray(result) ? result.length : result?.items?.length;
+    probeResult = `ok count=${String(count)}`;
+  } catch (e: any) {
+    probeResult = `error: ${e?.message ?? String(e)}`;
+  }
+}
+
+// JSON-LD: WebSite + Organization on home; BreadcrumbList on every other page.
+let jsonLd: object[] = [];
+if (seo && View) {
+  jsonLd =
+    pathname === "/"
+      ? [webSiteJsonLd(origin), organizationJsonLd(origin)]
+      : [
+          breadcrumbJsonLd(origin, [
+            { name: "Home", path: "/" },
+            ...(pathname === "/for-businesses/get-listed"
+              ? [
+                  { name: "For businesses", path: "/for-businesses" },
+                  { name: seo.crumb ?? seo.title, path: seo.path },
+                ]
+              : [{ name: seo.crumb ?? seo.title, path: seo.path }]),
+          ]),
+        ];
+}
+
+if (!seo && probeResult === null) {
   Astro.response.status = 404;
   Astro.response.statusText = "Not Found";
 }
@@ -118,14 +93,31 @@ const notFoundSeo: PageSeo = {
 const searchProps =
   pathname === "/search"
     ? {
-        what: Astro.url.searchParams.get("what")?.slice(0, 100) ?? "",
+        what: (
+          Astro.url.searchParams.get("what") ??
+          Astro.url.searchParams.get("q") ??
+          ""
+        ).slice(0, 100),
         where: Astro.url.searchParams.get("where")?.slice(0, 100) ?? "",
       }
     : {};
 
-const View = entry?.view ?? NotFoundView;
+const RenderView = View ?? NotFoundView;
 ---
 
-<SiteLayout seo={entry?.seo ?? notFoundSeo} jsonLd={pathname === "/" && entry ? homeJsonLd : []}>
-  <View {...searchProps} />
-</SiteLayout>
+{probeResult !== null ? (
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="robots" content="noindex, nofollow" />
+      <title>probe</title>
+    </head>
+    <body>
+      <pre>{probeResult}</pre>
+    </body>
+  </html>
+) : (
+  <SiteLayout seo={seo ?? notFoundSeo} jsonLd={jsonLd}>
+    <RenderView {...searchProps} />
+  </SiteLayout>
+)}
