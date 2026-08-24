@@ -74,7 +74,7 @@ const states = new Set(STATE_SEED.map((s) => s.slug));
 const countiesByState = new Map(
   STATE_SEED.map((s) => [s.slug, new Set(COUNTY_SEED.filter((c) => c.stateSlug === s.slug).map((c) => c.slug))]),
 );
-const townIndex = new Map(TOWN_SEED.map((t) => [t.slug, t]));
+const townIndex = new Map(TOWN_SEED.map((t) => [`${t.stateSlug}|${t.slug}`, t]));
 const categories = new Map(CATEGORY_SEED.map((c) => [c.slug, c]));
 const list = (v: string) => v.split(",").map((s) => s.trim()).filter(Boolean);
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -105,7 +105,7 @@ for (const [i, r] of raw.entries()) {
   const countySet = countiesByState.get(r.stateSlug);
   if (r.countySlug && countySet && !countySet.has(r.countySlug))
     problems.push(`countySlug "${r.countySlug}" not in state "${r.stateSlug}"`);
-  const homeTown = townIndex.get(r.townSlug);
+  const homeTown = townIndex.get(`${r.stateSlug}|${r.townSlug}`);
   if (r.townSlug && (!homeTown || homeTown.countySlug !== r.countySlug || homeTown.stateSlug !== r.stateSlug))
     problems.push(`townSlug "${r.townSlug}" not a seeded town of ${r.stateSlug}/${r.countySlug}`);
 
@@ -115,10 +115,8 @@ for (const [i, r] of raw.entries()) {
 
   const serviceTowns = list(r.serviceTownSlugs || "");
   for (const t of serviceTowns) {
-    const town = townIndex.get(t);
-    if (!town) problems.push(`serviceTownSlug "${t}" does not exist`);
-    else if (town.stateSlug !== r.stateSlug)
-      problems.push(`serviceTownSlug "${t}" is in ${town.stateSlug}, not ${r.stateSlug}`);
+    const town = townIndex.get(`${r.stateSlug}|${t}`);
+    if (!town) problems.push(`serviceTownSlug "${t}" does not exist in ${r.stateSlug}`);
   }
 
   if (r.licenseSource && !r.licenseVerifiedAt)

@@ -190,6 +190,18 @@ export const COUNTY_SEED: CountySeed[] = [
     "isLaunch": true
   },
   {
+    "name": "Passaic County",
+    "slug": "passaic-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/passaic-county",
+    "population": 524118,
+    "intro": "Passaic County stretches from dense older cities in its south, anchored by Paterson, the county seat and New Jersey's third-largest city, to suburban and highlands communities like Wayne and West Milford in the north. Commuting runs on NJ Transit's Main, Bergen County and Montclair-Boonton lines and on Routes 3, 46 and I-80.",
+    "permitNotes": "Home improvement contractors must hold a statewide HIC registration from the NJ Division of Consumer Affairs. Building permits are issued locally by each municipality's construction office under the NJ Uniform Construction Code.",
+    "lat": 41.0367,
+    "lng": -74.2994,
+    "isLaunch": true
+  },
+  {
     "name": "Kings County",
     "slug": "kings-county",
     "stateSlug": "ny",
@@ -295,6 +307,30 @@ export const COUNTY_SEED: CountySeed[] = [
     "permitNotes": "Contractor licensing runs through the county consumer-protection office, while building permits are issued by individual town, city, and village building departments.",
     "lat": 41.1546,
     "lng": -74.0247,
+    "isLaunch": true
+  },
+  {
+    "name": "Tompkins County",
+    "slug": "tompkins-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/tompkins-county",
+    "population": 105740,
+    "intro": "Tompkins County sits at the southern end of Cayuga Lake in the Finger Lakes region, centered on Ithaca, the county seat and home to Cornell University and Ithaca College. The county pairs a college-driven small city with rural towns such as Dryden, Groton, Lansing, and Newfield, set among gorges and rolling farmland. Many residents in the outlying towns commute into Ithaca for work at the universities and hospital.",
+    "permitNotes": "New York's Uniform Fire Prevention and Building Code is enforced by town and city code-enforcement offices, and home-improvement contractors are not licensed at the county level here. Verify state-licensed trades through New York State and check permit requirements with the local municipal code office before starting work.",
+    "lat": 42.453,
+    "lng": -76.4735,
+    "isLaunch": true
+  },
+  {
+    "name": "Delaware County",
+    "slug": "delaware-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/delaware-county",
+    "population": 44308,
+    "intro": "Delaware County covers a large swath of the western Catskills, with villages such as Margaretville and Fleischmanns strung along the Route 28 corridor. Much of the county lies within the New York City watershed, and second homes and tourism are a major part of the local economy alongside farming. The county seat is the village of Delhi.",
+    "permitNotes": "New York's Uniform Fire Prevention and Building Code is enforced by town code-enforcement officers. Portions of the county lie within the New York City watershed, where NYC DEP rules can add review for some projects, particularly work involving septic systems or near watercourses.",
+    "lat": 42.194,
+    "lng": -74.9667,
     "isLaunch": true
   }
 ];
@@ -1963,6 +1999,1739 @@ export const TOWN_SEED: TownSeed[] = [
     "isLaunch": true
   },
   {
+    "name": "Westwood",
+    "slug": "westwood",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/westwood",
+    "population": 11282,
+    "intro": "Westwood is the traditional downtown hub of Bergen County's Pascack Valley, a walkable borough centered on its rail station and a compact shopping district.",
+    "localFacts": [
+      "Known as the hub of the Pascack Valley, with a classic borough downtown",
+      "NJ Transit's Pascack Valley Line stops at Westwood station",
+      "Housing is mostly early-20th-century and postwar single-family homes"
+    ],
+    "zips": [
+      "07675"
+    ],
+    "lat": 40.989,
+    "lng": -74.0319,
+    "nearbySlugs": [
+      "river-vale",
+      "emerson",
+      "hillsdale",
+      "washington-township",
+      "oradell"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "River Vale",
+    "slug": "river-vale",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/river-vale",
+    "population": 10091,
+    "intro": "River Vale is a residential township in the northeast corner of Bergen County's Pascack Valley, bordering Rockland County, New York.",
+    "localFacts": [
+      "Borders Rockland County, New York, on its northern edge",
+      "Sits in the Pascack Valley within the Hackensack River watershed",
+      "Golf courses occupy a large share of its remaining open land"
+    ],
+    "zips": [
+      "07675"
+    ],
+    "lat": 41.0142,
+    "lng": -74.0068,
+    "nearbySlugs": [
+      "westwood",
+      "hillsdale",
+      "old-tappan",
+      "montvale",
+      "park-ridge"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Park Ridge",
+    "slug": "park-ridge",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/park-ridge",
+    "population": 9082,
+    "intro": "Park Ridge is a small Pascack Valley borough near the New York state line with its own downtown and commuter rail station.",
+    "localFacts": [
+      "NJ Transit's Pascack Valley Line stops at Park Ridge station",
+      "Sits near the New York state line in northern Bergen County",
+      "Operates its own municipal electric utility, a rarity in New Jersey"
+    ],
+    "zips": [
+      "07656"
+    ],
+    "lat": 41.0362,
+    "lng": -74.0443,
+    "nearbySlugs": [
+      "montvale",
+      "woodcliff-lake",
+      "river-vale",
+      "hillsdale"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Emerson",
+    "slug": "emerson",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/emerson",
+    "population": 7819,
+    "intro": "Emerson is a small residential borough in the Pascack Valley with a commuter rail station and largely postwar housing.",
+    "localFacts": [
+      "NJ Transit's Pascack Valley Line stops at Emerson station",
+      "The Oradell Reservoir lands border the borough to the east",
+      "Housing stock is largely postwar single-family homes"
+    ],
+    "zips": [
+      "07630"
+    ],
+    "lat": 40.975,
+    "lng": -74.0232,
+    "nearbySlugs": [
+      "westwood",
+      "oradell",
+      "hillsdale",
+      "paramus"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Hillsdale",
+    "slug": "hillsdale",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/hillsdale",
+    "population": 10367,
+    "intro": "Hillsdale is a Pascack Valley commuter borough whose small downtown grew up around its 19th-century railroad depot.",
+    "localFacts": [
+      "NJ Transit's Pascack Valley Line stops at Hillsdale station",
+      "Its downtown grew up around the historic railroad depot",
+      "Pascack Brook runs through the borough"
+    ],
+    "zips": [
+      "07642"
+    ],
+    "lat": 41.0071,
+    "lng": -74.0451,
+    "nearbySlugs": [
+      "westwood",
+      "river-vale",
+      "emerson",
+      "woodcliff-lake",
+      "park-ridge"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Montvale",
+    "slug": "montvale",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/montvale",
+    "population": 8662,
+    "intro": "Montvale is a corporate-office and residential borough in Bergen County's northwest Pascack Valley, on the New York state line along the Garden State Parkway.",
+    "localFacts": [
+      "Longtime corporate headquarters town along the Garden State Parkway corridor",
+      "Borders Rockland County, New York",
+      "NJ Transit's Pascack Valley Line stops at Montvale station"
+    ],
+    "zips": [
+      "07645"
+    ],
+    "lat": 41.0546,
+    "lng": -74.0473,
+    "nearbySlugs": [
+      "park-ridge",
+      "woodcliff-lake",
+      "upper-saddle-river",
+      "river-vale",
+      "saddle-river"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Oradell",
+    "slug": "oradell",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/oradell",
+    "population": 8270,
+    "intro": "Oradell is a residential Pascack Valley borough beside the reservoir that shares its name, with a commuter rail station and tree-lined streets.",
+    "localFacts": [
+      "The Oradell Reservoir, a major North Jersey water supply, borders the borough",
+      "NJ Transit's Pascack Valley Line stops at Oradell station",
+      "Housing is largely early-20th-century and postwar single-family homes"
+    ],
+    "zips": [
+      "07649"
+    ],
+    "lat": 40.9567,
+    "lng": -74.0329,
+    "nearbySlugs": [
+      "emerson",
+      "westwood",
+      "paramus",
+      "new-milford",
+      "hackensack"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Paramus",
+    "slug": "paramus",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/paramus",
+    "population": 26698,
+    "intro": "Paramus is one of the largest retail concentrations in the United States, where Routes 4 and 17 and the Garden State Parkway converge amid several major malls, alongside quiet residential neighborhoods.",
+    "localFacts": [
+      "One of the country's highest-volume retail hubs, including Westfield Garden State Plaza",
+      "Routes 4 and 17 and the Garden State Parkway converge in the borough",
+      "Bergen County blue laws keep most retail closed on Sundays"
+    ],
+    "zips": [
+      "07652"
+    ],
+    "lat": 40.9473,
+    "lng": -74.0702,
+    "nearbySlugs": [
+      "hackensack",
+      "fair-lawn",
+      "ridgewood",
+      "oradell",
+      "glen-rock"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Ridgewood",
+    "slug": "ridgewood",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/ridgewood",
+    "population": 25979,
+    "intro": "Ridgewood is an affluent Bergen County village with a large, walkable downtown, Victorian-era housing and a major NJ Transit rail hub.",
+    "localFacts": [
+      "One of the few New Jersey municipalities incorporated as a village",
+      "Ridgewood station serves NJ Transit's Main and Bergen County lines",
+      "Its downtown is among Bergen County's largest traditional shopping districts"
+    ],
+    "zips": [
+      "07450"
+    ],
+    "lat": 40.9816,
+    "lng": -74.1135,
+    "nearbySlugs": [
+      "glen-rock",
+      "paramus",
+      "fair-lawn",
+      "ho-ho-kus",
+      "wyckoff"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Closter",
+    "slug": "closter",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/closter",
+    "population": 8663,
+    "intro": "Closter is a hub of Bergen County's Northern Valley, an eastern Bergen borough with a historic downtown and a modern retail plaza district.",
+    "localFacts": [
+      "A commercial hub of Bergen County's Northern Valley area",
+      "Its historic district preserves Dutch-influenced 18th- and 19th-century homes",
+      "Closter Plaza anchors its modern retail corridor"
+    ],
+    "zips": [
+      "07624"
+    ],
+    "lat": 40.9729,
+    "lng": -73.9603,
+    "nearbySlugs": [
+      "haworth",
+      "harrington-park",
+      "norwood",
+      "cresskill",
+      "old-tappan"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Old Tappan",
+    "slug": "old-tappan",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/old-tappan",
+    "population": 5987,
+    "intro": "Old Tappan is a low-density Northern Valley borough on the New York state line, bordered by the Lake Tappan reservoir.",
+    "localFacts": [
+      "Borders Rockland County, New York, in Bergen County's Northern Valley",
+      "Lake Tappan, a Hackensack River reservoir, forms much of its western edge",
+      "Housing is predominantly larger postwar and late-20th-century single-family homes"
+    ],
+    "zips": [
+      "07675"
+    ],
+    "lat": 41.0233,
+    "lng": -73.9842,
+    "nearbySlugs": [
+      "river-vale",
+      "harrington-park",
+      "northvale",
+      "norwood",
+      "westwood"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Washington Township",
+    "slug": "washington-township",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/washington-township",
+    "population": 9272,
+    "intro": "The Township of Washington is a residential Pascack Valley community in Bergen County, largely built out with postwar single-family homes.",
+    "localFacts": [
+      "Officially named the Township of Washington, honoring George Washington",
+      "Sits in the Pascack Valley between Westwood and Paramus",
+      "Housing stock is predominantly postwar split-levels and capes"
+    ],
+    "zips": [
+      "07676"
+    ],
+    "lat": 40.9883,
+    "lng": -74.0647,
+    "nearbySlugs": [
+      "westwood",
+      "hillsdale",
+      "emerson",
+      "paramus",
+      "oradell"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Woodcliff Lake",
+    "slug": "woodcliff-lake",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/woodcliff-lake",
+    "population": 6067,
+    "intro": "Woodcliff Lake is an affluent Pascack Valley borough named for its reservoir, mixing corporate campuses with wooded residential streets.",
+    "localFacts": [
+      "Named for the Woodcliff Lake Reservoir within the borough",
+      "NJ Transit's Pascack Valley Line stops at Woodcliff Lake station",
+      "Longtime home of corporate campuses off the Garden State Parkway"
+    ],
+    "zips": [
+      "07677"
+    ],
+    "lat": 41.026,
+    "lng": -74.0611,
+    "nearbySlugs": [
+      "park-ridge",
+      "hillsdale",
+      "montvale",
+      "saddle-river",
+      "westwood"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Haworth",
+    "slug": "haworth",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/haworth",
+    "population": 3529,
+    "intro": "Haworth is a small Northern Valley borough on the eastern shore of the Oradell Reservoir with quiet residential streets.",
+    "localFacts": [
+      "Sits on the eastern shore of the Oradell Reservoir",
+      "White Beeches Golf and Country Club occupies a large part of the borough",
+      "One of Bergen County's smallest boroughs by population"
+    ],
+    "zips": [
+      "07641"
+    ],
+    "lat": 40.9627,
+    "lng": -73.9975,
+    "nearbySlugs": [
+      "closter",
+      "harrington-park",
+      "emerson",
+      "oradell",
+      "dumont"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Harrington Park",
+    "slug": "harrington-park",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/harrington-park",
+    "population": 4830,
+    "intro": "Harrington Park is a small residential borough in Bergen County's Northern Valley, set among the reservoirs of the Hackensack River system.",
+    "localFacts": [
+      "A small Northern Valley borough amid the Hackensack River reservoir system",
+      "Lake Tappan borders the borough to the north",
+      "Almost entirely single-family residential with no major highways"
+    ],
+    "zips": [
+      "07640"
+    ],
+    "lat": 40.9917,
+    "lng": -73.9802,
+    "nearbySlugs": [
+      "closter",
+      "old-tappan",
+      "norwood",
+      "haworth",
+      "northvale"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Northvale",
+    "slug": "northvale",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/northvale",
+    "population": 5096,
+    "intro": "Northvale is Bergen County's northeasternmost borough, a small Northern Valley community on the New York state line.",
+    "localFacts": [
+      "Bergen County's northeasternmost municipality, on the New York state line",
+      "Sits in the Northern Valley near the base of the Palisades ridge",
+      "Mixes residential streets with a light-industrial and office corridor"
+    ],
+    "zips": [
+      "07647"
+    ],
+    "lat": 41.0129,
+    "lng": -73.9486,
+    "nearbySlugs": [
+      "norwood",
+      "old-tappan",
+      "harrington-park",
+      "closter"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Norwood",
+    "slug": "norwood",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/norwood",
+    "population": 5858,
+    "intro": "Norwood is a small Northern Valley borough in eastern Bergen County near the New York state line, largely built out with postwar homes.",
+    "localFacts": [
+      "A Northern Valley borough close to the New York state line",
+      "Lies just west of the Palisades ridge communities",
+      "Largely postwar single-family housing with a small commercial center"
+    ],
+    "zips": [
+      "07648"
+    ],
+    "lat": 40.992,
+    "lng": -73.9506,
+    "nearbySlugs": [
+      "northvale",
+      "closter",
+      "harrington-park",
+      "old-tappan",
+      "cresskill"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Englewood",
+    "slug": "englewood",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/englewood",
+    "population": 29308,
+    "intro": "Englewood is a diverse eastern Bergen County city below the Palisades with a substantial downtown along Palisade Avenue and a major regional hospital.",
+    "localFacts": [
+      "One of only three Bergen County municipalities incorporated as a city",
+      "Englewood Health is one of the region's major hospitals",
+      "bergenPAC, the Bergen Performing Arts Center, anchors its downtown"
+    ],
+    "zips": [
+      "07631"
+    ],
+    "lat": 40.8912,
+    "lng": -73.9725,
+    "nearbySlugs": [
+      "teaneck",
+      "fort-lee",
+      "cresskill",
+      "bergenfield",
+      "hackensack"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Glen Rock",
+    "slug": "glen-rock",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/glen-rock",
+    "population": 12133,
+    "intro": "Glen Rock is a commuter borough in northwest-central Bergen County named for the glacial boulder at its central crossroads, with two rail stations.",
+    "localFacts": [
+      "Named for a large glacial boulder, the Rock, at its central crossroads",
+      "Two NJ Transit stations serve the borough, on the Main and Bergen County lines",
+      "Housing is largely early-20th-century single-family homes"
+    ],
+    "zips": [
+      "07452"
+    ],
+    "lat": 40.9595,
+    "lng": -74.1252,
+    "nearbySlugs": [
+      "ridgewood",
+      "fair-lawn",
+      "paramus",
+      "wyckoff",
+      "ho-ho-kus"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Ho-Ho-Kus",
+    "slug": "ho-ho-kus",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/ho-ho-kus",
+    "population": 4266,
+    "intro": "Ho-Ho-Kus is a small, affluent northwest Bergen County borough with a distinctive hyphenated name, a commuter rail stop and a historic village center.",
+    "localFacts": [
+      "One of the few hyphenated municipality names in the United States",
+      "NJ Transit rail stops at Ho-Ho-Kus station",
+      "The Hermitage, a National Historic Landmark house museum, is located here"
+    ],
+    "zips": [
+      "07423"
+    ],
+    "lat": 40.9995,
+    "lng": -74.0966,
+    "nearbySlugs": [
+      "ridgewood",
+      "saddle-river",
+      "glen-rock",
+      "upper-saddle-river",
+      "ramsey"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Saddle River",
+    "slug": "saddle-river",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/saddle-river",
+    "population": 3347,
+    "intro": "Saddle River is a low-density borough of large estate lots in northern Bergen County, consistently ranked among the wealthiest municipalities in the country.",
+    "localFacts": [
+      "Known for estate-style zoning and ranking among the nation's wealthiest towns",
+      "Richard Nixon lived in the borough after his presidency",
+      "The Saddle River, its namesake stream, flows through the borough"
+    ],
+    "zips": [
+      "07458"
+    ],
+    "lat": 41.0237,
+    "lng": -74.0926,
+    "nearbySlugs": [
+      "upper-saddle-river",
+      "woodcliff-lake",
+      "ho-ho-kus",
+      "montvale",
+      "allendale"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Upper Saddle River",
+    "slug": "upper-saddle-river",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/upper-saddle-river",
+    "population": 8180,
+    "intro": "Upper Saddle River is an affluent residential borough in Bergen County's northwest corner on the New York state line.",
+    "localFacts": [
+      "Borders Rockland County, New York, in Bergen County's northwest corner",
+      "Developed largely with mid-to-late-20th-century single-family subdivisions",
+      "Shares the 07458 ZIP code with neighboring Saddle River"
+    ],
+    "zips": [
+      "07458"
+    ],
+    "lat": 41.0632,
+    "lng": -74.1,
+    "nearbySlugs": [
+      "saddle-river",
+      "ramsey",
+      "montvale",
+      "allendale",
+      "ho-ho-kus"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Franklin Lakes",
+    "slug": "franklin-lakes",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/franklin-lakes",
+    "population": 11055,
+    "intro": "Franklin Lakes is an affluent northwest Bergen County borough of lakes, wooded lots and large-lot luxury housing.",
+    "localFacts": [
+      "Named for Franklin Lake, one of several lakes within the borough",
+      "Known for large-lot luxury housing in northwest Bergen County",
+      "Longtime headquarters town of medical technology maker BD"
+    ],
+    "zips": [
+      "07417"
+    ],
+    "lat": 41.0075,
+    "lng": -74.2057,
+    "nearbySlugs": [
+      "wyckoff",
+      "allendale",
+      "ramsey",
+      "ridgewood"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Wyckoff",
+    "slug": "wyckoff",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/wyckoff",
+    "population": 17433,
+    "intro": "Wyckoff is a large suburban township in northwest Bergen County with roots in Dutch colonial settlement and a predominantly single-family housing stock.",
+    "localFacts": [
+      "Settled in Dutch colonial times in Bergen County's northwest",
+      "The James A. McFaul Wildlife Center is a county nature center in town",
+      "Housing is predominantly single-family homes on suburban lots"
+    ],
+    "zips": [
+      "07481"
+    ],
+    "lat": 40.9991,
+    "lng": -74.1688,
+    "nearbySlugs": [
+      "franklin-lakes",
+      "ridgewood",
+      "glen-rock",
+      "allendale",
+      "fair-lawn"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Allendale",
+    "slug": "allendale",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/allendale",
+    "population": 6807,
+    "intro": "Allendale is a small northwest Bergen County borough with a traditional downtown around its rail station and a well-known nature preserve.",
+    "localFacts": [
+      "NJ Transit rail stops at Allendale station",
+      "The Celery Farm nature preserve is a noted birding destination",
+      "A small traditional downtown surrounds the rail station"
+    ],
+    "zips": [
+      "07401"
+    ],
+    "lat": 41.0327,
+    "lng": -74.1338,
+    "nearbySlugs": [
+      "ramsey",
+      "wyckoff",
+      "saddle-river",
+      "upper-saddle-river",
+      "franklin-lakes"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Ramsey",
+    "slug": "ramsey",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/ramsey",
+    "population": 14798,
+    "intro": "Ramsey is a northwest Bergen County borough on the New York border area with a railroad-era Main Street downtown and a busy Route 17 corridor.",
+    "localFacts": [
+      "Two NJ Transit stations, Ramsey and Ramsey Route 17, serve the borough",
+      "Route 17's retail corridor runs the length of the town",
+      "Its Main Street downtown dates to the railroad era"
+    ],
+    "zips": [
+      "07446"
+    ],
+    "lat": 41.0613,
+    "lng": -74.147,
+    "nearbySlugs": [
+      "allendale",
+      "upper-saddle-river",
+      "wyckoff",
+      "franklin-lakes",
+      "montvale"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Dumont",
+    "slug": "dumont",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/dumont",
+    "population": 18376,
+    "intro": "Dumont is a compact, almost entirely residential borough in eastern Bergen County with a mainly prewar and early postwar housing stock.",
+    "localFacts": [
+      "Almost entirely residential, among Bergen County's more densely settled boroughs",
+      "Washington Avenue is the borough's main commercial corridor",
+      "Housing stock is largely prewar and early postwar single-family homes"
+    ],
+    "zips": [
+      "07628"
+    ],
+    "lat": 40.9452,
+    "lng": -73.9924,
+    "nearbySlugs": [
+      "bergenfield",
+      "new-milford",
+      "cresskill",
+      "haworth"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "New Milford",
+    "slug": "new-milford",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/new-milford",
+    "population": 16923,
+    "intro": "New Milford is a densely settled eastern Bergen County borough on the Hackensack River, tied to some of the county's earliest Dutch colonial settlement.",
+    "localFacts": [
+      "Historic New Bridge Landing, a Revolutionary War river crossing, sits on its border",
+      "Lies along the Hackensack River below the Oradell Reservoir",
+      "Densely settled with prewar and postwar single-family homes"
+    ],
+    "zips": [
+      "07646"
+    ],
+    "lat": 40.9342,
+    "lng": -74.0195,
+    "nearbySlugs": [
+      "oradell",
+      "dumont",
+      "bergenfield",
+      "teaneck",
+      "hackensack"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Bergenfield",
+    "slug": "bergenfield",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/bergenfield",
+    "population": 28321,
+    "intro": "Bergenfield is one of Bergen County's most populous boroughs, a dense eastern Bergen suburb with a busy Washington Avenue downtown.",
+    "localFacts": [
+      "One of Bergen County's most populous boroughs",
+      "Known for a large Filipino-American community",
+      "Washington Avenue forms its main downtown corridor"
+    ],
+    "zips": [
+      "07621"
+    ],
+    "lat": 40.9223,
+    "lng": -73.998,
+    "nearbySlugs": [
+      "dumont",
+      "new-milford",
+      "teaneck",
+      "englewood",
+      "cresskill"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Cresskill",
+    "slug": "cresskill",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/cresskill",
+    "population": 9102,
+    "intro": "Cresskill is a residential eastern Bergen County borough at the base of the Palisades with a small central business district.",
+    "localFacts": [
+      "Sits at the base of the Palisades in eastern Bergen County",
+      "A monument marks Camp Merritt, a major World War I embarkation camp centered here",
+      "Largely single-family residential with a small central business district"
+    ],
+    "zips": [
+      "07626"
+    ],
+    "lat": 40.94,
+    "lng": -73.9583,
+    "nearbySlugs": [
+      "dumont",
+      "englewood",
+      "closter",
+      "norwood",
+      "haworth"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Rutherford",
+    "slug": "rutherford",
+    "countySlug": "bergen-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/bergen-county/rutherford",
+    "population": 18834,
+    "intro": "Rutherford is a southern Bergen County borough with a classic tree-lined downtown along Park Avenue, just west of the Meadowlands sports complex area.",
+    "localFacts": [
+      "Known as the Borough of Trees, with a traditional Park Avenue downtown",
+      "Longtime home of poet and physician William Carlos Williams",
+      "NJ Transit's Bergen County Line stops at Rutherford station"
+    ],
+    "zips": [
+      "07070"
+    ],
+    "lat": 40.8203,
+    "lng": -74.106,
+    "nearbySlugs": [
+      "garfield",
+      "passaic",
+      "clifton",
+      "nutley",
+      "hackensack"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Montclair",
+    "slug": "montclair",
+    "countySlug": "essex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/essex-county/montclair",
+    "population": 40921,
+    "intro": "Montclair is a diverse Essex County township on the slope of the First Watchung Mountain, known for its arts scene, historic housing and multiple rail stations into New York.",
+    "localFacts": [
+      "Home to Montclair State University and the Montclair Art Museum",
+      "Multiple NJ Transit Montclair-Boonton Line stations serve the township",
+      "Victorian and early-20th-century housing climbs the Watchung ridge"
+    ],
+    "zips": [
+      "07042",
+      "07043"
+    ],
+    "lat": 40.825,
+    "lng": -74.2109,
+    "nearbySlugs": [
+      "bloomfield",
+      "nutley",
+      "clifton",
+      "west-orange",
+      "little-falls"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Nutley",
+    "slug": "nutley",
+    "countySlug": "essex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/essex-county/nutley",
+    "population": 30143,
+    "intro": "Nutley is a compact northern Essex County township on the Passaic River known for its linear parks along the Third River and predominantly prewar housing.",
+    "localFacts": [
+      "Known for its linear park system along the Third River",
+      "Longtime home of the Hoffmann-La Roche campus, now a redevelopment site",
+      "Housing is predominantly prewar single-family and two-family homes"
+    ],
+    "zips": [
+      "07110"
+    ],
+    "lat": 40.8206,
+    "lng": -74.1563,
+    "nearbySlugs": [
+      "montclair",
+      "bloomfield",
+      "clifton",
+      "passaic"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Clifton",
+    "slug": "clifton",
+    "countySlug": "passaic-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/passaic-county/clifton",
+    "population": 90296,
+    "intro": "Clifton is Passaic County's second-largest city, a diverse crossroads community where Routes 3, 21 and 46 and the Garden State Parkway meet between Paterson and the Meadowlands.",
+    "localFacts": [
+      "Passaic County's second most populous municipality",
+      "Routes 3, 21 and 46 and the Garden State Parkway all cross the city",
+      "Two NJ Transit Main Line stations: Clifton and Delawanna"
+    ],
+    "zips": [
+      "07011",
+      "07013"
+    ],
+    "lat": 40.8621,
+    "lng": -74.1604,
+    "nearbySlugs": [
+      "passaic",
+      "paterson",
+      "nutley",
+      "garfield",
+      "little-falls"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Passaic",
+    "slug": "passaic",
+    "countySlug": "passaic-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/passaic-county/passaic",
+    "population": 70537,
+    "intro": "Passaic is a dense industrial-era city on the Passaic River, historically a wool and textile manufacturing center and today a majority-Hispanic community.",
+    "localFacts": [
+      "Historically one of the country's leading wool and textile manufacturing centers",
+      "Among the most densely populated cities in New Jersey",
+      "NJ Transit's Main Line stops at Passaic station"
+    ],
+    "zips": [
+      "07055"
+    ],
+    "lat": 40.8576,
+    "lng": -74.1291,
+    "nearbySlugs": [
+      "clifton",
+      "garfield",
+      "paterson",
+      "rutherford",
+      "nutley"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Paterson",
+    "slug": "paterson",
+    "countySlug": "passaic-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/passaic-county/paterson",
+    "population": 159732,
+    "intro": "Paterson is New Jersey's third-largest city and the Passaic County seat, founded around the Great Falls of the Passaic River as America's first planned industrial city.",
+    "localFacts": [
+      "County seat of Passaic County and New Jersey's third most populous city",
+      "The Great Falls of the Passaic River is a national historical park",
+      "Known as the Silk City for its 19th-century silk industry"
+    ],
+    "zips": [
+      "07501",
+      "07505"
+    ],
+    "lat": 40.9148,
+    "lng": -74.1628,
+    "nearbySlugs": [
+      "clifton",
+      "passaic",
+      "fair-lawn",
+      "wayne",
+      "little-falls"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Wayne",
+    "slug": "wayne",
+    "countySlug": "passaic-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/passaic-county/wayne",
+    "population": 54838,
+    "intro": "Wayne is Passaic County's largest suburban township, a highway crossroads with major retail at Willowbrook Mall, lake-community neighborhoods and the campus of William Paterson University.",
+    "localFacts": [
+      "Home to William Paterson University",
+      "Willowbrook Mall anchors a regional retail hub near the Route 23, 46 and I-80 junction",
+      "Lake communities such as Packanack Lake and Pines Lake dot the township"
+    ],
+    "zips": [
+      "07470"
+    ],
+    "lat": 40.9459,
+    "lng": -74.2451,
+    "nearbySlugs": [
+      "little-falls",
+      "paterson",
+      "clifton",
+      "franklin-lakes"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Little Falls",
+    "slug": "little-falls",
+    "countySlug": "passaic-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/passaic-county/little-falls",
+    "population": 12893,
+    "intro": "Little Falls is a small Passaic County township on the Passaic River between Wayne and Montclair, named for the falls that powered its early mills.",
+    "localFacts": [
+      "Named for the small falls of the Passaic River that powered its early mills",
+      "NJ Transit's Montclair-Boonton Line serves the Little Falls and Montclair State University stations",
+      "The route of the historic Morris Canal crossed the township"
+    ],
+    "zips": [
+      "07424"
+    ],
+    "lat": 40.8756,
+    "lng": -74.2174,
+    "nearbySlugs": [
+      "wayne",
+      "clifton",
+      "montclair",
+      "paterson"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "East Brunswick",
+    "slug": "east-brunswick",
+    "countySlug": "middlesex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/middlesex-county/east-brunswick",
+    "population": 49715,
+    "intro": "East Brunswick is a large suburban Middlesex County township along the NJ Turnpike and Route 18, known for its schools and a major commuter park-and-ride.",
+    "localFacts": [
+      "Route 18's retail corridor forms its commercial spine",
+      "A major NJ Turnpike Exit 9 park-and-ride serves New York commuters",
+      "Developed largely with postwar single-family subdivisions"
+    ],
+    "zips": [
+      "08816"
+    ],
+    "lat": 40.4262,
+    "lng": -74.4182,
+    "nearbySlugs": [
+      "new-brunswick",
+      "north-brunswick",
+      "sayreville",
+      "spotswood",
+      "milltown"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Sayreville",
+    "slug": "sayreville",
+    "countySlug": "middlesex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/middlesex-county/sayreville",
+    "population": 45345,
+    "intro": "Sayreville is a Middlesex County borough on the Raritan River and Raritan Bay, historically a brick-making center now redeveloping its waterfront.",
+    "localFacts": [
+      "Historically a major clay and brick manufacturing center on the Raritan River",
+      "Musician Jon Bon Jovi grew up in Sayreville",
+      "Includes the Parlin and President Park communities"
+    ],
+    "zips": [
+      "08872",
+      "08859"
+    ],
+    "lat": 40.4669,
+    "lng": -74.3202,
+    "nearbySlugs": [
+      "old-bridge",
+      "east-brunswick",
+      "perth-amboy",
+      "spotswood"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "South Brunswick",
+    "slug": "south-brunswick",
+    "countySlug": "middlesex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/middlesex-county/south-brunswick",
+    "population": 47043,
+    "intro": "South Brunswick is a growing Middlesex County township along the Route 1 corridor between New Brunswick and Princeton, including the communities of Monmouth Junction, Dayton and Kendall Park.",
+    "localFacts": [
+      "Comprises communities including Monmouth Junction, Kendall Park and Dayton",
+      "The Route 1 corridor hosts major warehouse and office parks",
+      "Sits roughly midway between New Brunswick and Princeton"
+    ],
+    "zips": [
+      "08852",
+      "08824"
+    ],
+    "lat": 40.3847,
+    "lng": -74.5228,
+    "nearbySlugs": [
+      "north-brunswick",
+      "monroe-township",
+      "east-brunswick",
+      "new-brunswick",
+      "milltown"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Monroe Township",
+    "slug": "monroe-township",
+    "countySlug": "middlesex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/middlesex-county/monroe-township",
+    "population": 48594,
+    "intro": "Monroe Township is a fast-growing municipality in southern Middlesex County known for its large age-restricted communities and remaining farmland.",
+    "localFacts": [
+      "Known for large adult communities such as Rossmoor and Clearbrook",
+      "One of Middlesex County's fastest-growing municipalities in recent censuses",
+      "Retains some of the county's last working farmland"
+    ],
+    "zips": [
+      "08831"
+    ],
+    "lat": 40.3195,
+    "lng": -74.4288,
+    "nearbySlugs": [
+      "south-brunswick",
+      "east-brunswick",
+      "spotswood",
+      "old-bridge",
+      "manalapan"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "North Brunswick",
+    "slug": "north-brunswick",
+    "countySlug": "middlesex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/middlesex-county/north-brunswick",
+    "population": 43905,
+    "intro": "North Brunswick is a suburban Middlesex County township along the Route 1 and Route 130 corridors on the southern edge of New Brunswick.",
+    "localFacts": [
+      "Despite its name, the township lies mostly south of New Brunswick",
+      "Routes 1 and 130 frame its main commercial corridors",
+      "Developed largely with postwar suburban housing"
+    ],
+    "zips": [
+      "08902"
+    ],
+    "lat": 40.4504,
+    "lng": -74.4794,
+    "nearbySlugs": [
+      "new-brunswick",
+      "east-brunswick",
+      "milltown",
+      "south-brunswick"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Milltown",
+    "slug": "milltown",
+    "countySlug": "middlesex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/middlesex-county/milltown",
+    "population": 7006,
+    "intro": "Milltown is a small Middlesex County borough on Lawrence Brook, nearly surrounded by East Brunswick, with a compact early-20th-century housing stock.",
+    "localFacts": [
+      "A former mill town on Lawrence Brook, once home to a Michelin tire plant",
+      "One of the few New Jersey boroughs with its own municipal electric utility",
+      "Nearly surrounded by East Brunswick"
+    ],
+    "zips": [
+      "08850"
+    ],
+    "lat": 40.4502,
+    "lng": -74.4348,
+    "nearbySlugs": [
+      "east-brunswick",
+      "new-brunswick",
+      "north-brunswick",
+      "spotswood"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Spotswood",
+    "slug": "spotswood",
+    "countySlug": "middlesex-county",
+    "stateSlug": "nj",
+    "pathKey": "nj/middlesex-county/spotswood",
+    "population": 8795,
+    "intro": "Spotswood is a small Middlesex County borough on Manalapan Brook, a colonial-era mill settlement that grew into a compact residential suburb.",
+    "localFacts": [
+      "Grew from a colonial-era ironworks and mill settlement",
+      "DeVoe Lake, an impoundment of Manalapan Brook, sits at its center",
+      "Bordered by Monroe, East Brunswick and Old Bridge townships"
+    ],
+    "zips": [
+      "08884"
+    ],
+    "lat": 40.3936,
+    "lng": -74.3927,
+    "nearbySlugs": [
+      "east-brunswick",
+      "monroe-township",
+      "old-bridge",
+      "milltown",
+      "sayreville"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Horsham Township",
+    "slug": "horsham-township",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/horsham-township",
+    "population": 26564,
+    "intro": "Horsham Township is a Montgomery County suburb along the Route 611 corridor known for the former naval air base site it shares with its Willow Grove neighbors.",
+    "localFacts": [
+      "The former Naval Air Station Joint Reserve Base Willow Grove occupied a large site in the township",
+      "Horsham Air Guard Station remains an active military installation",
+      "The Route 611 corridor carries much of its commercial development"
+    ],
+    "zips": [
+      "19044"
+    ],
+    "lat": 40.1993,
+    "lng": -75.1665,
+    "nearbySlugs": [
+      "hatboro",
+      "willow-grove",
+      "warminster-township",
+      "upper-dublin-township",
+      "abington-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Skippack Township",
+    "slug": "skippack-township",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/skippack-township",
+    "population": 14386,
+    "intro": "Skippack Township is a central Montgomery County community centered on Skippack Village, a shopping and dining destination along Route 73 surrounded by preserved open land.",
+    "localFacts": [
+      "Skippack Village is a well-known corridor of shops and restaurants along Route 73",
+      "Evansburg State Park covers a large portion of the township",
+      "Skippack Creek flows through the township toward the Perkiomen"
+    ],
+    "zips": [
+      "19474"
+    ],
+    "lat": 40.2167,
+    "lng": -75.4191,
+    "nearbySlugs": [
+      "worcester-township",
+      "collegeville",
+      "harleysville",
+      "lower-providence-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "North Wales",
+    "slug": "north-wales",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/north-wales",
+    "population": 3426,
+    "intro": "North Wales is a compact railroad borough in the North Penn area of Montgomery County, with a walkable Victorian-era street grid.",
+    "localFacts": [
+      "Its walkable borough grid developed around a 19th-century rail depot",
+      "North Wales station is on SEPTA's Lansdale/Doylestown Regional Rail line",
+      "One of Montgomery County's smallest municipalities by land area"
+    ],
+    "zips": [
+      "19454"
+    ],
+    "lat": 40.2112,
+    "lng": -75.2744,
+    "nearbySlugs": [
+      "lansdale",
+      "montgomery-township",
+      "blue-bell",
+      "upper-dublin-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Hatboro",
+    "slug": "hatboro",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/hatboro",
+    "population": 8238,
+    "intro": "Hatboro is a traditional borough in eastern Montgomery County with a busy York Road main street and commuter rail to Center City Philadelphia.",
+    "localFacts": [
+      "York Road, the borough's main street, follows an old colonial-era route",
+      "Hatboro station is on SEPTA's Warminster Regional Rail line",
+      "The Union Library of Hatboro, founded in 1755, is one of the oldest libraries in Pennsylvania"
+    ],
+    "zips": [
+      "19040"
+    ],
+    "lat": 40.1774,
+    "lng": -75.1055,
+    "nearbySlugs": [
+      "horsham-township",
+      "willow-grove",
+      "warminster-township",
+      "abington-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Ambler",
+    "slug": "ambler",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/ambler",
+    "population": 6807,
+    "intro": "Ambler is a revitalized rail-town borough in central Montgomery County, with a restaurant-and-theater downtown along Butler Avenue.",
+    "localFacts": [
+      "Ambler station is on SEPTA's Lansdale/Doylestown Regional Rail line",
+      "Its revitalized downtown centers on Butler Avenue and the restored Ambler Theater",
+      "Temple University's Ambler campus is nearby in neighboring Upper Dublin Township"
+    ],
+    "zips": [
+      "19002"
+    ],
+    "lat": 40.1564,
+    "lng": -75.2215,
+    "nearbySlugs": [
+      "upper-dublin-township",
+      "blue-bell",
+      "north-wales",
+      "abington-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Upper Dublin Township",
+    "slug": "upper-dublin-township",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/upper-dublin-township",
+    "population": 26665,
+    "intro": "Upper Dublin Township is an affluent eastern Montgomery County suburb comprising Fort Washington, Dresher, and Maple Glen, with office parks along the Pennsylvania Turnpike.",
+    "localFacts": [
+      "Includes the communities of Fort Washington, Dresher, and Maple Glen",
+      "Temple University's Ambler campus is located in the township",
+      "Fort Washington State Park lies along its southern edge"
+    ],
+    "zips": [
+      "19034",
+      "19025"
+    ],
+    "lat": 40.1513,
+    "lng": -75.18,
+    "nearbySlugs": [
+      "ambler",
+      "horsham-township",
+      "abington-township",
+      "cheltenham-township",
+      "blue-bell"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Montgomery Township",
+    "slug": "montgomery-township",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/montgomery-township",
+    "population": 25862,
+    "intro": "Montgomery Township is a retail and residential hub in the North Penn area, centered on the Montgomeryville crossroads where Routes 202, 309, and 463 meet.",
+    "localFacts": [
+      "The Montgomeryville crossroads of Routes 202, 309, and 463 is a major retail hub",
+      "Montgomery Mall anchors one of the county's largest shopping corridors",
+      "Developed rapidly from farmland into suburbs in the late 20th century"
+    ],
+    "zips": [
+      "18936"
+    ],
+    "lat": 40.2441,
+    "lng": -75.2341,
+    "nearbySlugs": [
+      "lansdale",
+      "north-wales",
+      "horsham-township",
+      "harleysville"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Lansdale",
+    "slug": "lansdale",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/lansdale",
+    "population": 18773,
+    "intro": "Lansdale is the densely settled borough at the heart of Montgomery County's North Penn area, a railroad junction town with a reviving downtown.",
+    "localFacts": [
+      "Lansdale station is the namesake hub of SEPTA's Lansdale/Doylestown Line",
+      "Grew up as a railroad junction town in the 19th century",
+      "Its Main Street downtown has seen new apartment and restaurant development"
+    ],
+    "zips": [
+      "19446"
+    ],
+    "lat": 40.2417,
+    "lng": -75.2812,
+    "nearbySlugs": [
+      "north-wales",
+      "montgomery-township",
+      "harleysville",
+      "blue-bell"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Willow Grove",
+    "slug": "willow-grove",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/willow-grove",
+    "population": 13730,
+    "intro": "Willow Grove is a commercial crossroads community in eastern Montgomery County, spanning parts of Abington and Upper Moreland townships around the Willow Grove Park Mall.",
+    "localFacts": [
+      "Grew up around the former Willow Grove Park amusement park, now the site of the Willow Grove Park Mall",
+      "Willow Grove station is on SEPTA's Warminster Regional Rail line",
+      "Easton Road (Route 611) forms its main commercial corridor"
+    ],
+    "zips": [
+      "19090"
+    ],
+    "lat": 40.1472,
+    "lng": -75.1169,
+    "nearbySlugs": [
+      "abington-township",
+      "horsham-township",
+      "hatboro",
+      "upper-dublin-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Collegeville",
+    "slug": "collegeville",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/collegeville",
+    "population": 5043,
+    "intro": "Collegeville is a borough on the Perkiomen Creek in western Montgomery County, home to Ursinus College and a growing Route 29 corridor.",
+    "localFacts": [
+      "Home to Ursinus College, founded in 1869",
+      "Sits on Perkiomen Creek along the Route 29 corridor",
+      "The Perkiomen Trail rail-trail runs along the creek through the area"
+    ],
+    "zips": [
+      "19426"
+    ],
+    "lat": 40.1869,
+    "lng": -75.4575,
+    "nearbySlugs": [
+      "trappe",
+      "lower-providence-township",
+      "skippack-township",
+      "royersford",
+      "limerick-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Blue Bell",
+    "slug": "blue-bell",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/blue-bell",
+    "population": 6506,
+    "intro": "Blue Bell is an affluent unincorporated community in Whitpain Township, known for corporate office campuses and the county's community college.",
+    "localFacts": [
+      "Home to the main campus of Montgomery County Community College",
+      "An unincorporated community within Whitpain Township",
+      "Known for corporate office parks along the Route 202 corridor"
+    ],
+    "zips": [
+      "19422"
+    ],
+    "lat": 40.1474,
+    "lng": -75.2687,
+    "nearbySlugs": [
+      "ambler",
+      "north-wales",
+      "worcester-township",
+      "norristown"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Harleysville",
+    "slug": "harleysville",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/harleysville",
+    "population": 9899,
+    "intro": "Harleysville is an unincorporated community in Lower Salford Township in Montgomery County's Indian Valley, with deep Pennsylvania Dutch roots.",
+    "localFacts": [
+      "An unincorporated community within Lower Salford Township",
+      "Sits along the Route 63 Main Street corridor in the Indian Valley area",
+      "The Mennonite Heritage Center preserves the area's Pennsylvania Dutch history"
+    ],
+    "zips": [
+      "19438"
+    ],
+    "lat": 40.2784,
+    "lng": -75.3879,
+    "nearbySlugs": [
+      "skippack-township",
+      "lansdale",
+      "montgomery-township",
+      "collegeville"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Trappe",
+    "slug": "trappe",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/trappe",
+    "population": 4002,
+    "intro": "Trappe is a small historic borough adjoining Collegeville in western Montgomery County, settled by German colonists in the early 1700s.",
+    "localFacts": [
+      "Augustus Lutheran Church, built in 1743, is among the oldest unaltered Lutheran church buildings in the country",
+      "One of the region's oldest inland communities, settled by German colonists in the early 1700s",
+      "Borders Collegeville along the Route 29 corridor"
+    ],
+    "zips": [
+      "19426"
+    ],
+    "lat": 40.1991,
+    "lng": -75.4754,
+    "nearbySlugs": [
+      "collegeville",
+      "royersford",
+      "limerick-township",
+      "skippack-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Limerick Township",
+    "slug": "limerick-township",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/limerick-township",
+    "population": 20458,
+    "intro": "Limerick Township is a fast-growing western Montgomery County suburb along the Route 422 corridor, recognizable by the cooling towers of its nuclear generating station.",
+    "localFacts": [
+      "The Limerick Generating Station's cooling towers are a regional landmark",
+      "The Philadelphia Premium Outlets are located in the township",
+      "The Route 422 corridor drove rapid residential growth in recent decades"
+    ],
+    "zips": [
+      "19468"
+    ],
+    "lat": 40.2327,
+    "lng": -75.533,
+    "nearbySlugs": [
+      "royersford",
+      "trappe",
+      "collegeville",
+      "phoenixville"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Worcester Township",
+    "slug": "worcester-township",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/worcester-township",
+    "population": 10317,
+    "intro": "Worcester Township is a semi-rural central Montgomery County community of preserved farmland and newer subdivisions around the Center Point crossroads.",
+    "localFacts": [
+      "The Peter Wentz Farmstead, used by George Washington in 1777, is a preserved historic site",
+      "Retains a rural character with preserved farmland and open space",
+      "The Center Point crossroads of Routes 73 and 363 marks its historic core"
+    ],
+    "zips": [
+      "19490"
+    ],
+    "lat": 40.1918,
+    "lng": -75.3497,
+    "nearbySlugs": [
+      "skippack-township",
+      "blue-bell",
+      "norristown",
+      "lower-providence-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Lower Providence Township",
+    "slug": "lower-providence-township",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/lower-providence-township",
+    "population": 25625,
+    "intro": "Lower Providence Township is a large Montgomery County suburb comprising Eagleville, Audubon, and Trooper, between Norristown and the Perkiomen Valley.",
+    "localFacts": [
+      "Includes the communities of Eagleville, Audubon, and Trooper",
+      "The John James Audubon Center at Mill Grove preserves the naturalist's first American home",
+      "Reaches the Schuylkill River near Valley Forge at Betzwood"
+    ],
+    "zips": [
+      "19403"
+    ],
+    "lat": 40.1486,
+    "lng": -75.4164,
+    "nearbySlugs": [
+      "norristown",
+      "collegeville",
+      "worcester-township",
+      "upper-merion-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Royersford",
+    "slug": "royersford",
+    "countySlug": "montgomery-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/montgomery-county/royersford",
+    "population": 4940,
+    "intro": "Royersford is a former industrial borough on the Schuylkill River in western Montgomery County, with a compact rowhouse core and a reviving Main Street.",
+    "localFacts": [
+      "A former industrial borough on the Schuylkill River opposite Spring City",
+      "Grew around 19th-century stove works and other riverfront industry",
+      "The Schuylkill River Trail corridor links the borough toward Phoenixville and Philadelphia"
+    ],
+    "zips": [
+      "19468"
+    ],
+    "lat": 40.1863,
+    "lng": -75.5389,
+    "nearbySlugs": [
+      "limerick-township",
+      "trappe",
+      "collegeville",
+      "phoenixville"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Warminster Township",
+    "slug": "warminster-township",
+    "countySlug": "bucks-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/bucks-county/warminster-township",
+    "population": 33603,
+    "intro": "Warminster Township is a large postwar suburb in southern Bucks County, once home to the Johnsville naval air development center that trained early astronauts.",
+    "localFacts": [
+      "The former Naval Air Warfare Center at Johnsville occupied a large site in the township",
+      "The Johnsville Centrifuge was used to train early NASA astronauts",
+      "Warminster station is the terminus of SEPTA's Warminster Regional Rail line"
+    ],
+    "zips": [
+      "18974"
+    ],
+    "lat": 40.2027,
+    "lng": -75.089,
+    "nearbySlugs": [
+      "warrington-township",
+      "hatboro",
+      "horsham-township",
+      "northampton-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Warrington Township",
+    "slug": "warrington-township",
+    "countySlug": "bucks-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/bucks-county/warrington-township",
+    "population": 25639,
+    "intro": "Warrington Township is a growing Central Bucks suburb along the Route 611 corridor between Doylestown and the Montgomery County line.",
+    "localFacts": [
+      "The Route 611 corridor forms its main commercial spine",
+      "Grew rapidly with late-20th-century residential development in Central Bucks",
+      "Little Neshaminy Creek runs through the township"
+    ],
+    "zips": [
+      "18976"
+    ],
+    "lat": 40.249,
+    "lng": -75.1589,
+    "nearbySlugs": [
+      "warminster-township",
+      "doylestown",
+      "horsham-township",
+      "montgomery-township"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Doylestown",
+    "slug": "doylestown",
+    "countySlug": "bucks-county",
+    "stateSlug": "pa",
+    "pathKey": "pa/bucks-county/doylestown",
+    "population": 8300,
+    "intro": "Doylestown is the Bucks County seat, a walkable borough known for its museums, courthouse square, and Henry Mercer's concrete castles.",
+    "localFacts": [
+      "County seat of Bucks County, with the county courthouse downtown",
+      "Henry Mercer's Fonthill Castle and the Mercer Museum are landmark concrete castles",
+      "Doylestown station is the terminus of SEPTA's Lansdale/Doylestown Regional Rail line"
+    ],
+    "zips": [
+      "18901"
+    ],
+    "lat": 40.3142,
+    "lng": -75.1277,
+    "nearbySlugs": [
+      "warrington-township",
+      "warminster-township",
+      "northampton-township",
+      "montgomery-township"
+    ],
+    "isLaunch": true
+  },
+  {
     "name": "Brooklyn",
     "slug": "brooklyn",
     "countySlug": "kings-county",
@@ -2634,6 +4403,266 @@ export const TOWN_SEED: TownSeed[] = [
       "haverstraw",
       "ramapo",
       "clarkstown"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Ithaca",
+    "slug": "ithaca",
+    "countySlug": "tompkins-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/tompkins-county/ithaca",
+    "population": 32108,
+    "intro": "Ithaca is the Tompkins County seat at the southern end of Cayuga Lake, a college city shaped by Cornell University and Ithaca College and by the gorges that cut through its hillsides.",
+    "localFacts": [
+      "Home to Cornell University, whose campus overlooks the city from East Hill",
+      "Ithaca College sits on South Hill overlooking the city and Cayuga Lake",
+      "Gorges and waterfalls, including Ithaca Falls, run through the city to Cayuga Lake"
+    ],
+    "zips": [
+      "14850",
+      "14853"
+    ],
+    "lat": 42.4439,
+    "lng": -76.5031,
+    "nearbySlugs": [
+      "dryden",
+      "lansing",
+      "newfield",
+      "groton"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Dryden",
+    "slug": "dryden",
+    "countySlug": "tompkins-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/tompkins-county/dryden",
+    "population": 1887,
+    "intro": "Dryden is a village and surrounding town in eastern Tompkins County on the Route 13 corridor between Ithaca and Cortland, mixing a small village center with rural hamlets like Varna and Etna.",
+    "localFacts": [
+      "The main campus of Tompkins Cortland Community College is in the village",
+      "Route 13 links the village to Ithaca and Cortland",
+      "The surrounding Town of Dryden is one of Tompkins County's largest municipalities by area"
+    ],
+    "zips": [
+      "13053"
+    ],
+    "lat": 42.4908,
+    "lng": -76.3014,
+    "nearbySlugs": [
+      "ithaca",
+      "groton",
+      "lansing",
+      "newfield"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Lansing",
+    "slug": "lansing",
+    "countySlug": "tompkins-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/tompkins-county/lansing",
+    "population": 11565,
+    "intro": "The Town of Lansing stretches along the east shore of Cayuga Lake north of Ithaca, mixing lakeshore homes, farmland, and newer residential development.",
+    "localFacts": [
+      "Runs along the east shore of Cayuga Lake directly north of Ithaca",
+      "Includes the separately incorporated Village of Lansing near the Ithaca border",
+      "Myers Park on Cayuga Lake is the town's well-known lakefront park"
+    ],
+    "zips": [
+      "14882"
+    ],
+    "lat": 42.5665,
+    "lng": -76.532,
+    "nearbySlugs": [
+      "ithaca",
+      "groton",
+      "dryden",
+      "newfield"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Groton",
+    "slug": "groton",
+    "countySlug": "tompkins-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/tompkins-county/groton",
+    "population": 5746,
+    "intro": "The Town of Groton occupies the northeastern corner of Tompkins County, centered on the Village of Groton amid rolling farmland.",
+    "localFacts": [
+      "The Village of Groton is the town's population and commercial center",
+      "Sits in the county's northeast corner near the Cortland and Cayuga county lines",
+      "Route 222 connects the village east toward Cortland"
+    ],
+    "zips": [
+      "13073"
+    ],
+    "lat": 42.5834,
+    "lng": -76.3599,
+    "nearbySlugs": [
+      "dryden",
+      "lansing",
+      "ithaca"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Newfield",
+    "slug": "newfield",
+    "countySlug": "tompkins-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/tompkins-county/newfield",
+    "population": 5184,
+    "intro": "The Town of Newfield lies southwest of Ithaca along Route 13, a rural town of wooded hills, farms, and state forest land.",
+    "localFacts": [
+      "The Newfield Covered Bridge, built in 1853, is one of the oldest covered bridges still in use in New York",
+      "Route 13 links the hamlet of Newfield to Ithaca",
+      "Large tracts of state forest cover the town's hills"
+    ],
+    "zips": [
+      "14867"
+    ],
+    "lat": 42.3371,
+    "lng": -76.6102,
+    "nearbySlugs": [
+      "ithaca",
+      "dryden",
+      "lansing"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Margaretville",
+    "slug": "margaretville",
+    "countySlug": "delaware-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/delaware-county/margaretville",
+    "population": 514,
+    "intro": "Margaretville is a village on the East Branch of the Delaware River in the western Catskills, serving as the commercial hub of Delaware County's Route 28 corridor.",
+    "localFacts": [
+      "Sits on the East Branch of the Delaware River along Route 28",
+      "Serves as a commercial center for the surrounding western Catskills communities",
+      "The Belleayre Mountain ski center is a short drive east on Route 28"
+    ],
+    "zips": [
+      "12455"
+    ],
+    "lat": 42.1453,
+    "lng": -74.6507,
+    "nearbySlugs": [
+      "arkville",
+      "fleischmanns",
+      "andes",
+      "roxbury"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Fleischmanns",
+    "slug": "fleischmanns",
+    "countySlug": "delaware-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/delaware-county/fleischmanns",
+    "population": 210,
+    "intro": "Fleischmanns is a small village in eastern Delaware County on Route 28, a onetime Catskills resort town named for the Fleischmann yeast family who summered there.",
+    "localFacts": [
+      "Named for the Fleischmann family of yeast fame, who kept a summer compound here",
+      "Sits along Route 28 near the Ulster County line",
+      "A short drive from the Belleayre Mountain ski center"
+    ],
+    "zips": [
+      "12430"
+    ],
+    "lat": 42.1549,
+    "lng": -74.5348,
+    "nearbySlugs": [
+      "arkville",
+      "margaretville",
+      "roxbury",
+      "andes"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Andes",
+    "slug": "andes",
+    "countySlug": "delaware-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/delaware-county/andes",
+    "population": 1114,
+    "intro": "Andes is a hilltop town in the central Catskills of Delaware County, with a small hamlet center known for antiques shops and its setting near the Pepacton Reservoir.",
+    "localFacts": [
+      "The Pepacton Reservoir, part of the New York City water supply, borders the town",
+      "The hamlet's Main Street is known for antiques shops and galleries",
+      "Site of an 1845 confrontation in New York's Anti-Rent War"
+    ],
+    "zips": [
+      "13731"
+    ],
+    "lat": 42.1296,
+    "lng": -74.7878,
+    "nearbySlugs": [
+      "margaretville",
+      "arkville",
+      "roxbury",
+      "fleischmanns"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Roxbury",
+    "slug": "roxbury",
+    "countySlug": "delaware-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/delaware-county/roxbury",
+    "population": 2247,
+    "intro": "The Town of Roxbury lies in the northeastern corner of Delaware County along the East Branch of the Delaware River, including the hamlets of Roxbury and Grand Gorge.",
+    "localFacts": [
+      "The Catskill Scenic Trail, a rail-trail on the former Ulster & Delaware line, runs through the town",
+      "Birthplace of naturalist John Burroughs and railroad financier Jay Gould",
+      "Includes the hamlets of Roxbury and Grand Gorge along Route 30"
+    ],
+    "zips": [
+      "12474",
+      "12434"
+    ],
+    "lat": 42.3156,
+    "lng": -74.5278,
+    "nearbySlugs": [
+      "margaretville",
+      "fleischmanns",
+      "arkville",
+      "andes"
+    ],
+    "isLaunch": true
+  },
+  {
+    "name": "Arkville",
+    "slug": "arkville",
+    "countySlug": "delaware-county",
+    "stateSlug": "ny",
+    "pathKey": "ny/delaware-county/arkville",
+    "population": 644,
+    "intro": "Arkville is a hamlet on Route 28 between Margaretville and Fleischmanns in the western Catskills, in the Town of Middletown.",
+    "localFacts": [
+      "Home base of the Delaware & Ulster Railroad excursion line",
+      "Sits on Route 28 between Margaretville and Fleischmanns",
+      "The Catskill Center for Conservation and Development is headquartered here"
+    ],
+    "zips": [
+      "12406"
+    ],
+    "lat": 42.1478,
+    "lng": -74.6197,
+    "nearbySlugs": [
+      "margaretville",
+      "fleischmanns",
+      "roxbury",
+      "andes"
     ],
     "isLaunch": true
   }

@@ -24,6 +24,7 @@ export const GET: APIRoute = async ({ url }) => {
   const taken = all.filter(
     (b) =>
       isPublished(b) &&
+      b.stateSlug === stateSlug &&
       hasActivePaidTier(b) &&
       categoriesOf(b).has(categorySlug) &&
       (b.countySlug === countySlug || [...townSlugs].some((t) => servesTown(b, t))),

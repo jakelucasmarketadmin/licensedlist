@@ -93,17 +93,21 @@ const categories = readCsv('data/taxonomy/categories.csv').map((r) => ({
 
 // ---- Validate ----
 const fail = (msg) => { console.error('VALIDATION FAILED:', msg); process.exit(1); };
+// Slugs are unique PER STATE (nj/roxbury and ny/roxbury may coexist;
+// pa/delaware-county and ny/delaware-county may coexist). pathKeys stay
+// globally unique.
 const stateSlugs = new Set(states.map((s) => s.slug));
-const countySlugs = new Set(counties.map((c) => c.slug));
-const townSlugs = new Set(towns.map((t) => t.slug));
+const countyKeys = new Set(counties.map((c) => `${c.stateSlug}|${c.slug}`));
+const townKeys = new Set(towns.map((t) => `${t.stateSlug}|${t.slug}`));
 const groupSlugs = new Set(categoryGroups.map((g) => g.slug));
-if (countySlugs.size !== counties.length) fail('duplicate county slugs');
+if (countyKeys.size !== counties.length) fail('duplicate county slug within a state');
+if (townKeys.size !== towns.length) fail('duplicate town slug within a state');
 if (new Set(towns.map((t) => t.pathKey)).size !== towns.length) fail('duplicate town pathKeys');
 for (const c of counties) if (!stateSlugs.has(c.stateSlug)) fail(`county ${c.slug} bad state`);
 for (const t of towns) {
-  if (!countySlugs.has(t.countySlug)) fail(`town ${t.slug} bad county ${t.countySlug}`);
+  if (!countyKeys.has(`${t.stateSlug}|${t.countySlug}`)) fail(`town ${t.slug} bad county ${t.countySlug}`);
   if (t.pathKey !== `${t.stateSlug}/${t.countySlug}/${t.slug}`) fail(`town ${t.slug} bad pathKey`);
-  for (const n of t.nearbySlugs) if (!townSlugs.has(n)) fail(`town ${t.slug} bad nearby ${n}`);
+  for (const n of t.nearbySlugs) if (!townKeys.has(`${t.stateSlug}|${n}`)) fail(`town ${t.slug} bad nearby ${n} (must exist in ${t.stateSlug})`);
   if (!Array.isArray(t.localFacts) || t.localFacts.length < 3) fail(`town ${t.slug} needs 3 localFacts`);
 }
 for (const c of categories) if (!groupSlugs.has(c.groupSlug)) fail(`category ${c.slug} bad group`);

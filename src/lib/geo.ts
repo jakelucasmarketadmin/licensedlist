@@ -47,8 +47,9 @@ export function getTown(
 }
 
 export function getNearbyTowns(town: TownSeed): TownSeed[] {
+  // nearbySlugs resolve within the same state (slugs are unique per state).
   return town.nearbySlugs
-    .map((slug) => TOWN_SEED.find((t) => t.slug === slug))
+    .map((slug) => TOWN_SEED.find((t) => t.slug === slug && t.stateSlug === town.stateSlug))
     .filter((t): t is TownSeed => Boolean(t));
 }
 
@@ -70,9 +71,10 @@ export function getAllTowns(): TownSeed[] {
   return TOWN_SEED;
 }
 
-/** Resolve a town by slug regardless of county (service areas cross counties). */
-export function getTownBySlug(slug: string): TownSeed | undefined {
-  return TOWN_SEED.find((t) => t.slug === slug);
+/** Resolve a town by slug (service areas cross counties). Slugs are unique per
+ * state — pass stateSlug whenever known. */
+export function getTownBySlug(slug: string, stateSlug?: string): TownSeed | undefined {
+  return TOWN_SEED.find((t) => t.slug === slug && (!stateSlug || t.stateSlug === stateSlug));
 }
 
 /** Every hub path: /nj, /nj/bergen-county, /nj/bergen-county/hackensack … */

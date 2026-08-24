@@ -207,7 +207,7 @@ if (!View && segments.length >= 2 && segments.length <= 4) {
       let scope: "town" | "county" | "state";
       if (town && county) {
         scope = "town";
-        listings = await listForTownCategory(town.slug, category.slug, preview);
+        listings = await listForTownCategory(state.slug, town.slug, category.slug, preview);
       } else if (county) {
         scope = "county";
         listings = await listForCountyCategory(state.slug, county.slug, category.slug, preview);

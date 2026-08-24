@@ -15,7 +15,7 @@ const { state, county, town } = Astro.props;
 const nearby = getNearbyTowns(town);
 
 // Only categories that meet the 3-listing publishing rule get links.
-const qualified = [...(await qualifiedCategoriesForTown(town.slug)).entries()]
+const qualified = [...(await qualifiedCategoriesForTown(town.stateSlug, town.slug)).entries()]
   .map(([slug, count]) => ({ category: getCategory(slug), count }))
   .filter((entry) => entry.category)
   .sort((a, b) => b.count - a.count);

@@ -73,7 +73,7 @@ const nearbyTowns =
         await Promise.all(
           getNearbyTowns(town!).map(async (n) => ({
             town: n,
-            ok: qualifies(await listForTownCategory(n.slug, category.slug, preview)),
+            ok: qualifies(await listForTownCategory(n.stateSlug, n.slug, category.slug, preview)),
           })),
         )
       )

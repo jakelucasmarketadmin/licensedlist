@@ -61,3 +61,10 @@ Tutoring Services,tutoring,family-education-community,LocalBusiness,false,{},"tu
 Music Lessons,music-lessons,family-education-community,LocalBusiness,false,{},"music schools,piano lessons,guitar lessons,voice lessons",60
 Martial Arts Studios,martial-arts,family-education-community,SportsActivityLocation,false,{},"karate,jiu jitsu,taekwondo,self defense,mma",61
 Gyms,gyms,family-education-community,ExerciseGym,false,{},"fitness centers,health clubs,personal training,crossfit",62
+"Windows, Doors & Siding",windows-doors-siding,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","window installation,window replacement,siding,door installation,exterior remodeling",63
+Video Production,video-production,professional-financial,ProfessionalService,false,{},"videography,corporate video,commercial production,editing",64
+Trade Schools,trade-schools,family-education-community,EducationalOrganization,false,{},"vocational school,career training,apprenticeship prep,bootcamp",65
+Cannabis Dispensaries,cannabis-dispensaries,retail,Store,true,"{""NY"":""NY Office of Cannabis Management""}","dispensary,adult-use cannabis,smoke shop",66
+Golf Courses,golf-courses,family-education-community,GolfCourse,false,{},"golf club,driving range,golf lessons",67
+Hotels & Lodging,hotels-lodging,family-education-community,LodgingBusiness,false,{},"hotel,inn,resort,lodge,bed and breakfast",68
+Event Venues,event-venues,family-education-community,EventVenue,false,{},"wedding venue,banquet hall,event space",69

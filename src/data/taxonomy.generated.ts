@@ -1150,5 +1150,115 @@ export const CATEGORY_SEED: CategorySeed[] = [
       "crossfit"
     ],
     "sortOrder": 62
+  },
+  {
+    "name": "Windows, Doors & Siding",
+    "slug": "windows-doors-siding",
+    "groupSlug": "home-property",
+    "schemaType": "HomeAndConstructionBusiness",
+    "licenseRequired": true,
+    "licenseSourcesByState": {
+      "NJ": "NJ DCA HIC registration",
+      "NY": "NYC DCWP / county HIC",
+      "PA": "PA AG HICPA registration"
+    },
+    "synonyms": [
+      "window installation",
+      "window replacement",
+      "siding",
+      "door installation",
+      "exterior remodeling"
+    ],
+    "sortOrder": 63
+  },
+  {
+    "name": "Video Production",
+    "slug": "video-production",
+    "groupSlug": "professional-financial",
+    "schemaType": "ProfessionalService",
+    "licenseRequired": false,
+    "licenseSourcesByState": {},
+    "synonyms": [
+      "videography",
+      "corporate video",
+      "commercial production",
+      "editing"
+    ],
+    "sortOrder": 64
+  },
+  {
+    "name": "Trade Schools",
+    "slug": "trade-schools",
+    "groupSlug": "family-education-community",
+    "schemaType": "EducationalOrganization",
+    "licenseRequired": false,
+    "licenseSourcesByState": {},
+    "synonyms": [
+      "vocational school",
+      "career training",
+      "apprenticeship prep",
+      "bootcamp"
+    ],
+    "sortOrder": 65
+  },
+  {
+    "name": "Cannabis Dispensaries",
+    "slug": "cannabis-dispensaries",
+    "groupSlug": "retail",
+    "schemaType": "Store",
+    "licenseRequired": true,
+    "licenseSourcesByState": {
+      "NY": "NY Office of Cannabis Management"
+    },
+    "synonyms": [
+      "dispensary",
+      "adult-use cannabis",
+      "smoke shop"
+    ],
+    "sortOrder": 66
+  },
+  {
+    "name": "Golf Courses",
+    "slug": "golf-courses",
+    "groupSlug": "family-education-community",
+    "schemaType": "GolfCourse",
+    "licenseRequired": false,
+    "licenseSourcesByState": {},
+    "synonyms": [
+      "golf club",
+      "driving range",
+      "golf lessons"
+    ],
+    "sortOrder": 67
+  },
+  {
+    "name": "Hotels & Lodging",
+    "slug": "hotels-lodging",
+    "groupSlug": "family-education-community",
+    "schemaType": "LodgingBusiness",
+    "licenseRequired": false,
+    "licenseSourcesByState": {},
+    "synonyms": [
+      "hotel",
+      "inn",
+      "resort",
+      "lodge",
+      "bed and breakfast"
+    ],
+    "sortOrder": 68
+  },
+  {
+    "name": "Event Venues",
+    "slug": "event-venues",
+    "groupSlug": "family-education-community",
+    "schemaType": "EventVenue",
+    "licenseRequired": false,
+    "licenseSourcesByState": {},
+    "synonyms": [
+      "wedding venue",
+      "banquet hall",
+      "event space"
+    ],
+    "sortOrder": 69
   }
 ];

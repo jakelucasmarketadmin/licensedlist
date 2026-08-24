@@ -173,14 +173,21 @@ const inScope = (preview: boolean) => (b: DirectoryBusiness) =>
   preview ? isPreviewable(b) : isPublished(b);
 
 export async function listForTownCategory(
+  stateSlug: string,
   townSlug: string,
   categorySlug: string,
   preview = false,
 ): Promise<ListingSet> {
+  // Town slugs are unique per state — a business only matches towns in its
+  // own state (nj "roxbury" never serves ny/delaware-county/roxbury).
   const all = await fetchBusinesses();
   return toListingSet(
     all.filter(
-      (b) => inScope(preview)(b) && servesTown(b, townSlug) && categoriesOf(b).has(categorySlug),
+      (b) =>
+        inScope(preview)(b) &&
+        b.stateSlug === stateSlug &&
+        servesTown(b, townSlug) &&
+        categoriesOf(b).has(categorySlug),
     ),
   );
 }
@@ -197,6 +204,7 @@ export async function listForCountyCategory(
     all.filter(
       (b) =>
         inScope(preview)(b) &&
+        b.stateSlug === stateSlug &&
         categoriesOf(b).has(categorySlug) &&
         (b.countySlug === countySlug ||
           list(b.serviceTownSlugs).some((t) => townSlugs.has(t))),
@@ -226,11 +234,15 @@ export async function getBusinessBySlug(
 }
 
 /** Category slugs with ≥ min published businesses serving the given town. */
-export async function qualifiedCategoriesForTown(townSlug: string, min = 3): Promise<Map<string, number>> {
+export async function qualifiedCategoriesForTown(
+  stateSlug: string,
+  townSlug: string,
+  min = 3,
+): Promise<Map<string, number>> {
   const all = await fetchBusinesses();
   const counts = new Map<string, number>();
   for (const b of all) {
-    if (!isPublished(b) || !servesTown(b, townSlug)) continue;
+    if (!isPublished(b) || b.stateSlug !== stateSlug || !servesTown(b, townSlug)) continue;
     for (const cat of categoriesOf(b)) counts.set(cat, (counts.get(cat) ?? 0) + 1);
   }
   return new Map([...counts].filter(([, n]) => n >= min));

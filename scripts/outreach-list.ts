@@ -50,17 +50,19 @@ function parseCsv(text: string): Record<string, string>[] {
 const businesses = bizPath ? parseCsv(readFileSync(bizPath, "utf8")).filter((b) => b.status === "published") : [];
 const townsByCounty = new Map<string, Set<string>>();
 for (const t of TOWN_SEED) {
-  if (!townsByCounty.has(t.countySlug)) townsByCounty.set(t.countySlug, new Set());
-  townsByCounty.get(t.countySlug)!.add(t.slug);
+  const key = `${t.stateSlug}|${t.countySlug}`;
+  if (!townsByCounty.has(key)) townsByCounty.set(key, new Set());
+  townsByCounty.get(key)!.add(t.slug);
 }
 
 const rows: Record<string, unknown>[] = [];
 for (const county of COUNTY_SEED) {
-  const townSlugs = townsByCounty.get(county.slug) ?? new Set();
+  const townSlugs = townsByCounty.get(`${county.stateSlug}|${county.slug}`) ?? new Set();
   for (const catSlug of TOP_12) {
     const category = CATEGORY_SEED.find((c) => c.slug === catSlug);
     if (!category) continue;
     const published = businesses.filter((b) => {
+      if (b.stateSlug !== county.stateSlug) return false;
       const cats = new Set((b.categorySlugs ?? "").split(",").map((s) => s.trim()));
       if (b.primaryCategorySlug) cats.add(b.primaryCategorySlug);
       if (!cats.has(catSlug)) return false;

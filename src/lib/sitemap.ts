@@ -74,7 +74,7 @@ export async function buildSitemapXml(): Promise<string> {
       const cats = categoriesOf(b);
       const updated = toDateOnly((b as any)._updatedDate);
       for (const town of getAllTowns()) {
-        if (!servesTown(b, town.slug)) continue;
+        if (b.stateSlug !== town.stateSlug || !servesTown(b, town.slug)) continue;
         for (const cat of cats) {
           const key = `${town.pathKey}|${cat}`;
           const entry = townCat.get(key) ?? { count: 0 };

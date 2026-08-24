@@ -47,7 +47,7 @@ try {
 } catch { /* malformed hoursJson renders nothing */ }
 const serviceTowns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 const serviceTownNames = serviceTowns
-  .map((slug) => (b.stateSlug && b.countySlug ? getTown(b.stateSlug, b.countySlug, slug) : undefined) ?? getTownAnyCounty(slug))
+  .map((slug) => (b.stateSlug && b.countySlug ? getTown(b.stateSlug, b.countySlug, slug) : undefined) ?? getTownAnyCounty(slug, b.stateSlug))
   .filter((t): t is NonNullable<typeof t> => Boolean(t))
   .map((t) => t.name);
 const servesLabel =
@@ -65,7 +65,7 @@ const lastVerified = b.lastVerifiedAt
 // Cross-links only when the target list page meets the publishing rule.
 const townListOk =
   town && category
-    ? (await listForTownCategory(town.slug, category.slug)).organic.length >= 3
+    ? (await listForTownCategory(town.stateSlug, town.slug, category.slug)).organic.length >= 3
     : false;
 const countyListOk =
   county && state && category

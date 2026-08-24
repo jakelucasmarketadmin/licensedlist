@@ -28,10 +28,11 @@ function countyQualifies(stateSlug: string, countySlug: string): boolean {
   const townSlugs = new Set(getTownsByCounty(stateSlug, countySlug).map((t) => t.slug));
   const count = businesses.filter(
     (b) =>
-      b.countySlug === countySlug ||
+      b.stateSlug === stateSlug &&
+      (b.countySlug === countySlug ||
       (b.serviceTownSlugs ?? "")
         .split(",")
-        .some((t) => townSlugs.has(t.trim())),
+        .some((t) => townSlugs.has(t.trim()))),
   ).length;
   return count >= 3;
 }
