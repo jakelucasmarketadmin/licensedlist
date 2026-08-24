@@ -42,3 +42,65 @@ Base URL: https://my-site-nf00gfth-tier201.wix-vibe-site.com
   "Local Businesses in {Town}, {ST}" patterns; descriptions from geo intros.
 - Screenshots: `m2-desktop-*.png`, `m2-mobile-*.png` in `docs/screens/` (live captures,
   light scheme, no horizontal overflow at 390).
+
+## M3 — Listings engine (verified live 2026-08-24)
+
+- **Server-side CMS reads confirmed in production** (listings/profiles render from the
+  `businesses` collection in the initial HTML — no client-side data fetching for content).
+- **3-listing publishing rule enforced:** every public geo×category page and draft profile
+  returns a real 404 (`/nj/bergen-county/hackensack/roofers` → 404,
+  `/business/sample-roofing-co` → 404). `?preview=demo` renders the labeled DEMO drafts with
+  a banner and forced noindex (`m3-desktop-money-page-preview.png`).
+- Money-page checks: "Updated August 2026" in H1/title, methodology line + funnel counts
+  ("N listed · M license-verified"), labeled Featured block, transparent-ranking section,
+  license-ledger on every card, guide + visible FAQ, qualified nearby/related links.
+- `rel="sponsored"` on all featured/sponsor/client links (4 instances on the sample page,
+  covering the featured block and the sponsored organic card).
+- JSON-LD: `ItemList` on list pages (published records only), `LocalBusiness` +
+  `BreadcrumbList` on profiles, **no aggregateRating anywhere** (reserved for real on-site
+  user ratings).
+
+## M4 — Conversion (verified live 2026-08-24)
+
+- **Lead pipeline tested end-to-end on the live site:** a test quote request submitted through
+  the profile form appeared in the `leads` collection with business/category/town context,
+  message, urgency, consent text and timestamp — then was deleted. Claims flow smoke-tested
+  the same way earlier.
+- Consent: checkbox with explicit named disclosure (providers may call/text; consent not a
+  condition of purchase); the exact text shown is stored on the record. `consentIp` is not
+  captured client-side (see DECISIONS.md).
+- `leads` and `claims` use the "Collect content" permission (anyone submits, admins read).
+- `/pricing` live with the always-labeled/never-ranks copy; `/claim` → `/claim/{slug}` flow
+  live (noindex on per-business claim pages).
+
+## M5 — Final QA (2026-08-24)
+
+**Lighthouse (mobile emulation, live site):**
+
+| Page | Perf | A11y | Best practices | SEO | LCP | CLS |
+| --- | --- | --- | --- | --- | --- | --- |
+| Home | 99 | 92 | 100 | 100 | 1.7s | 0 |
+| State hub /nj | 99 | 91 | 100 | 100 | 1.9s | 0 |
+| Town hub | 99 | 90 | 100 | 100 | 1.9s | 0 |
+| Category hub /roofers | 99 | 91 | 100 | 100 | 1.9s | 0.019 |
+| /how-we-verify | 99 | 91 | 100 | 100 | 1.9s | 0.014 |
+| Money page (preview) | 99 | 92 | 100 | 63* | 1.9s | 0.025 |
+| Profile (preview) | 99 | 92 | 100 | 63* | 1.9s | 0 |
+
+\* Preview pages are deliberately noindex — that's the entire SEO deduction.
+Targets (≥90 hubs) exceeded everywhere; zero blocking time; no map JS shipped.
+
+**Accessibility:** the one real finding — dark-mode accent buttons at 3.54:1 — was fixed
+(dark accent now #c2500a, ≥4.5:1; light was already 4.79:1). The only remaining flag on any
+audited page is the target-size of **Wix's own** "Built on WIX Vibe" banner close button,
+which is injected by the platform on the free domain and not controllable from the repo.
+
+**Link integrity:** full-site crawl (all 186 reachable pages): **0 broken internal links.**
+The crawl initially caught 1,364 category-hub → county×category links pointing at
+sub-threshold 404s; all internal linking is now qualification-aware (links to geo×category
+pages render only when the target meets the 3-listing rule).
+
+**Compliance spot-checks (live):** every list page carries the methodology line + "How we
+verify" links + "Updated {Month YYYY}"; sub-threshold pages 404; sponsored placements
+labeled visually and with `rel="sponsored"`; specimen/DEMO records marked "Sample"
+everywhere they render.
