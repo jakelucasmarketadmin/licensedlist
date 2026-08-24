@@ -58,6 +58,8 @@ export interface DirectoryBusiness {
   ratingFacebook?: number;
   ratingFacebookCount?: number;
   responseTimeHours?: number;
+  /** Featured tier expiry — past this date the tier no longer renders. */
+  featuredUntil?: string | Date;
   lastVerifiedAt?: string | Date;
   sourceNotes?: string;
 }
@@ -122,8 +124,13 @@ export function ratingSourcesLabel(b: DirectoryBusiness): string {
   return `${sources.slice(0, -1).join(", ")} & ${sources[sources.length - 1]}`;
 }
 
+/** Featured/sponsor tier counts only while featuredUntil (if set) is in the future. */
+export const hasActivePaidTier = (b: DirectoryBusiness) =>
+  (b.tier === "featured" || b.tier === "sponsor") &&
+  (!b.featuredUntil || new Date(b.featuredUntil).getTime() > Date.now());
+
 export const isSponsoredPlacement = (b: DirectoryBusiness) =>
-  b.tier === "featured" || b.tier === "sponsor" || truthy(b.isClient);
+  hasActivePaidTier(b) || truthy(b.isClient);
 
 let cache: { at: number; items: DirectoryBusiness[] } | null = null;
 const CACHE_MS = 60_000;
@@ -153,7 +160,7 @@ export interface ListingSet {
 function toListingSet(matches: DirectoryBusiness[]): ListingSet {
   const organic = [...matches].sort(organicCompare);
   const featured = matches
-    .filter((b) => b.tier === "featured" || b.tier === "sponsor")
+    .filter(hasActivePaidTier)
     .sort((a, b) => {
       const tier = Number(b.tier === "sponsor") - Number(a.tier === "sponsor");
       return tier || organicCompare(a, b);

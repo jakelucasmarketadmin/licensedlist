@@ -2,6 +2,16 @@
 import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import { SITE_NAME } from "@/lib/site";
 import { OWNER_FAQ } from "@/data/owner-faq";
+import FeaturedRequestForm from "@/components/site/FeaturedRequestForm.tsx";
+import { getStates, getCountiesByState } from "@/lib/geo";
+import { getCategories } from "@/lib/taxonomy";
+
+const frStates = getStates().map((s) => ({
+  slug: s.slug,
+  name: s.name,
+  counties: getCountiesByState(s.slug).map((c) => ({ slug: c.slug, name: c.name })),
+}));
+const frCategories = getCategories().map((c) => ({ slug: c.slug, name: c.name }));
 
 const TIERS = [
   {
@@ -21,7 +31,7 @@ const TIERS = [
   {
     name: "Verified",
     price: "$29",
-    period: "/month",
+    period: "/month · $290/yr",
     blurb: "We verify your license against the official registry and badge your listing with the receipt.",
     features: [
       "Everything in Free",
@@ -35,7 +45,7 @@ const TIERS = [
   {
     name: "Featured",
     price: "$99",
-    period: "/month",
+    period: "/month · $990/yr",
     blurb: "A labeled featured slot on your category's list pages.",
     features: [
       "Everything in Verified",
@@ -43,7 +53,7 @@ const TIERS = [
       "Capped at 3 per category per county",
       "Never changes organic rankings",
     ],
-    cta: { label: "Request a slot", href: "/for-businesses/get-listed" },
+    cta: { label: "Check slot availability", href: "#featured-request" },
     highlighted: false,
   },
   {
@@ -136,6 +146,10 @@ const TIERS = [
         <a href="/editorial-policy" class="font-medium text-brand underline underline-offset-2">editorial policy</a>.
       </li>
     </ul>
+  </section>
+
+  <section id="featured-request" class="mt-12 max-w-3xl rounded-card border border-line bg-surface p-6" aria-label="Featured slot request">
+    <FeaturedRequestForm client:load states={frStates} categories={frCategories} />
   </section>
 
   <section class="mt-12 max-w-prose" aria-labelledby="pricing-faq-heading">
