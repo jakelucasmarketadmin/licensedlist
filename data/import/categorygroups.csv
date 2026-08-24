@@ -1,0 +1,9 @@
+name,slug,sortOrder,icon
+Home & Property,home-property,1,home
+Auto,auto,2,car
+Food & Drink,food-drink,3,utensils
+Health & Medical,health-medical,4,stethoscope
+Beauty & Personal Care,beauty-personal-care,5,scissors
+Professional & Financial,professional-financial,6,briefcase
+Retail,retail,7,shopping-bag
+"Family, Education & Community",family-education-community,8,graduation-cap
