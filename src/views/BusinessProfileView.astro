@@ -3,7 +3,7 @@ import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import TrustBadge from "@/components/site/TrustBadge.astro";
 import QuoteRequestForm from "@/components/site/QuoteRequestForm.tsx";
 import { SITE_NAME, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
-import { getTown, getCounty, getState } from "@/lib/geo";
+import { getTown, getTownBySlug as getTownAnyCounty, getCounty, getState } from "@/lib/geo";
 import { getCategory } from "@/lib/taxonomy";
 import {
   type DirectoryBusiness,
@@ -46,6 +46,14 @@ try {
   }
 } catch { /* malformed hoursJson renders nothing */ }
 const serviceTowns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+const serviceTownNames = serviceTowns
+  .map((slug) => (b.stateSlug && b.countySlug ? getTown(b.stateSlug, b.countySlug, slug) : undefined) ?? getTownAnyCounty(slug))
+  .filter((t): t is NonNullable<typeof t> => Boolean(t))
+  .map((t) => t.name);
+const servesLabel =
+  serviceTownNames.length > 1
+    ? `Serves ${serviceTownNames.slice(0, -1).join(", ")} and ${serviceTownNames[serviceTownNames.length - 1]}`
+    : "";
 const services = (b.services ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 const verifiedDate = b.licenseVerifiedAt
   ? new Date(b.licenseVerifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })
@@ -75,13 +83,6 @@ const countyListOk =
     </p>
   )}
 
-  {isClient && (
-    <p class="mt-4 rounded-card border border-line bg-inset px-4 py-3 text-sm text-muted">
-      Disclosure: this business is a client of the agency that operates {SITE_NAME}. Client
-      listings are always labeled and receive no ranking benefit.
-    </p>
-  )}
-
   <header class="mt-4">
     <div class="flex flex-wrap items-center gap-3">
       {b.logoUrl && (
@@ -101,7 +102,7 @@ const countyListOk =
     <p class="mt-2 text-muted">
       {category?.name}
       {town && ` · ${town.name}, ${state?.abbr}`}
-      {serviceTowns.length > 1 && ` · serves ${serviceTowns.length} towns`}
+      {servesLabel && ` · ${servesLabel}`}
     </p>
     <div class="mt-3 flex flex-wrap items-center gap-3">
       <TrustBadge
@@ -233,6 +234,12 @@ const countyListOk =
             </div>
           )}
         </div>
+        {isClient && (
+          <p class="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-muted">
+            Disclosure: this business is a client of the agency that operates {SITE_NAME}.
+            Client listings are always labeled and receive no ranking benefit.
+          </p>
+        )}
         <p class="mt-3 text-xs leading-relaxed text-faint">
           Licenses can lapse after our check — every badge names its registry so you can repeat
           the lookup. <a href="/how-we-verify" class="underline">How we verify</a>

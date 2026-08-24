@@ -70,6 +70,11 @@ export function getAllTowns(): TownSeed[] {
   return TOWN_SEED;
 }
 
+/** Resolve a town by slug regardless of county (service areas cross counties). */
+export function getTownBySlug(slug: string): TownSeed | undefined {
+  return TOWN_SEED.find((t) => t.slug === slug);
+}
+
 /** Every hub path: /nj, /nj/bergen-county, /nj/bergen-county/hackensack … */
 export function hubPaths(): string[] {
   return [
