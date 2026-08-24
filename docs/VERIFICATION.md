@@ -48,6 +48,23 @@ Division of Consumer Affairs yields a spreadsheet) and feed it in with `--nj-ros
 `licenseSource` = "NJ DCA HIC" for home-improvement registrations, or the specific board
 (e.g. "NJ Board of Examiners of Electrical Contractors") for licensed trades.
 
+**NJ registration → licensure transition (P.L. 2023, c.237).** The law signed January 8,
+2024 creates the **State Board of Home Improvement and Home Elevation Contractors** and
+converts HIC/HEC registration into licensure: examination; apprenticeship, trade school, or
+two years' supervised experience; insurance; and $100,000 in security (bond, letter of
+credit, or securities). Education/training standards take effect **February 1, 2026**; the
+general licensing requirement takes effect **six months after the Board adopts rules**;
+existing registrants are grandfathered. Operationally: keep verifying DCA registrations
+(`licenseSource = "NJ DCA HIC"`) until the Board's licensing requirement is in force, then
+switch new verifications to the canonical value
+**`licenseSource = "NJ Board of Home Improvement and Home Elevation Contractors"`** — a
+data-only change on records and in `data/taxonomy/categories.csv`'s
+`licenseSourcesByState.NJ` (no code change; badges print whatever source is recorded).
+Sources: the DCA notice
+(https://www.njconsumeraffairs.gov/Documents/HIC-HEC-Regarding-Changes-To-The-Law-New-Requirements-For-Registration.pdf),
+the statute (https://pub.njleg.state.nj.us/Bills/2022/PL23/237_.PDF), and the Board page
+(https://www.njconsumeraffairs.gov/HIHEC).
+
 **NYC.** Bulk feed wired in: NYC Open Data "Legally Operating Businesses" (dataset
 `w7w3-xahh`, Socrata), filtered to `business_category = 'Home Improvement Contractor'` —
 license number, status, expiration, ZIP. `licenseSource` = "NYC DCWP".
