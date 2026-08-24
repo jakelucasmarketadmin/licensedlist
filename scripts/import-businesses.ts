@@ -119,8 +119,6 @@ for (const [i, r] of raw.entries()) {
     if (!town) problems.push(`serviceTownSlug "${t}" does not exist in ${r.stateSlug}`);
   }
 
-  if (r.licenseSource && !r.licenseVerifiedAt)
-    problems.push("licenseVerifiedAt required when licenseSource is set");
   if (r.licenseVerifiedAt && Number.isNaN(Date.parse(r.licenseVerifiedAt)))
     problems.push(`licenseVerifiedAt "${r.licenseVerifiedAt}" is not a date`);
   if (r.tier && !TIERS.has(r.tier)) problems.push(`tier "${r.tier}" not in free|verified|featured|sponsor`);
@@ -136,19 +134,24 @@ for (const [i, r] of raw.entries()) {
 
   const primaryCat = categories.get(r.primaryCategorySlug)!;
   const licenseVerified = Boolean(r.licenseNumber && r.licenseSource && r.licenseVerifiedAt);
+  // A license claim that hasn't passed registry verification (source set, no
+  // verified date) never publishes, even in a not-required category.
+  const unverifiedClaim = Boolean(r.licenseSource && !r.licenseVerifiedAt);
   const licenseStatus = licenseVerified
     ? "verified"
-    : primaryCat.licenseRequired
+    : primaryCat.licenseRequired || unverifiedClaim
       ? "unverified"
       : "not-required";
-  const published = licenseStatus === "verified" || !primaryCat.licenseRequired;
+  const published = licenseStatus === "verified" || (!primaryCat.licenseRequired && !unverifiedClaim);
   if (!published)
     needsVerification.push({
       slug: r.slug,
       name: r.name,
       primaryCategorySlug: r.primaryCategorySlug,
       state: r.stateSlug,
-      reason: "licenseRequired category without a verified license — imported as draft",
+      reason: unverifiedClaim
+        ? "license claim did not pass registry verification — imported as draft"
+        : "licenseRequired category without a verified license — imported as draft",
     });
 
   const photoUrls = list(r.photoUrls || "");
