@@ -104,3 +104,37 @@ pages render only when the target meets the 3-listing rule).
 verify" links + "Updated {Month YYYY}"; sub-threshold pages 404; sponsored placements
 labeled visually and with `rel="sponsored"`; specimen/DEMO records marked "Sample"
 everywhere they render.
+
+## Phase 2 (verified live 2026-08-24)
+
+**Corrections re-verified live:** featured businesses render once (Featured block only, fixed
+note under it — screenshot `p2a-featured-dedupe-live.png`); county hubs link to the
+methodology instead of repeating it; Owner FAQ single-sourced on /for-businesses + /pricing;
+profile shows one client disclosure (in the verification card, chip in header) and expands
+service towns to names ("Serves Teaneck and Hackensack").
+
+**Live checks by section:**
+- P2-A: importer validated (template row correctly rejects on unseeded slug; publish/draft
+  rule and reports verified); awaiting the client CSV.
+- P2-B: NYC bulk match ran against the live dataset (21,548 DCWP HIC records); demo NYC
+  record correctly routed to manual review; NJ/PA rows routed to their manual checklists;
+  amber "Verification due" badge >365d and the PA AG caveat are in the template.
+- P2-C: GA4 loads only when `PUBLIC_GA4_ID` is set (verified absent by default); footer
+  Privacy-choices link + /privacy#analytics live; SEARCH-CONSOLE.md ready for the domain.
+- P2-D: `/api/webhook-forward` live (no URLs configured yet — logs and continues);
+  `/api/owner-listing` correctly 401s anonymous callers; `/owner` renders the sign-in flow.
+  Full member E2E pending a real owner signup (see DECISIONS).
+- P2-E: `/api/featured-slots` returns `{cap:3, taken:0, open:3}` for live scopes; request/
+  waitlist flow on /pricing; featuredUntil expiry enforced in templates; plan terms in /terms.
+- P2-F: all 49 guides render live on their hubs with bylines, dates, official sources, and
+  the AI-assist disclosure; /for-businesses/why-verified live; outreach targets CSV generates
+  (264 slots, 0 live pre-import).
+
+**Lighthouse (mobile, live):** home 94 · state hub 99 · county hub (guide-heavy) 92 ·
+category hub 99 · pricing 99 · why-verified 99 — all ≥90 target; best-practices 100 and
+SEO 100 everywhere; a11y 95–96 (dark-accent fix confirmed; remaining flags are the
+Wix-injected free-domain banner).
+
+**Crawl:** 186/186 reachable pages, **0 broken internal links** after the Phase 2 content
+drop. New indexable URLs added by Phase 2: 1 (`/for-businesses/why-verified`) — see
+PUBLISH-LOG.md.

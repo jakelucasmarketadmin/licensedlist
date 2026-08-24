@@ -3,6 +3,53 @@
 Newest first. Every platform constraint we hit, and every product decision that wasn't
 already fixed by the Phase 1 master prompt, gets an entry.
 
+## 2026-08-24 · Phase 2 (P2-B – P2-F)
+
+**License data sources (P2-B).** NYC has a real bulk feed: NYC Open Data "Legally Operating
+Businesses" (`w7w3-xahh`, Socrata), `business_category = 'Home Improvement Contractor'`
+(~21.5k records) — wired into `scripts/verify-licenses.ts` with pagination. **NJ publishes no
+bulk license file on data.nj.gov** (checked the Socrata catalog); the script takes a
+downloaded roster via `--nj-roster` with column mapping, and VERIFICATION.md documents the
+DCA lookup + OPRA-export path. NY suburban counties and PA HICPA are manual-checklist only
+(PA AG search is explicitly not scraped). Auto-apply is limited to exact-license-number
+matches; name+ZIP matches always go to human review.
+
+**Owner portal auth model (P2-D).** Client side uses the template's Wix Members context
+(`useMember`, Wix-managed login). Authorization is enforced server-side in `/api/owner-listing`:
+elevated queries (auth.elevate from @wix/essentials) match `claims.memberId == member._id`
+with `status == "approved"`, and updates are whitelisted to
+description/hours/photos/services/phone/website — license fields, ratings, and tier are
+unreachable. `memberId` is bound to a claim once via `/api/claim-link` and can never be
+re-linked. Claim approvals are manual in the dashboard. **Untested live end-to-end:** the
+flow needs a real member signup, which Claude cannot perform (account creation is the
+owner's action) — test plan: submit a claim, create the login, approve the claim in the
+dashboard, then edit via /owner.
+
+**GHL webhooks (P2-D).** `/api/webhook-forward` reads GHL_LEAD_WEBHOOK / GHL_CLAIM_WEBHOOK
+from SERVER env (URLs never reach the client — an upgrade over the Phase-1 PUBLIC_ stub),
+retries 3× with backoff, and appends the outcome to a `webhookLog` field via elevated
+update. With no URL configured it logs and continues; live GHL contact test is pending the
+real webhook URLs. The elevated-update API shape (@wix/data getDataItem/updateDataItem) is
+best-known-pattern and wrapped in try/catch — confirm the webhookLog write during the live
+webhook test.
+
+**Pricing Plans (P2-E).** Plan creation/payments require the owner (Wix Payments payout
+setup + Pricing Plans app install are account actions). Everything code-side is live:
+featuredUntil expiry is enforced in templates (no manual step on cancellation), the Featured
+request flow checks the 3-per-category-per-county cap live and records waitlist entries in
+claims (method=waitlist), and purchase→tier operations are a documented manual table in
+PRICING-PLANS.md until Automations are wired.
+
+**Guides (P2-F).** 49 pieces render as sections on existing hub pages rather than as new
+guide URLs — content lands on the pages that rank, and the ≤50-new-URLs/week throttle is
+trivially satisfied (Phase 2 adds only /for-businesses/why-verified + noindex /owner).
+Bodies are constrained markdown rendered by a safe-subset renderer (input escaped — CMS
+content can't inject HTML). Same single-source pattern as geo: CSVs → generated module +
+data/import/guides.csv for the CMS `guides` collection (create via the standard recipe when
+desired; the site renders from the module either way). Editorial flag from the content pass:
+the NJ guide hedges the 2024 HIC-registration→licensure transition ("is converting") — worth
+an editorial re-check.
+
 ## 2026-08-24 · M2–M4 build
 
 **Publish flow (operational).** GitHub pushes sync into the Vibe editor automatically but do
