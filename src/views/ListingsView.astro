@@ -43,8 +43,12 @@ const applyFilter = (items: DirectoryBusiness[]) => {
   return items;
 };
 
-const organic = applyFilter(listings.organic);
 const featured = filter ? [] : listings.featured;
+// Each business renders once: the Featured block up top, and the organic list
+// excludes those slugs (counts still cover every qualifying business).
+const featuredSlugs = new Set(featured.map((b) => b.slug));
+const organic = applyFilter(listings.organic).filter((b) => !featuredSlugs.has(b.slug));
+const totalCount = listings.organic.length;
 const verifiedCount = listings.organic.filter((b) => b.licenseStatus === "verified").length;
 
 const licenseSource = category.licenseSourcesByState[state.abbr];
@@ -107,11 +111,11 @@ const faq = [
 
   <header class="mt-4 max-w-prose">
     <h1 class="font-display text-4xl font-bold text-ink">
-      {organic.length > 0 && !filter ? `${organic.length} ` : ""}Best {category.name} in {placeName}
+      {totalCount > 0 && !filter ? `${totalCount} ` : ""}Best {category.name} in {placeName}
       <span class="text-muted">(Updated {updatedLabel})</span>
     </h1>
     <p class="mt-3 text-muted">
-      {organic.length} listed · {verifiedCount} license-verified · ranked by a public score —
+      {totalCount} listed · {verifiedCount} license-verified · ranked by a public score —
       never by payment.
       <a href="/how-we-verify" class="font-medium text-brand underline underline-offset-2">How we verify</a>
     </p>
@@ -152,6 +156,10 @@ const faq = [
           <ResultCard business={b} inFeaturedBlock townName={town?.name} />
         ))}
       </div>
+      <p class="mt-2 text-xs text-faint">
+        Featured businesses also meet the same verification standard and are not ranked above
+        organic results.
+      </p>
     </section>
   )}
 
@@ -165,6 +173,11 @@ const faq = [
           <ResultCard business={b} townName={town?.name} />
         ))}
       </div>
+    ) : totalCount > 0 && !filter ? (
+      <p class="mt-3 text-sm text-muted">
+        Every qualifying business here currently holds a featured slot — they're all shown
+        above.
+      </p>
     ) : (
       <div class="mt-3">
         <CategoriesEmptyState scopeName={placeName} />

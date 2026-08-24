@@ -1,6 +1,7 @@
 ---
 import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import { SITE_NAME } from "@/lib/site";
+import { OWNER_FAQ } from "@/data/owner-faq";
 
 const TIERS = [
   {
@@ -135,5 +136,19 @@ const TIERS = [
         <a href="/editorial-policy" class="font-medium text-brand underline underline-offset-2">editorial policy</a>.
       </li>
     </ul>
+  </section>
+
+  <section class="mt-12 max-w-prose" aria-labelledby="pricing-faq-heading">
+    <h2 id="pricing-faq-heading" class="font-display text-2xl font-semibold text-ink">
+      Owner FAQ
+    </h2>
+    <dl class="mt-4 space-y-4">
+      {OWNER_FAQ.map((item) => (
+        <div class="rounded-card border border-line bg-surface p-5">
+          <dt class="text-base font-semibold text-ink">{item.q}</dt>
+          <dd class="mt-2 text-sm leading-relaxed text-muted">{item.a}</dd>
+        </div>
+      ))}
+    </dl>
   </section>
 </article>
