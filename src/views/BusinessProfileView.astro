@@ -8,6 +8,7 @@ import { getCategory } from "@/lib/taxonomy";
 import {
   type DirectoryBusiness,
   blendedRating,
+  ratingSourcesLabel,
   isSponsoredPlacement,
   isDemo,
   listForTownCategory,
@@ -29,7 +30,21 @@ const county = b.stateSlug && b.countySlug ? getCounty(b.stateSlug, b.countySlug
 const state = b.stateSlug ? getState(b.stateSlug) : undefined;
 
 const rating = blendedRating(b);
+const sourcesLabel = ratingSourcesLabel(b);
 const sponsored = isSponsoredPlacement(b);
+const isClient = b.isClient === true || b.isClient === "true";
+
+const DAY_LABELS: [string, string][] = [
+  ["mon", "Monday"], ["tue", "Tuesday"], ["wed", "Wednesday"], ["thu", "Thursday"],
+  ["fri", "Friday"], ["sat", "Saturday"], ["sun", "Sunday"],
+];
+let hours: [string, string][] = [];
+try {
+  const parsed = b.hoursJson ? JSON.parse(b.hoursJson) : null;
+  if (parsed && typeof parsed === "object") {
+    hours = DAY_LABELS.filter(([k]) => parsed[k]).map(([k, label]) => [label, String(parsed[k])]);
+  }
+} catch { /* malformed hoursJson renders nothing */ }
 const serviceTowns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 const services = (b.services ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 const verifiedDate = b.licenseVerifiedAt
@@ -60,14 +75,28 @@ const countyListOk =
     </p>
   )}
 
+  {isClient && (
+    <p class="mt-4 rounded-card border border-line bg-inset px-4 py-3 text-sm text-muted">
+      Disclosure: this business is a client of the agency that operates {SITE_NAME}. Client
+      listings are always labeled and receive no ranking benefit.
+    </p>
+  )}
+
   <header class="mt-4">
     <div class="flex flex-wrap items-center gap-3">
+      {b.logoUrl && (
+        <img src={b.logoUrl} alt="" width="56" height="56" loading="lazy" class="h-14 w-14 rounded-[10px] border border-line object-contain bg-surface" />
+      )}
       <h1 class="font-display text-4xl font-bold text-ink">{b.name}</h1>
-      {sponsored && (
+      {isClient ? (
+        <span class="rounded-chip bg-inset px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-faint">
+          Sponsored · client of the agency
+        </span>
+      ) : sponsored ? (
         <span class="rounded-chip bg-inset px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-faint">
           Sponsored
         </span>
-      )}
+      ) : null}
     </div>
     <p class="mt-2 text-muted">
       {category?.name}
@@ -83,7 +112,7 @@ const countyListOk =
       {rating !== null && (
         <span class="text-sm text-ink">
           <span class="font-semibold">{rating}★</span>
-          <span class="text-muted"> across Google &amp; Yelp</span>
+          <span class="text-muted"> across {sourcesLabel}</span>
         </span>
       )}
     </div>
@@ -136,12 +165,19 @@ const countyListOk =
         <h2 class="font-display text-xl font-semibold text-ink">Reviews</h2>
         {rating !== null ? (
           <p class="mt-3 text-sm leading-relaxed text-muted">
-            {b.name} holds {b.ratingGoogle && b.ratingGoogleCount
-              ? `${b.ratingGoogle}★ across ${b.ratingGoogleCount} Google reviews`
-              : ""}{b.ratingYelp && b.ratingYelpCount
-              ? `${b.ratingGoogle && b.ratingGoogleCount ? " and " : ""}${b.ratingYelp}★ across ${b.ratingYelpCount} Yelp reviews`
-              : ""}. We read reviews across platforms for patterns — we never edit, filter, or
-            reorder them.
+            {[
+              b.ratingGoogle && b.ratingGoogleCount
+                ? `${b.ratingGoogle}★ across ${b.ratingGoogleCount} Google reviews`
+                : null,
+              b.ratingYelp && b.ratingYelpCount
+                ? `${b.ratingYelp}★ across ${b.ratingYelpCount} Yelp reviews`
+                : null,
+              b.ratingFacebook && b.ratingFacebookCount
+                ? `${b.ratingFacebook}★ across ${b.ratingFacebookCount} Facebook reviews`
+                : null,
+            ].filter(Boolean).join(", ").replace(/, ([^,]*)$/, " and $1")}
+            — we read reviews across platforms for patterns and never edit, filter, or reorder
+            them.
           </p>
         ) : (
           <p class="mt-3 text-sm text-faint">Not enough review data yet.</p>
@@ -203,13 +239,27 @@ const countyListOk =
         </p>
       </div>
 
+      {hours.length > 0 && (
+        <div class="rounded-card border border-line bg-surface p-5">
+          <h2 class="font-display text-lg font-semibold text-ink">Hours</h2>
+          <dl class="mt-3 space-y-1 text-sm">
+            {hours.map(([day, value]) => (
+              <div class="flex justify-between gap-3">
+                <dt class="text-faint">{day}</dt>
+                <dd class="text-muted">{value === "closed" ? "Closed" : value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
       <div class="rounded-card border border-line bg-surface p-5">
         <h2 class="font-display text-lg font-semibold text-ink">Details</h2>
         <dl class="mt-3 space-y-2 text-sm">
           {b.address1 && (
             <div class="flex gap-2">
               <dt class="shrink-0 text-faint">Address</dt>
-              <dd class="text-muted">{b.address1}, {b.city}, {b.state} {b.zip}</dd>
+              <dd class="text-muted">{b.address1}{b.address2 ? `, ${b.address2}` : ""}, {b.city}, {b.state} {b.zip}</dd>
             </div>
           )}
           {b.responseTimeHours != null && (
@@ -221,7 +271,7 @@ const countyListOk =
           {b.yearsInBusiness && (
             <div class="flex gap-2">
               <dt class="shrink-0 text-faint">In business</dt>
-              <dd class="text-muted">{b.yearsInBusiness} years</dd>
+              <dd class="text-muted">{b.yearsInBusiness} years{b.foundedYear ? ` (since ${b.foundedYear})` : ""}</dd>
             </div>
           )}
         </dl>

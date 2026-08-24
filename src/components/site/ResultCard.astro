@@ -4,6 +4,7 @@ import {
   type DirectoryBusiness,
   blendedRating,
   totalReviewCount,
+  ratingSourcesLabel,
   isSponsoredPlacement,
   isDemo,
 } from "@/lib/businesses";
@@ -19,6 +20,8 @@ const { business: b, inFeaturedBlock = false, townName } = Astro.props;
 
 const rating = blendedRating(b);
 const reviews = totalReviewCount(b);
+const sourcesLabel = ratingSourcesLabel(b);
+const isClient = b.isClient === true || b.isClient === "true";
 const sponsored = isSponsoredPlacement(b);
 const rel = sponsored ? "sponsored" : undefined;
 const serviceTowns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -40,11 +43,15 @@ const verifiedDate = b.licenseVerifiedAt
             Featured
           </span>
         )}
-        {sponsored && !inFeaturedBlock && (
+        {isClient ? (
+          <span class="rounded-chip bg-inset px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-faint" title="This business is a client of the agency that operates this directory. Disclosed placements receive no ranking benefit.">
+            Sponsored · client of the agency
+          </span>
+        ) : sponsored && !inFeaturedBlock ? (
           <span class="rounded-chip bg-inset px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-faint">
             Sponsored
           </span>
-        )}
+        ) : null}
         {isDemo(b) && (
           <span class="rounded-chip bg-warn-wash px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warn">
             Sample
@@ -68,7 +75,7 @@ const verifiedDate = b.licenseVerifiedAt
   {rating !== null ? (
     <p class="mt-2 text-sm text-ink">
       <span class="font-semibold">{rating}★</span>
-      <span class="text-muted"> · {reviews} reviews across Google &amp; Yelp</span>
+      <span class="text-muted"> · {reviews} reviews across {sourcesLabel}</span>
     </p>
   ) : (
     <p class="mt-2 text-sm text-faint">Not enough review data yet</p>

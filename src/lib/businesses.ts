@@ -26,6 +26,7 @@ export interface DirectoryBusiness {
   serviceTownSlugs?: string;
   pathKey?: string;
   address1?: string;
+  address2?: string;
   city?: string;
   state?: string;
   zip?: string;
@@ -37,7 +38,13 @@ export interface DirectoryBusiness {
   description?: string;
   whyWePicked?: string;
   yearsInBusiness?: number;
+  foundedYear?: number;
   services?: string;
+  /** JSON object {"mon":"8:00-17:00",...} */
+  hoursJson?: string;
+  logoUrl?: string;
+  /** comma list or JSON array of image URLs */
+  photosJson?: string;
   /** verified | unverified | not-required | suspended */
   licenseStatus?: string;
   licenseNumber?: string;
@@ -48,6 +55,8 @@ export interface DirectoryBusiness {
   ratingGoogleCount?: number;
   ratingYelp?: number;
   ratingYelpCount?: number;
+  ratingFacebook?: number;
+  ratingFacebookCount?: number;
   responseTimeHours?: number;
   lastVerifiedAt?: string | Date;
   sourceNotes?: string;
@@ -72,12 +81,14 @@ export const servesTown = (b: DirectoryBusiness, townSlug: string) =>
   b.townSlug === townSlug || list(b.serviceTownSlugs).includes(townSlug);
 
 export const totalReviewCount = (b: DirectoryBusiness) =>
-  (b.ratingGoogleCount ?? 0) + (b.ratingYelpCount ?? 0);
+  (b.ratingGoogleCount ?? 0) + (b.ratingYelpCount ?? 0) + (b.ratingFacebookCount ?? 0);
 
 export const blendedRating = (b: DirectoryBusiness): number | null => {
   const parts: [number, number][] = [];
   if (b.ratingGoogle && b.ratingGoogleCount) parts.push([b.ratingGoogle, b.ratingGoogleCount]);
   if (b.ratingYelp && b.ratingYelpCount) parts.push([b.ratingYelp, b.ratingYelpCount]);
+  if (b.ratingFacebook && b.ratingFacebookCount)
+    parts.push([b.ratingFacebook, b.ratingFacebookCount]);
   const n = parts.reduce((s, [, c]) => s + c, 0);
   if (!n) return null;
   return Math.round((parts.reduce((s, [r, c]) => s + r * c, 0) / n) * 10) / 10;
@@ -98,6 +109,17 @@ export function organicCompare(a: DirectoryBusiness, b: DirectoryBusiness): numb
   const fresh =
     new Date(b.lastVerifiedAt ?? 0).getTime() - new Date(a.lastVerifiedAt ?? 0).getTime();
   return fresh;
+}
+
+/** "Google & Yelp"-style label naming only the platforms with data. */
+export function ratingSourcesLabel(b: DirectoryBusiness): string {
+  const sources = [
+    b.ratingGoogle && b.ratingGoogleCount ? "Google" : null,
+    b.ratingYelp && b.ratingYelpCount ? "Yelp" : null,
+    b.ratingFacebook && b.ratingFacebookCount ? "Facebook" : null,
+  ].filter((s): s is string => Boolean(s));
+  if (sources.length <= 1) return sources[0] ?? "";
+  return `${sources.slice(0, -1).join(", ")} & ${sources[sources.length - 1]}`;
 }
 
 export const isSponsoredPlacement = (b: DirectoryBusiness) =>
