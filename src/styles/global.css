@@ -56,8 +56,10 @@
     --brand-deep: #0b2b45;
     --brand-wash: #16293b;
 
-    --accent: #e0621a;
-    --accent-hover: #ef7d3b;
+    /* Slightly deeper than the light accent's ember so white button text
+       keeps ≥4.5:1 contrast (WCAG AA) in dark mode too. */
+    --accent: #c2500a;
+    --accent-hover: #a84208;
     --accent-ink: #ffffff;
 
     --ok: #4cc38a;

@@ -10,6 +10,8 @@ import {
   blendedRating,
   isSponsoredPlacement,
   isDemo,
+  listForTownCategory,
+  listForCountyCategory,
 } from "@/lib/businesses";
 
 interface Props {
@@ -36,6 +38,16 @@ const verifiedDate = b.licenseVerifiedAt
 const lastVerified = b.lastVerifiedAt
   ? new Date(b.lastVerifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })
   : null;
+
+// Cross-links only when the target list page meets the publishing rule.
+const townListOk =
+  town && category
+    ? (await listForTownCategory(town.slug, category.slug)).organic.length >= 3
+    : false;
+const countyListOk =
+  county && state && category
+    ? (await listForCountyCategory(state.slug, county.slug, category.slug)).organic.length >= 3
+    : false;
 ---
 
 <article class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:py-14">
@@ -233,13 +245,19 @@ const lastVerified = b.lastVerifiedAt
     </aside>
   </section>
 
-  {town && category && (
+  {town && category && (townListOk || countyListOk) && (
     <p class="mt-10 text-sm text-muted">
       More
-      <a href={`/${town.pathKey}/${category.slug}`} class="font-medium text-brand underline underline-offset-2">
-        {category.name.toLowerCase()} in {town.name}
-      </a>
-      {county && (
+      {townListOk ? (
+        <a href={`/${town.pathKey}/${category.slug}`} class="font-medium text-brand underline underline-offset-2">
+          {category.name.toLowerCase()} in {town.name}
+        </a>
+      ) : (
+        <a href={`/${town.pathKey}`} class="font-medium text-brand underline underline-offset-2">
+          local businesses in {town.name}
+        </a>
+      )}
+      {county && countyListOk && (
         <>
           {" "}or across
           <a href={`/${county.pathKey}/${category.slug}`} class="font-medium text-brand underline underline-offset-2">

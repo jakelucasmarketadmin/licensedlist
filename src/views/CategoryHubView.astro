@@ -2,8 +2,9 @@
 import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import MethodologyStrip from "@/components/site/MethodologyStrip.astro";
 import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
-import { getStates, getCountiesByState } from "@/lib/geo";
+import { getStates, getCountiesByState, getTownsByCounty } from "@/lib/geo";
 import type { CategorySeed } from "@/lib/taxonomy";
+import { fetchBusinesses, isPublished, categoriesOf, servesTown } from "@/lib/businesses";
 
 interface Props {
   category: CategorySeed;
@@ -11,6 +12,25 @@ interface Props {
 const { category } = Astro.props;
 const states = getStates();
 const sources = Object.entries(category.licenseSourcesByState);
+
+// A county chip links to its county×category page only when that page meets
+// the 3-listing publishing rule — otherwise it links to the county hub, which
+// always exists. Never link to a page that would 404.
+const businesses = (await fetchBusinesses()).filter(
+  (b) => isPublished(b) && categoriesOf(b).has(category.slug),
+);
+function countyQualifies(stateSlug: string, countySlug: string): boolean {
+  if (businesses.length === 0) return false;
+  const townSlugs = new Set(getTownsByCounty(stateSlug, countySlug).map((t) => t.slug));
+  const count = businesses.filter(
+    (b) =>
+      b.countySlug === countySlug ||
+      (b.serviceTownSlugs ?? "")
+        .split(",")
+        .some((t) => townSlugs.has(t.trim())),
+  ).length;
+  return count >= 3;
+}
 ---
 
 <article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
@@ -67,7 +87,11 @@ const sources = Object.entries(category.licenseSourcesByState);
             {getCountiesByState(state.slug).map((county) => (
               <li>
                 <a
-                  href={`/${county.pathKey}/${category.slug}`}
+                  href={
+                    countyQualifies(state.slug, county.slug)
+                      ? `/${county.pathKey}/${category.slug}`
+                      : `/${county.pathKey}`
+                  }
                   class="inline-block rounded-chip bg-inset px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-brand-wash hover:text-brand"
                 >
                   {county.name.replace(/ County$/, "")}
