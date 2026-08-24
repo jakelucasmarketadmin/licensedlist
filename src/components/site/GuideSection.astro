@@ -1,0 +1,27 @@
+---
+import { renderMarkdown } from "@/lib/markdown";
+import type { GuideSeed } from "@/lib/guides";
+
+interface Props {
+  guide: GuideSeed;
+  headingLevel?: "h2" | "h3";
+}
+const { guide, headingLevel = "h2" } = Astro.props;
+const Heading = headingLevel;
+const updated = new Date(guide.updatedAt).toLocaleDateString("en-US", {
+  month: "long",
+  year: "numeric",
+});
+const html = renderMarkdown(guide.body);
+---
+
+<section class="max-w-prose" aria-label={guide.title}>
+  <Heading class="font-display text-2xl font-semibold text-ink">{guide.title}</Heading>
+  <p class="mt-1 text-xs text-faint">
+    By {guide.author} · Updated {updated}
+  </p>
+  <div
+    class="guide-body mt-4 space-y-3 text-sm leading-relaxed text-muted [&_h2]:mt-6 [&_h2]:font-display [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-ink [&_h3]:mt-4 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-ink [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5 [&_hr]:my-4 [&_hr]:border-line"
+    set:html={html}
+  />
+</section>

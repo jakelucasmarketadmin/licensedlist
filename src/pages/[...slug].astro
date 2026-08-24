@@ -20,6 +20,8 @@ import CategoriesIndexView from "@/views/CategoriesIndexView.astro";
 import PricingView from "@/views/PricingView.astro";
 import ClaimView from "@/views/ClaimView.astro";
 import ClaimBusinessView from "@/views/ClaimBusinessView.astro";
+import OwnerView from "@/views/OwnerView.astro";
+import WhyVerifiedView from "@/views/WhyVerifiedView.astro";
 import { SITE_NAME } from "@/lib/site";
 import { ROUTE_SEO } from "@/lib/routes";
 import { matchHubPath, getState, getCounty, getTown } from "@/lib/geo";
@@ -68,6 +70,8 @@ const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/categories": CategoriesIndexView,
   "/pricing": PricingView,
   "/claim": ClaimView,
+  "/owner": OwnerView,
+  "/for-businesses/why-verified": WhyVerifiedView,
 };
 
 let seo: PageSeo | undefined = ROUTE_SEO[pathname];
@@ -298,7 +302,7 @@ if (View && ROUTE_SEO[pathname] && jsonLd.length === 0) {
     jsonLd = [
       breadcrumbJsonLd(origin, [
         { name: "Home", path: "/" },
-        ...(pathname === "/for-businesses/get-listed"
+        ...(pathname === "/for-businesses/get-listed" || pathname === "/for-businesses/why-verified"
           ? [
               { name: "For businesses", path: "/for-businesses" },
               { name: routeSeo.crumb ?? routeSeo.title, path: routeSeo.path },

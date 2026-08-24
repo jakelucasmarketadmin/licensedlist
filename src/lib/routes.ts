@@ -34,6 +34,13 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     path: "/for-businesses/get-listed",
     crumb: "Get listed",
   },
+  "/for-businesses/why-verified": {
+    title: `Why a Verified Listing Is Worth Having · ${SITE_NAME}`,
+    description:
+      "A badge homeowners can check against the official registry, rankings money can't touch, and leads with recorded consent — why businesses list on the tri-state's verified directory.",
+    path: "/for-businesses/why-verified",
+    crumb: "Why verified",
+  },
   "/about": {
     title: `About · ${SITE_NAME}`,
     description:
@@ -80,6 +87,13 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
       "Find your business, verify you own it, and take control of your listing — free forever, no credit card.",
     path: "/claim",
     crumb: "Claim your listing",
+  },
+  "/owner": {
+    title: `Owner Dashboard · ${SITE_NAME}`,
+    description: "Sign in to manage your business listing — description, hours, photos, services, and contact details.",
+    path: "/owner",
+    robots: "noindex, follow",
+    crumb: "Owner dashboard",
   },
   "/search": {
     title: `Search · ${SITE_NAME}`,

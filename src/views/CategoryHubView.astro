@@ -5,6 +5,8 @@ import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
 import { getStates, getCountiesByState, getTownsByCounty } from "@/lib/geo";
 import type { CategorySeed } from "@/lib/taxonomy";
 import { fetchBusinesses, isPublished, categoriesOf, servesTown } from "@/lib/businesses";
+import { getGuide } from "@/lib/guides";
+import GuideSection from "@/components/site/GuideSection.astro";
 
 interface Props {
   category: CategorySeed;
@@ -12,6 +14,8 @@ interface Props {
 const { category } = Astro.props;
 const states = getStates();
 const sources = Object.entries(category.licenseSourcesByState);
+const hiringGuide = getGuide("category", category.slug, "hiring-");
+const costGuide = getGuide("category", category.slug, "cost-context-");
 
 // A county chip links to its county×category page only when that page meets
 // the 3-listing publishing rule — otherwise it links to the county hub, which
@@ -103,6 +107,17 @@ function countyQualifies(stateSlug: string, countySlug: string): boolean {
       ))}
     </div>
   </section>
+
+  {hiringGuide && (
+    <div class="mt-12">
+      <GuideSection guide={hiringGuide} />
+    </div>
+  )}
+  {costGuide && (
+    <div class="mt-12">
+      <GuideSection guide={costGuide} />
+    </div>
+  )}
 
   <div class="mt-12 max-w-prose">
     <CategoriesEmptyState scopeName={`this category`} />

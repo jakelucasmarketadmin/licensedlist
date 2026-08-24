@@ -72,6 +72,18 @@ const categoryGroups = readCsv('data/taxonomy/categorygroups.csv').map((r) => ({
   name: r.name, slug: r.slug, sortOrder: num(r.sortOrder), icon: r.icon,
 }));
 
+let guides = [];
+try {
+  guides = [
+    ...readCsv('data/guides/guides-geo.csv'),
+    ...readCsv('data/guides/guides-categories.csv'),
+  ].map((r) => ({
+    slug: r.slug, title: r.title, scope: r.scope, scopeKey: r.scopeKey, body: r.body,
+    author: r.author, aiAssisted: r.aiAssisted === 'true',
+    publishedAt: r.publishedAt, updatedAt: r.updatedAt,
+  }));
+} catch { /* guides are optional until the CSVs exist */ }
+
 const categories = readCsv('data/taxonomy/categories.csv').map((r) => ({
   name: r.name, slug: r.slug, groupSlug: r.groupSlug, schemaType: r.schemaType,
   licenseRequired: bool(r.licenseRequired),
@@ -127,7 +139,36 @@ export const CATEGORY_SEED: CategorySeed[] = ${JSON.stringify(categories, null, 
 `,
 );
 
+// Guides validation + emit
+if (guides.length) {
+  const guideSlugs = new Set();
+  for (const g of guides) {
+    if (guideSlugs.has(g.slug)) fail(`duplicate guide slug ${g.slug}`);
+    guideSlugs.add(g.slug);
+    if (!g.body.includes('Sources:')) fail(`guide ${g.slug} missing sources block`);
+    if (g.scope === 'state' && !stateSlugs.has(g.scopeKey)) fail(`guide ${g.slug} bad state scopeKey`);
+    if (g.scope === 'category' && !categories.some((c) => c.slug === g.scopeKey)) fail(`guide ${g.slug} bad category scopeKey`);
+    if (g.scope === 'county' && !counties.some((c) => c.pathKey === g.scopeKey)) fail(`guide ${g.slug} bad county scopeKey`);
+  }
+  writeFileSync(
+    join(root, 'src/data/guides.generated.ts'),
+    `${banner}
+export interface GuideSeed { slug: string; title: string; scope: string; scopeKey: string; body: string; author: string; aiAssisted: boolean; publishedAt: string; updatedAt: string }
+
+export const GUIDE_SEED: GuideSeed[] = ${JSON.stringify(guides, null, 2)};
+`,
+  );
+  // merged CSV for the CMS dashboard importer (guides collection)
+  const NEEDS_QUOTES = new RegExp('[",\\n\\r]');
+  const esc = (v) => { const s = String(v ?? ''); return NEEDS_QUOTES.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const header = ['slug','title','scope','scopeKey','body','author','aiAssisted','publishedAt','updatedAt'];
+  writeFileSync(
+    join(root, 'data/import/guides.csv'),
+    [header.join(','), ...guides.map((g) => header.map((h) => esc(g[h])).join(','))].join(String.fromCharCode(10)) + String.fromCharCode(10),
+  );
+}
+
 console.log(
   `generated: ${states.length} states, ${counties.length} counties, ${towns.length} towns, ` +
-  `${categoryGroups.length} groups, ${categories.length} categories`,
+  `${categoryGroups.length} groups, ${categories.length} categories, ${guides.length} guides`,
 );

@@ -1,0 +1,69 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import { SITE_NAME } from "@/lib/site";
+
+const POINTS = [
+  {
+    title: "A badge a stranger can check",
+    body: "Your verified badge names the official registry we checked and the date we checked it — the one trust signal a competitor can't buy and a homeowner can confirm themselves.",
+  },
+  {
+    title: "You show up where decisions happen",
+    body: "Town and category pages publish only when they have verified businesses behind them. Being listed early means being one of the few names on the page, not one of hundreds.",
+  },
+  {
+    title: "Rankings money can't touch",
+    body: "The organic order is a public score — license verification, reviews, responsiveness. Paid placement is always labeled and never changes it. When you rank here, it means something.",
+  },
+  {
+    title: "Leads with consent attached",
+    body: "Quote requests come with the customer's explicit, recorded consent to be contacted. No recycled lists, no surprise robocall complaints.",
+  },
+];
+---
+
+<article class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo
+    trail={[
+      { name: "Home", path: "/" },
+      { name: "For businesses", path: "/for-businesses" },
+      { name: "Why verified", path: "/for-businesses/why-verified" },
+    ]}
+  />
+
+  <header class="mt-4">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">For businesses</p>
+    <h1 class="mt-3 font-display text-4xl font-bold text-ink">
+      Why a verified listing is worth having
+    </h1>
+    <p class="mt-4 max-w-prose text-lg leading-relaxed text-muted">
+      {SITE_NAME} is the tri-state directory that checks licenses against official state
+      registries before a business earns a badge. Here's what that buys you.
+    </p>
+  </header>
+
+  <div class="mt-8 grid gap-4 sm:grid-cols-2">
+    {POINTS.map((point) => (
+      <div class="rounded-card border border-line bg-surface p-5">
+        <h2 class="font-display text-lg font-semibold text-ink">{point.title}</h2>
+        <p class="mt-2 text-sm leading-relaxed text-muted">{point.body}</p>
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-10 rounded-card bg-brand-deep p-6 text-white sm:p-8">
+    <h2 class="font-display text-xl font-semibold">Start free</h2>
+    <p class="mt-2 max-w-prose text-sm leading-relaxed text-white/80">
+      The listing is free forever — no credit card. Verification and featured placement are
+      optional, always labeled, and never change rankings.
+    </p>
+    <div class="mt-4 flex flex-wrap gap-3">
+      <a href="/for-businesses/get-listed" class="rounded-chip bg-accent px-6 py-3 text-sm font-semibold text-accent-ink hover:bg-accent-hover">
+        Get listed free
+      </a>
+      <a href="/pricing" class="rounded-chip border border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+        See plans
+      </a>
+    </div>
+  </div>
+</article>
