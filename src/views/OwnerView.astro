@@ -1,0 +1,21 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import OwnerPortal from "@/components/site/OwnerPortal.tsx";
+---
+
+<article class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo
+    trail={[
+      { name: "Home", path: "/" },
+      { name: "For businesses", path: "/for-businesses" },
+      { name: "Owner dashboard", path: "/owner" },
+    ]}
+  />
+  <h1 class="mt-4 font-display text-4xl font-bold text-ink">Owner dashboard</h1>
+  <p class="mt-3 max-w-prose text-muted">
+    Manage your listing: description, hours, photos, services, and contact details.
+  </p>
+  <div class="mt-8">
+    <OwnerPortal client:only="react" />
+  </div>
+</article>

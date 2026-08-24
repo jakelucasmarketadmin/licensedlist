@@ -5,7 +5,7 @@ import { BaseCrudService } from '@/integrations';
  * Two-step quote request. Writes to the `leads` collection with the exact
  * consent language shown to the user plus a timestamp (FTC/TCPA posture:
  * explicit, named disclosure that up to 3 providers may call/text).
- * Optional GHL forward via PUBLIC_GHL_LEAD_WEBHOOK.
+ * GHL forwarding runs server-side via /api/webhook-forward.
  */
 interface Props {
   businessSlug?: string;
@@ -53,8 +53,9 @@ export default function QuoteRequestForm({
     if (form.company || !consent) return;
     setStatus('submitting');
     try {
+      const leadId = crypto.randomUUID();
       await BaseCrudService.create('leads', {
-        _id: crypto.randomUUID(),
+        _id: leadId,
         businessSlugs: businessSlug ?? '',
         categorySlug: categorySlug ?? '',
         townSlug: townSlug ?? '',
@@ -70,14 +71,27 @@ export default function QuoteRequestForm({
         status: 'new',
         ghlSynced: false,
       });
-      const webhook = import.meta.env.PUBLIC_GHL_LEAD_WEBHOOK;
-      if (webhook) {
-        fetch(webhook, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'lead', businessSlug, ...form, company: undefined }),
-        }).catch(() => {});
-      }
+      // Server-side GHL forward (URL stays in server env); fire-and-forget.
+      fetch('/api/webhook-forward', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'lead',
+          itemId: leadId,
+          payload: {
+            businessSlugs: businessSlug ?? '',
+            categorySlug: categorySlug ?? '',
+            townSlug: townSlug ?? '',
+            name: form.name,
+            phone: form.phone,
+            email: form.email,
+            message: form.message,
+            urgency: form.urgency,
+            consentText,
+            consentAt: new Date().toISOString(),
+          },
+        }),
+      }).catch(() => {});
       setStatus('success');
     } catch (err) {
       console.error('quote request failed', err);

@@ -13,6 +13,7 @@ const inputClass =
 
 export default function ClaimForm({ businessSlug, businessName }: Props) {
   const [status, setStatus] = useState<Status>('idle');
+  const [claimId, setClaimId] = useState<string | null>(null);
   const [form, setForm] = useState({
     claimantName: '',
     claimantEmail: '',
@@ -31,8 +32,9 @@ export default function ClaimForm({ businessSlug, businessName }: Props) {
     if (form.company) return;
     setStatus('submitting');
     try {
+      const claimId = crypto.randomUUID();
       await BaseCrudService.create('claims', {
-        _id: crypto.randomUUID(),
+        _id: claimId,
         businessSlug,
         businessName,
         claimantName: form.claimantName,
@@ -43,14 +45,24 @@ export default function ClaimForm({ businessSlug, businessName }: Props) {
         status: 'new',
         createdAt: new Date(),
       });
-      const webhook = import.meta.env.PUBLIC_GHL_CLAIM_WEBHOOK;
-      if (webhook) {
-        fetch(webhook, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'claim', businessSlug, ...form, company: undefined }),
-        }).catch(() => {});
-      }
+      fetch('/api/webhook-forward', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'claim',
+          itemId: claimId,
+          payload: {
+            businessSlug,
+            businessName,
+            claimantName: form.claimantName,
+            claimantEmail: form.claimantEmail,
+            claimantPhone: form.claimantPhone,
+            method: form.method,
+            consentAt: new Date().toISOString(),
+          },
+        }),
+      }).catch(() => {});
+      setClaimId(claimId);
       setStatus('success');
     } catch (err) {
       console.error('claim failed', err);
@@ -66,6 +78,16 @@ export default function ClaimForm({ businessSlug, businessName }: Props) {
           We'll verify ownership using your chosen method and email you next steps — usually
           within one business day.
         </p>
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          <span className="font-medium text-ink">One more step:</span> create your free owner
+          login now so your approved claim connects to your account.
+        </p>
+        <a
+          href={`/owner${claimId ? `?claim=${claimId}` : ''}`}
+          className="mt-3 inline-block rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover"
+        >
+          Create your owner login
+        </a>
       </div>
     );
   }
