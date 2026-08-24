@@ -3,6 +3,8 @@ import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import MethodologyStrip from "@/components/site/MethodologyStrip.astro";
 import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
 import { getNearbyTowns, type StateSeed, type CountySeed, type TownSeed } from "@/lib/geo";
+import { qualifiedCategoriesForTown } from "@/lib/businesses";
+import { getCategory } from "@/lib/taxonomy";
 
 interface Props {
   state: StateSeed;
@@ -11,6 +13,12 @@ interface Props {
 }
 const { state, county, town } = Astro.props;
 const nearby = getNearbyTowns(town);
+
+// Only categories that meet the 3-listing publishing rule get links.
+const qualified = [...(await qualifiedCategoriesForTown(town.slug)).entries()]
+  .map(([slug, count]) => ({ category: getCategory(slug), count }))
+  .filter((entry) => entry.category)
+  .sort((a, b) => b.count - a.count);
 ---
 
 <article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
@@ -34,9 +42,25 @@ const nearby = getNearbyTowns(town);
     <h2 id="categories-heading" class="font-display text-2xl font-semibold text-ink">
       Find a service in {town.name}
     </h2>
-    <div class="mt-5">
-      <CategoriesEmptyState scopeName={town.name} />
-    </div>
+    {qualified.length > 0 ? (
+      <ul class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {qualified.map(({ category, count }) => (
+          <li>
+            <a
+              href={`/${town.pathKey}/${category!.slug}`}
+              class="block rounded-card border border-line bg-surface px-4 py-3 transition-colors hover:border-brand hover:bg-brand-wash"
+            >
+              <span class="text-sm font-medium text-ink">{category!.name}</span>
+              <span class="mt-0.5 block text-xs text-faint">{count} verified {count === 1 ? "listing" : "listings"}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="mt-5">
+        <CategoriesEmptyState scopeName={town.name} />
+      </div>
+    )}
   </section>
 
   {town.localFacts.length > 0 && (

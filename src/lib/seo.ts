@@ -67,3 +67,70 @@ export function breadcrumbJsonLd(origin: string, trail: { name: string; path: st
     })),
   };
 }
+
+/** ItemList → ListItem → LocalBusiness (name, url) for list pages. */
+export function itemListJsonLd(
+  origin: string,
+  items: { name: string; slug: string; schemaType?: string }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": item.schemaType || "LocalBusiness",
+        name: item.name,
+        url: `${origin}/business/${item.slug}`,
+      },
+    })),
+  };
+}
+
+/**
+ * Full LocalBusiness for profile pages. Never includes aggregateRating —
+ * that's reserved for real on-site user ratings (none exist yet), never
+ * editorial scores or third-party platform ratings.
+ */
+export function localBusinessJsonLd(
+  origin: string,
+  b: {
+    name?: string;
+    slug?: string;
+    schemaType?: string;
+    description?: string;
+    phone?: string;
+    website?: string;
+    address1?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    lat?: number;
+    lng?: number;
+  },
+) {
+  const node: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": b.schemaType || "LocalBusiness",
+    name: b.name,
+    url: `${origin}/business/${b.slug}`,
+  };
+  if (b.description) node.description = b.description;
+  if (b.phone) node.telephone = b.phone;
+  if (b.website) node.sameAs = [b.website];
+  if (b.city && b.state) {
+    node.address = {
+      "@type": "PostalAddress",
+      ...(b.address1 ? { streetAddress: b.address1 } : {}),
+      addressLocality: b.city,
+      addressRegion: b.state,
+      ...(b.zip ? { postalCode: b.zip } : {}),
+      addressCountry: "US",
+    };
+  }
+  if (b.lat != null && b.lng != null) {
+    node.geo = { "@type": "GeoCoordinates", latitude: b.lat, longitude: b.lng };
+  }
+  return node;
+}

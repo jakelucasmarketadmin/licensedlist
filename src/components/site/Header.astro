@@ -4,6 +4,7 @@ import Wordmark from "@/components/site/Wordmark.astro";
 
 const NAV_LINKS = [
   { label: "Find a pro", href: "/" },
+  { label: "Categories", href: "/categories" },
   { label: "How we verify", href: "/how-we-verify" },
   { label: "For businesses", href: "/for-businesses" },
   { label: "About", href: "/about" },
@@ -18,10 +19,13 @@ const NAV_LINKS = [
 
     <div class="flex items-center gap-1 sm:gap-2">
       <nav aria-label="Main" class="hidden items-center gap-1 md:flex">
+        <a href="/categories" class="rounded-chip px-3 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink">
+          Categories
+        </a>
         <a href="/how-we-verify" class="rounded-chip px-3 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink">
           How we verify
         </a>
-        <a href="/about" class="rounded-chip px-3 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink">
+        <a href="/about" class="hidden rounded-chip px-3 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink lg:block">
           About
         </a>
       </nav>

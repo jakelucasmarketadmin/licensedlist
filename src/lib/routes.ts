@@ -60,6 +60,13 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     path: "/terms",
     crumb: "Terms",
   },
+  "/categories": {
+    title: `All Categories · ${SITE_NAME}`,
+    description:
+      "Every service category we cover across New Jersey, New York & Pennsylvania — from licensed trades to local professionals.",
+    path: "/categories",
+    crumb: "Categories",
+  },
   "/search": {
     title: `Search · ${SITE_NAME}`,
     description: `Search ${SITE_NAME} for verified local businesses in New Jersey, New York & Pennsylvania.`,

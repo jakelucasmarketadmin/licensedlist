@@ -1,0 +1,59 @@
+---
+/** License-status badge with the registry receipt in the title tooltip. */
+interface Props {
+  licenseStatus?: string;
+  licenseSource?: string;
+  licenseVerifiedAt?: string | Date;
+  size?: "sm" | "md";
+}
+const { licenseStatus, licenseSource, licenseVerifiedAt, size = "md" } = Astro.props;
+
+const verifiedDate = licenseVerifiedAt
+  ? new Date(licenseVerifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })
+  : null;
+
+const config =
+  licenseStatus === "verified"
+    ? {
+        label: "License verified",
+        cls: "bg-ok-wash text-ok",
+        title:
+          licenseSource && verifiedDate
+            ? `License verified against ${licenseSource} on ${verifiedDate}`
+            : "License verified against the official registry",
+      }
+    : licenseStatus === "not-required"
+      ? {
+          label: "License not required",
+          cls: "bg-inset text-muted",
+          title: "No state or county license applies to this category",
+        }
+      : licenseStatus === "suspended"
+        ? {
+            label: "License suspended",
+            cls: "bg-danger-wash text-danger",
+            title: "The registry shows this license as lapsed, revoked, or suspended",
+          }
+        : {
+            label: "License not verified",
+            cls: "bg-warn-wash text-warn",
+            title: "We could not confirm a required license — ask before you hire",
+          };
+---
+
+<span
+  class:list={[
+    "inline-flex items-center gap-1 rounded-chip font-semibold",
+    size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-3 py-1 text-xs",
+    config.cls,
+  ]}
+  title={config.title}
+>
+  {licenseStatus === "verified" && (
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+      <path d="m9 12 2 2 4-4"></path>
+    </svg>
+  )}
+  {config.label}
+</span>

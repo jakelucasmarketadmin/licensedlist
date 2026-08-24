@@ -13,13 +13,27 @@ import NotFoundView from "@/views/NotFoundView.astro";
 import StateHubView from "@/views/StateHubView.astro";
 import CountyHubView from "@/views/CountyHubView.astro";
 import TownHubView from "@/views/TownHubView.astro";
+import ListingsView from "@/views/ListingsView.astro";
+import BusinessProfileView from "@/views/BusinessProfileView.astro";
+import CategoryHubView from "@/views/CategoryHubView.astro";
+import CategoriesIndexView from "@/views/CategoriesIndexView.astro";
 import { SITE_NAME } from "@/lib/site";
 import { ROUTE_SEO } from "@/lib/routes";
-import { matchHubPath } from "@/lib/geo";
+import { matchHubPath, getState, getCounty, getTown } from "@/lib/geo";
+import { getCategory } from "@/lib/taxonomy";
+import {
+  listForTownCategory,
+  listForCountyCategory,
+  listForStateCategory,
+  getBusinessBySlug,
+  type ListingSet,
+} from "@/lib/businesses";
 import {
   organizationJsonLd,
   webSiteJsonLd,
   breadcrumbJsonLd,
+  itemListJsonLd,
+  localBusinessJsonLd,
   resolveOrigin,
   type PageSeo,
 } from "@/lib/seo";
@@ -30,9 +44,14 @@ import "@/styles/global.css";
 // Normalize: treat trailing-slash variants as the canonical no-slash path.
 const rawPath = new URL(Astro.request.url).pathname;
 const pathname = rawPath === "/" ? "/" : rawPath.replace(/\/+$/, "");
+const segments = pathname.replace(/^\/+/, "").split("/").filter(Boolean);
 
-// Path → view. SEO for each path lives in src/lib/routes.ts (shared with the
-// sitemap endpoints). Unknown paths are a real 404 (status + noindex).
+const preview = Astro.url.searchParams.get("preview") === "demo";
+const filter = Astro.url.searchParams.get("filter") ?? undefined;
+const origin = resolveOrigin();
+const truncate = (text: string, max = 155) =>
+  text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
+
 const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/": HomeView,
   "/how-we-verify": HowWeVerifyView,
@@ -43,18 +62,58 @@ const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/privacy": PrivacyView,
   "/terms": TermsView,
   "/search": SearchView,
+  "/categories": CategoriesIndexView,
 };
 
-let seo = ROUTE_SEO[pathname];
-let View = seo ? VIEWS[pathname] : undefined;
+let seo: PageSeo | undefined = ROUTE_SEO[pathname];
+let View: ((props: Record<string, unknown>) => unknown) | undefined = seo
+  ? VIEWS[pathname]
+  : undefined;
 let viewProps: Record<string, unknown> = {};
-const origin = resolveOrigin();
+let jsonLd: object[] = [];
+let trail: { name: string; path: string }[] | null = null;
 
-// Geography hubs: /{state}, /{state}/{county}, /{state}/{county}/{town}
-const truncate = (text: string, max = 155) =>
-  text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
-let hubTrail: { name: string; path: string }[] | null = null;
-if (!seo) {
+// --- Business profile: /business/{slug} -------------------------------------
+if (!View && segments.length === 2 && segments[0] === "business") {
+  const business = await getBusinessBySlug(segments[1], preview);
+  if (business) {
+    const state = business.stateSlug ? getState(business.stateSlug) : undefined;
+    const county =
+      business.stateSlug && business.countySlug
+        ? getCounty(business.stateSlug, business.countySlug)
+        : undefined;
+    const town =
+      business.stateSlug && business.countySlug && business.townSlug
+        ? getTown(business.stateSlug, business.countySlug, business.townSlug)
+        : undefined;
+    const category = business.primaryCategorySlug
+      ? getCategory(business.primaryCategorySlug)
+      : undefined;
+    trail = [
+      { name: "Home", path: "/" },
+      ...(state ? [{ name: state.name, path: `/${state.slug}` }] : []),
+      ...(county ? [{ name: county.name, path: `/${county.pathKey}` }] : []),
+      ...(town ? [{ name: town.name, path: `/${town.pathKey}` }] : []),
+      { name: business.name ?? "Business", path: pathname },
+    ];
+    View = BusinessProfileView;
+    viewProps = { business, trail };
+    seo = {
+      title: `${business.name} · ${category?.name ?? "Local Business"} in ${business.city}, ${business.state} · ${SITE_NAME}`,
+      description: truncate(business.description ?? `${business.name} on ${SITE_NAME}.`),
+      path: pathname,
+      // DEMO drafts render only in preview and are never indexable.
+      robots: business.status === "published" ? undefined : "noindex, nofollow",
+    };
+    jsonLd = [
+      breadcrumbJsonLd(origin, trail),
+      localBusinessJsonLd(origin, { ...business, schemaType: category?.schemaType }),
+    ];
+  }
+}
+
+// --- Geography hubs ----------------------------------------------------------
+if (!View) {
   const hub = matchHubPath(pathname);
   if (hub) {
     const { state, county, town } = hub;
@@ -65,9 +124,8 @@ if (!seo) {
         title: `Local Pros Across ${state.name} (${state.abbr}) · ${SITE_NAME}`,
         description: truncate(state.intro),
         path: `/${state.slug}`,
-        crumb: state.name,
       };
-      hubTrail = [
+      trail = [
         { name: "Home", path: "/" },
         { name: state.name, path: `/${state.slug}` },
       ];
@@ -78,9 +136,8 @@ if (!seo) {
         title: `${county.name}, ${state.abbr} Local Services · ${SITE_NAME}`,
         description: truncate(county.intro),
         path: `/${county.pathKey}`,
-        crumb: county.name,
       };
-      hubTrail = [
+      trail = [
         { name: "Home", path: "/" },
         { name: state.name, path: `/${state.slug}` },
         { name: county.name, path: `/${county.pathKey}` },
@@ -92,54 +149,147 @@ if (!seo) {
         title: `Local Businesses in ${town.name}, ${state.abbr} · ${SITE_NAME}`,
         description: truncate(town.intro),
         path: `/${town.pathKey}`,
-        crumb: town.name,
       };
-      hubTrail = [
+      trail = [
         { name: "Home", path: "/" },
         { name: state.name, path: `/${state.slug}` },
         { name: county.name, path: `/${county.pathKey}` },
         { name: town.name, path: `/${town.pathKey}` },
       ];
     }
+    if (trail) jsonLd = [breadcrumbJsonLd(origin, trail)];
   }
 }
 
-// Temporary M2 probe (not in ROUTE_SEO → 404-path handled separately below):
-// verifies that CMS reads work server-side before hub pages are built on them.
-let probeResult: string | null = null;
-if (pathname === "/__data-probe") {
-  try {
-    const integrations = await import("@/integrations");
-    const result: any = await integrations.BaseCrudService.getAll("businesses");
-    const count = Array.isArray(result) ? result.length : result?.items?.length;
-    probeResult = `ok count=${String(count)}`;
-  } catch (e: any) {
-    probeResult = `error: ${e?.message ?? String(e)}`;
+// --- Geo × category list pages ----------------------------------------------
+// /{state}/{category}, /{state}/{county}/{category}, /{state}/{county}/{town}/{category}
+if (!View && segments.length >= 2 && segments.length <= 4) {
+  const category = getCategory(segments[segments.length - 1]);
+  const state = category ? getState(segments[0]) : undefined;
+  if (category && state) {
+    const geoSegments = segments.slice(1, -1);
+    const county = geoSegments.length >= 1 ? getCounty(state.slug, geoSegments[0]) : undefined;
+    const town =
+      geoSegments.length === 2 && county
+        ? getTown(state.slug, county.slug, geoSegments[1])
+        : undefined;
+    const geoValid =
+      geoSegments.length === 0 ||
+      (geoSegments.length === 1 && county) ||
+      (geoSegments.length === 2 && town);
+
+    if (geoValid) {
+      let listings: ListingSet;
+      let scope: "town" | "county" | "state";
+      if (town && county) {
+        scope = "town";
+        listings = await listForTownCategory(town.slug, category.slug, preview);
+      } else if (county) {
+        scope = "county";
+        listings = await listForCountyCategory(state.slug, county.slug, category.slug, preview);
+      } else {
+        scope = "state";
+        listings = await listForStateCategory(state.slug, category.slug, preview);
+      }
+
+      // The publishing rule: a list page below 3 listings does not exist
+      // (except in explicit preview mode, which is always noindex).
+      if (listings.organic.length >= 3 || (preview && listings.organic.length > 0)) {
+        const placeName = town ? `${town.name}, ${state.abbr}` : (county?.name ?? state.name);
+        trail = [
+          { name: "Home", path: "/" },
+          { name: state.name, path: `/${state.slug}` },
+          ...(county ? [{ name: county.name, path: `/${county.pathKey}` }] : []),
+          ...(town ? [{ name: town.name, path: `/${town.pathKey}` }] : []),
+          { name: category.name, path: pathname },
+        ];
+        View = ListingsView;
+        viewProps = {
+          scope,
+          state,
+          county,
+          town,
+          category,
+          listings,
+          filter,
+          preview,
+          trail,
+          basePath: pathname,
+        };
+        const updatedLabel = new Date().toLocaleDateString("en-US", {
+          month: "long",
+          year: "numeric",
+        });
+        seo = {
+          title: `${listings.organic.length} Best ${category.name} in ${placeName} (Updated ${updatedLabel}) · ${SITE_NAME}`,
+          description: truncate(
+            `The best ${category.name.toLowerCase()} in ${placeName}, ranked by verified licenses, real reviews, and responsiveness — never by payment. Updated ${updatedLabel}.`,
+          ),
+          path: pathname,
+          robots: preview || filter ? "noindex, follow" : undefined,
+        };
+        jsonLd = [
+          breadcrumbJsonLd(origin, trail),
+          itemListJsonLd(
+            origin,
+            listings.organic
+              .filter((b) => b.status === "published")
+              .map((b) => ({
+                name: b.name ?? "",
+                slug: b.slug ?? "",
+                schemaType: category.schemaType,
+              })),
+          ),
+        ];
+      }
+    }
   }
 }
 
-// JSON-LD: WebSite + Organization on home; BreadcrumbList on every other page.
-let jsonLd: object[] = [];
-if (seo && View) {
+// --- Category hub: /{category} ----------------------------------------------
+if (!View && segments.length === 1) {
+  const category = getCategory(segments[0]);
+  if (category) {
+    View = CategoryHubView;
+    viewProps = { category };
+    seo = {
+      title: `${category.name} in NJ, NY & PA · ${SITE_NAME}`,
+      description: truncate(
+        `Find ${category.name.toLowerCase()} across New Jersey, New York & Pennsylvania${category.licenseRequired ? " — every verified listing names the official license registry we checked" : ", vetted for identity, reviews, and responsiveness"}.`,
+      ),
+      path: pathname,
+    };
+    jsonLd = [
+      breadcrumbJsonLd(origin, [
+        { name: "Home", path: "/" },
+        { name: "Categories", path: "/categories" },
+        { name: category.name, path: pathname },
+      ]),
+    ];
+  }
+}
+
+// --- Static-page JSON-LD -----------------------------------------------------
+if (View && ROUTE_SEO[pathname] && jsonLd.length === 0) {
   if (pathname === "/") {
     jsonLd = [webSiteJsonLd(origin), organizationJsonLd(origin)];
   } else {
-    const trail =
-      hubTrail ??
-      [
+    const routeSeo = ROUTE_SEO[pathname];
+    jsonLd = [
+      breadcrumbJsonLd(origin, [
         { name: "Home", path: "/" },
         ...(pathname === "/for-businesses/get-listed"
           ? [
               { name: "For businesses", path: "/for-businesses" },
-              { name: seo.crumb ?? seo.title, path: seo.path },
+              { name: routeSeo.crumb ?? routeSeo.title, path: routeSeo.path },
             ]
-          : [{ name: seo.crumb ?? seo.title, path: seo.path }]),
-      ];
-    jsonLd = [breadcrumbJsonLd(origin, trail)];
+          : [{ name: routeSeo.crumb ?? routeSeo.title, path: routeSeo.path }]),
+      ]),
+    ];
   }
 }
 
-if (!seo && probeResult === null) {
+if (!View) {
   Astro.response.status = 404;
   Astro.response.statusText = "Not Found";
 }
@@ -166,19 +316,6 @@ const searchProps =
 const RenderView = View ?? NotFoundView;
 ---
 
-{probeResult !== null ? (
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="robots" content="noindex, nofollow" />
-      <title>probe</title>
-    </head>
-    <body>
-      <pre>{probeResult}</pre>
-    </body>
-  </html>
-) : (
-  <SiteLayout seo={seo ?? notFoundSeo} jsonLd={jsonLd}>
-    <RenderView {...viewProps} {...searchProps} />
-  </SiteLayout>
-)}
+<SiteLayout seo={seo ?? notFoundSeo} jsonLd={View ? jsonLd : []}>
+  <RenderView {...viewProps} {...searchProps} />
+</SiteLayout>

@@ -1,0 +1,90 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import MethodologyStrip from "@/components/site/MethodologyStrip.astro";
+import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
+import { getStates, getCountiesByState } from "@/lib/geo";
+import type { CategorySeed } from "@/lib/taxonomy";
+
+interface Props {
+  category: CategorySeed;
+}
+const { category } = Astro.props;
+const states = getStates();
+const sources = Object.entries(category.licenseSourcesByState);
+---
+
+<article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo
+    trail={[
+      { name: "Home", path: "/" },
+      { name: "Categories", path: "/categories" },
+      { name: category.name, path: `/${category.slug}` },
+    ]}
+  />
+
+  <header class="mt-4 max-w-prose">
+    <h1 class="font-display text-4xl font-bold text-ink">{category.name} in NJ, NY &amp; PA</h1>
+    <p class="mt-3 text-lg leading-relaxed text-muted">
+      {category.licenseRequired
+        ? `A licensed trade in the tri-state area — every verified listing names the official registry we checked it against, and the date we checked.`
+        : `No practitioner license applies to this category, so reputation matters more: we verify identity, read reviews across platforms, and confirm responsiveness before listing anyone.`}
+    </p>
+  </header>
+
+  {sources.length > 0 && (
+    <section class="mt-10 max-w-prose" aria-labelledby="lookup-heading">
+      <h2 id="lookup-heading" class="font-display text-2xl font-semibold text-ink">
+        Check a license yourself
+      </h2>
+      <p class="mt-2 text-sm text-muted">
+        The registries we verify {category.name.toLowerCase()} against, by state:
+      </p>
+      <dl class="mt-4 space-y-3">
+        {sources.map(([abbr, source]) => (
+          <div class="grid gap-1 rounded-card border border-line bg-surface p-4 sm:grid-cols-[6rem_1fr] sm:gap-4">
+            <dt class="font-mono text-sm font-medium text-ink">{abbr}</dt>
+            <dd class="font-mono text-sm text-muted">{source}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )}
+
+  <section class="mt-12" aria-labelledby="find-heading">
+    <h2 id="find-heading" class="font-display text-2xl font-semibold text-ink">
+      Find {category.name.toLowerCase()} near you
+    </h2>
+    <p class="mt-1 max-w-prose text-muted">
+      Browse by county — town pages publish as soon as three verified businesses are behind them.
+    </p>
+    <div class="mt-5 grid gap-6 lg:grid-cols-3">
+      {states.map((state) => (
+        <div>
+          <h3 class="font-display text-lg font-semibold text-ink">
+            <a href={`/${state.slug}`} class="hover:text-brand">{state.name}</a>
+          </h3>
+          <ul class="mt-3 flex flex-wrap gap-1.5">
+            {getCountiesByState(state.slug).map((county) => (
+              <li>
+                <a
+                  href={`/${county.pathKey}/${category.slug}`}
+                  class="inline-block rounded-chip bg-inset px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-brand-wash hover:text-brand"
+                >
+                  {county.name.replace(/ County$/, "")}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <div class="mt-12 max-w-prose">
+    <CategoriesEmptyState scopeName={`this category`} />
+  </div>
+
+  <div class="mt-8">
+    <MethodologyStrip />
+  </div>
+</article>

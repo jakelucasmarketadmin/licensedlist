@@ -1,0 +1,253 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import ResultCard from "@/components/site/ResultCard.astro";
+import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
+import { SITE_NAME } from "@/lib/site";
+import type { CategorySeed } from "@/lib/taxonomy";
+import type { StateSeed, CountySeed, TownSeed } from "@/lib/geo";
+import { getNearbyTowns } from "@/lib/geo";
+import { getCategoriesByGroup } from "@/lib/taxonomy";
+import {
+  type ListingSet,
+  type DirectoryBusiness,
+  blendedRating,
+  listForTownCategory,
+} from "@/lib/businesses";
+
+interface Props {
+  scope: "town" | "county" | "state";
+  state: StateSeed;
+  county?: CountySeed;
+  town?: TownSeed;
+  category: CategorySeed;
+  listings: ListingSet;
+  /** Active server-side filter (noindex variants). */
+  filter?: string;
+  preview?: boolean;
+  trail: { name: string; path: string }[];
+  basePath: string;
+}
+const { scope, state, county, town, category, listings, filter, preview, trail, basePath } =
+  Astro.props;
+
+const placeName =
+  scope === "town" ? `${town!.name}, ${state.abbr}` : scope === "county" ? county!.name : state.name;
+
+const updatedLabel = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+const applyFilter = (items: DirectoryBusiness[]) => {
+  if (filter === "verified") return items.filter((b) => b.licenseStatus === "verified");
+  if (filter === "responds-24h")
+    return items.filter((b) => b.responseTimeHours != null && b.responseTimeHours <= 24);
+  if (filter === "rating-45") return items.filter((b) => (blendedRating(b) ?? 0) >= 4.5);
+  return items;
+};
+
+const organic = applyFilter(listings.organic);
+const featured = filter ? [] : listings.featured;
+const verifiedCount = listings.organic.filter((b) => b.licenseStatus === "verified").length;
+
+const licenseSource = category.licenseSourcesByState[state.abbr];
+
+const FILTERS = [
+  { key: "verified", label: "Verified license" },
+  { key: "responds-24h", label: "Responds < 24h" },
+  { key: "rating-45", label: "4.5★ and up" },
+];
+
+const relatedCategories = getCategoriesByGroup(category.groupSlug)
+  .filter((c) => c.slug !== category.slug)
+  .slice(0, 6);
+
+// Only link nearby towns whose own page meets the publishing rule — a link to
+// a sub-threshold page would be a link to a 404.
+const qualifies = (set: ListingSet) =>
+  set.organic.length >= 3 || (Boolean(preview) && set.organic.length > 0);
+const nearbyTowns =
+  scope === "town"
+    ? (
+        await Promise.all(
+          getNearbyTowns(town!).map(async (n) => ({
+            town: n,
+            ok: qualifies(await listForTownCategory(n.slug, category.slug, preview)),
+          })),
+        )
+      )
+        .filter((entry) => entry.ok)
+        .map((entry) => entry.town)
+    : [];
+
+const faq = [
+  {
+    q: `Do ${category.name.toLowerCase()} need a license in ${state.name}?`,
+    a: category.licenseRequired
+      ? `Yes — in ${state.abbr} this trade is checked against ${licenseSource ?? "the official state registry"}. Every verified listing on this page names the registry and the date we checked it.`
+      : `No state practitioner license applies to this category in ${state.abbr}. We still verify each listed business's identity, reviews, and responsiveness before it earns a badge.`,
+  },
+  {
+    q: "How are these businesses ordered?",
+    a: `The list is ordered by a transparent score — license verification first, then review count, rating across platforms, and how recently we re-checked the listing. Paid placement is always labeled "Featured" and never changes the organic order.`,
+  },
+  {
+    q: `How does ${SITE_NAME} verify these listings?`,
+    a: "Four checks, in order: we confirm the business is real, look its license up in the official registry where one is required, read its reviews across platforms, and confirm it's active and responsive. The full methodology is public.",
+  },
+];
+---
+
+<article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo trail={trail} />
+
+  {preview && (
+    <p class="mt-4 rounded-card border border-warn bg-warn-wash px-4 py-3 text-sm font-medium text-warn">
+      Preview mode — showing clearly-labeled sample records. This view is not indexed and not
+      visible to visitors.
+    </p>
+  )}
+
+  <header class="mt-4 max-w-prose">
+    <h1 class="font-display text-4xl font-bold text-ink">
+      {organic.length > 0 && !filter ? `${organic.length} ` : ""}Best {category.name} in {placeName}
+      <span class="text-muted">(Updated {updatedLabel})</span>
+    </h1>
+    <p class="mt-3 text-muted">
+      {organic.length} listed · {verifiedCount} license-verified · ranked by a public score —
+      never by payment.
+      <a href="/how-we-verify" class="font-medium text-brand underline underline-offset-2">How we verify</a>
+    </p>
+  </header>
+
+  <div class="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter listings">
+    <a
+      href={basePath}
+      class:list={[
+        "inline-flex min-h-[40px] items-center rounded-chip border px-4 py-2 text-sm font-medium",
+        !filter ? "border-brand bg-brand-wash text-brand" : "border-line bg-surface text-muted hover:text-ink",
+      ]}
+    >
+      All
+    </a>
+    {FILTERS.map((f) => (
+      <a
+        href={`${basePath}?filter=${f.key}`}
+        class:list={[
+          "inline-flex min-h-[40px] items-center rounded-chip border px-4 py-2 text-sm font-medium",
+          filter === f.key
+            ? "border-brand bg-brand-wash text-brand"
+            : "border-line bg-surface text-muted hover:text-ink",
+        ]}
+      >
+        {f.label}
+      </a>
+    ))}
+  </div>
+
+  {featured.length > 0 && (
+    <section class="mt-8" aria-labelledby="featured-heading">
+      <h2 id="featured-heading" class="text-xs font-semibold uppercase tracking-wider text-faint">
+        Featured · paid placement, always labeled
+      </h2>
+      <div class="mt-3 grid gap-4">
+        {featured.map((b) => (
+          <ResultCard business={b} inFeaturedBlock townName={town?.name} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="mt-8" aria-labelledby="results-heading">
+    <h2 id="results-heading" class="text-xs font-semibold uppercase tracking-wider text-faint">
+      All {category.name.toLowerCase()} · transparent ranking
+    </h2>
+    {organic.length > 0 ? (
+      <div class="mt-3 grid gap-4">
+        {organic.map((b) => (
+          <ResultCard business={b} townName={town?.name} />
+        ))}
+      </div>
+    ) : (
+      <div class="mt-3">
+        <CategoriesEmptyState scopeName={placeName} />
+      </div>
+    )}
+  </section>
+
+  <section class="mt-12 max-w-prose" aria-labelledby="guide-heading">
+    <h2 id="guide-heading" class="font-display text-2xl font-semibold text-ink">
+      Hiring {category.name.toLowerCase()} in {placeName}: what to know
+    </h2>
+    <div class="mt-3 space-y-3 leading-relaxed text-muted">
+      {category.licenseRequired && licenseSource ? (
+        <p>
+          In {state.name}, check this trade against <strong class="text-ink">{licenseSource}</strong> before
+          you hire — every verified listing above names the registry record we checked and when.
+          Registration is not an endorsement of competency, which is why reviews and
+          responsiveness are part of our score too.
+        </p>
+      ) : (
+        <p>
+          No state license applies to this category in {state.name}, so reputation carries more
+          weight: we weigh review patterns across platforms and confirmed responsiveness before
+          listing anyone.
+        </p>
+      )}
+      {county && <p>{county.permitNotes}</p>}
+      {scope === "town" && town && town.localFacts.length > 0 && <p>{town.localFacts[0]}.</p>}
+    </div>
+  </section>
+
+  <section class="mt-10 max-w-prose" aria-labelledby="listfaq-heading">
+    <h2 id="listfaq-heading" class="font-display text-2xl font-semibold text-ink">
+      Common questions
+    </h2>
+    <dl class="mt-4 space-y-4">
+      {faq.map((item) => (
+        <div class="rounded-card border border-line bg-surface p-5">
+          <dt class="text-base font-semibold text-ink">{item.q}</dt>
+          <dd class="mt-2 text-sm leading-relaxed text-muted">{item.a}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {(nearbyTowns.length > 0 || relatedCategories.length > 0) && (
+    <section class="mt-12 grid gap-8 sm:grid-cols-2" aria-label="Related pages">
+      {nearbyTowns.length > 0 && (
+        <div>
+          <h2 class="font-display text-xl font-semibold text-ink">
+            {category.name} in nearby towns
+          </h2>
+          <ul class="mt-3 flex flex-wrap gap-2">
+            {nearbyTowns.map((n) => (
+              <li>
+                <a
+                  href={`/${n.pathKey}/${category.slug}${preview ? "?preview=demo" : ""}`}
+                  class="inline-flex min-h-[40px] items-center rounded-chip border border-line bg-surface px-4 py-2 text-sm font-medium text-muted hover:border-brand hover:text-ink"
+                >
+                  {n.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {relatedCategories.length > 0 && (
+        <div>
+          <h2 class="font-display text-xl font-semibold text-ink">Related services</h2>
+          <ul class="mt-3 flex flex-wrap gap-2">
+            {relatedCategories.map((c) => (
+              <li>
+                <a
+                  href={`/${c.slug}`}
+                  class="inline-flex min-h-[40px] items-center rounded-chip border border-line bg-surface px-4 py-2 text-sm font-medium text-muted hover:border-brand hover:text-ink"
+                >
+                  {c.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  )}
+</article>

@@ -66,6 +66,10 @@ export function getNearbyCounties(county: CountySeed, limit = 4): CountySeed[] {
     .slice(0, limit);
 }
 
+export function getAllTowns(): TownSeed[] {
+  return TOWN_SEED;
+}
+
 /** Every hub path: /nj, /nj/bergen-county, /nj/bergen-county/hackensack … */
 export function hubPaths(): string[] {
   return [

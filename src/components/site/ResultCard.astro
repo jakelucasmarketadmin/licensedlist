@@ -1,0 +1,129 @@
+---
+import TrustBadge from "@/components/site/TrustBadge.astro";
+import {
+  type DirectoryBusiness,
+  blendedRating,
+  totalReviewCount,
+  isSponsoredPlacement,
+  isDemo,
+} from "@/lib/businesses";
+
+interface Props {
+  business: DirectoryBusiness;
+  /** Rendered inside the labeled featured block (adds the Featured tag). */
+  inFeaturedBlock?: boolean;
+  /** Town context for the "Serves" line. */
+  townName?: string;
+}
+const { business: b, inFeaturedBlock = false, townName } = Astro.props;
+
+const rating = blendedRating(b);
+const reviews = totalReviewCount(b);
+const sponsored = isSponsoredPlacement(b);
+const rel = sponsored ? "sponsored" : undefined;
+const serviceTowns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+const extraTowns = Math.max(0, serviceTowns.length - 1);
+const verifiedDate = b.licenseVerifiedAt
+  ? new Date(b.licenseVerifiedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+  : null;
+---
+
+<article class="rounded-card border border-line bg-surface p-5">
+  <div class="flex flex-wrap items-start justify-between gap-2">
+    <div class="min-w-0">
+      <div class="flex flex-wrap items-center gap-2">
+        <h3 class="font-display text-lg font-semibold text-ink">
+          <a href={`/business/${b.slug}`} rel={rel} class="hover:text-brand">{b.name}</a>
+        </h3>
+        {inFeaturedBlock && (
+          <span class="rounded-chip bg-brand-wash px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-brand">
+            Featured
+          </span>
+        )}
+        {sponsored && !inFeaturedBlock && (
+          <span class="rounded-chip bg-inset px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-faint">
+            Sponsored
+          </span>
+        )}
+        {isDemo(b) && (
+          <span class="rounded-chip bg-warn-wash px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warn">
+            Sample
+          </span>
+        )}
+      </div>
+      <p class="mt-0.5 text-sm text-muted">
+        {b.city}, {b.state}
+        {townName && extraTowns > 0 && ` · Serves ${townName} + ${extraTowns} more`}
+        {b.yearsInBusiness ? ` · ${b.yearsInBusiness} yrs in business` : ""}
+      </p>
+    </div>
+    <TrustBadge
+      licenseStatus={b.licenseStatus}
+      licenseSource={b.licenseSource}
+      licenseVerifiedAt={b.licenseVerifiedAt}
+      size="sm"
+    />
+  </div>
+
+  {rating !== null ? (
+    <p class="mt-2 text-sm text-ink">
+      <span class="font-semibold">{rating}★</span>
+      <span class="text-muted"> · {reviews} reviews across Google &amp; Yelp</span>
+    </p>
+  ) : (
+    <p class="mt-2 text-sm text-faint">Not enough review data yet</p>
+  )}
+
+  {b.whyWePicked && (
+    <p class="mt-2 text-sm leading-relaxed text-muted">
+      <span class="font-medium text-ink">Why we picked them:</span> {b.whyWePicked}
+    </p>
+  )}
+
+  <div class="ledger mt-3 rounded-[10px] bg-inset px-3 py-1.5">
+    <div class="ledger-row">
+      <span class="ledger-key">License</span>
+      <span class="ledger-val">
+        {b.licenseStatus === "verified"
+          ? `${b.licenseNumber} · ${b.licenseSource}${verifiedDate ? ` · checked ${verifiedDate}` : ""}`
+          : b.licenseStatus === "not-required"
+            ? "Not required for this category"
+            : "Not verified — ask before you hire"}
+      </span>
+    </div>
+    {b.responseTimeHours != null && (
+      <div class="ledger-row">
+        <span class="ledger-key">Response</span>
+        <span class="ledger-val">Replies in about {b.responseTimeHours} {b.responseTimeHours === 1 ? "hour" : "hours"}</span>
+      </div>
+    )}
+  </div>
+
+  <div class="mt-4 flex flex-wrap gap-2">
+    {b.phone && (
+      <a
+        href={`tel:${b.phone.replace(/[^+\d]/g, "")}`}
+        class="rounded-chip bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
+      >
+        Call {b.phone}
+      </a>
+    )}
+    <a
+      href={`/business/${b.slug}`}
+      rel={rel}
+      class="rounded-chip border border-line-strong px-4 py-2 text-sm font-semibold text-ink hover:bg-inset"
+    >
+      View profile
+    </a>
+    {b.website && (
+      <a
+        href={b.website}
+        rel={sponsored ? "sponsored nofollow" : "nofollow"}
+        target="_blank"
+        class="rounded-chip border border-line px-4 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink"
+      >
+        Website
+      </a>
+    )}
+  </div>
+</article>
