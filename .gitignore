@@ -46,5 +46,11 @@ docs/*
 !docs/ARCHITECTURE.md
 !docs/DECISIONS.md
 !docs/QA-REPORT.md
+!docs/RUNBOOK.md
 !docs/screens
 !docs/screens/**
+
+# import pipeline outputs (regenerated per run)
+data/import-rejects.csv
+data/needs-verification.csv
+data/businesses-merge.csv
