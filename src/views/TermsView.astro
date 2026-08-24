@@ -1,0 +1,65 @@
+---
+import { SITE_NAME, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
+---
+
+<article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+  <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">Legal</p>
+  <h1 class="mt-3 font-display text-4xl font-bold text-ink">Terms of use</h1>
+  <p class="mt-2 text-sm text-faint">Updated August 2026</p>
+
+  <div class="mt-8 max-w-prose space-y-8">
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">What {SITE_NAME} is</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        {SITE_NAME} is a directory that helps consumers find and evaluate local businesses in
+        New Jersey, New York, and Pennsylvania. We verify certain facts — like license
+        registrations — against official sources at a point in time, and we say when and where
+        we checked. We are not a party to any transaction between you and a listed business,
+        and we don't guarantee any business's work.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Verification is a snapshot</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        A "license verified" badge means the named registry showed the business in good
+        standing on the date shown. Licenses can lapse or be revoked afterward. Registration
+        or licensure is not a government endorsement of competency. Always confirm current
+        status for significant projects — every badge names the registry so you can.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Reviews and submissions</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        Content you submit — reviews, photos, claims — must be truthful, based on your own
+        experience, and yours to share. We may decline or remove content that is fake,
+        defamatory, or unrelated to a real customer experience. By submitting content you give
+        us a non-exclusive license to display it on the site.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Business listings</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        Claiming a listing requires that you are authorized to represent the business. Paid
+        tiers buy verification work and labeled placement only; they never change rankings or
+        reviews, and we may end a paid placement that violates our
+        <a href="/editorial-policy" class="font-medium text-brand underline underline-offset-2">editorial policy</a>.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Liability</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        The site is provided as-is. To the fullest extent permitted by law, {SITE_NAME} is not
+        liable for the acts, omissions, or work quality of any listed business, or for
+        decisions you make based on directory content. Nothing here limits rights you have
+        under applicable consumer-protection law.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Contact</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        Questions about these terms:
+        <a href={`mailto:${BUSINESS_CONTACT_EMAIL}`} class="font-medium text-brand underline underline-offset-2">{BUSINESS_CONTACT_EMAIL}</a>.
+      </p>
+    </section>
+  </div>
+</article>

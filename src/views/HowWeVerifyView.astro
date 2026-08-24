@@ -1,0 +1,224 @@
+---
+import { SITE_NAME } from "@/lib/site";
+
+const SOURCES = [
+  {
+    state: "New Jersey",
+    rows: [
+      {
+        what: "Home-improvement contractors",
+        source: "NJ Division of Consumer Affairs — HIC registration",
+      },
+      {
+        what: "Licensed trades & professions (electricians, plumbers, dentists, attorneys…)",
+        source: "NJ DCA MyLicense verification system",
+      },
+    ],
+  },
+  {
+    state: "New York",
+    rows: [
+      {
+        what: "Home-improvement contractors in the five boroughs",
+        source: "NYC Department of Consumer and Worker Protection",
+      },
+      {
+        what: "Contractors in Nassau, Suffolk, Westchester & Rockland",
+        source: "County consumer-affairs licensing offices",
+      },
+      {
+        what: "State-licensed professions",
+        source: "NYS Office of the Professions / Department of State",
+      },
+    ],
+  },
+  {
+    state: "Pennsylvania",
+    rows: [
+      {
+        what: "Home-improvement contractors",
+        source: "PA Attorney General — HICPA registration",
+      },
+      {
+        what: "State-licensed professions",
+        source: "Pennsylvania Licensing System (PALS)",
+      },
+    ],
+  },
+];
+
+const BADGES = [
+  {
+    label: "License verified",
+    tone: "ok",
+    body: "We found the business in the official registry named on its listing, and the record was in good standing on the date shown.",
+  },
+  {
+    label: "License not verified",
+    tone: "warn",
+    body: "The trade requires a license or registration and we could not confirm one, or the business hasn't provided a number yet. Ask before you hire.",
+  },
+  {
+    label: "License not required",
+    tone: "neutral",
+    body: "No state or county license applies to this category. We still run the identity, review, and responsiveness checks.",
+  },
+  {
+    label: "Suspended",
+    tone: "danger",
+    body: "The registry shows the license as lapsed, revoked, or suspended. We remove or clearly flag these listings.",
+  },
+];
+---
+
+<article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+  <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">Methodology</p>
+  <h1 class="mt-3 font-display text-4xl font-bold text-ink">How we verify</h1>
+  <p class="mt-4 text-lg leading-relaxed text-muted">
+    Most directories list anyone who signs up. {SITE_NAME} checks. This page explains exactly
+    what our badges mean, where our license data comes from, and how listings are ordered — so
+    you never have to take our word for it.
+  </p>
+
+  <section class="mt-12" aria-labelledby="steps-heading">
+    <h2 id="steps-heading" class="font-display text-2xl font-semibold text-ink">
+      The four checks, in order
+    </h2>
+    <ol class="mt-6 space-y-6">
+      <li class="rounded-card border border-line bg-surface p-5">
+        <h3 class="font-display text-lg font-semibold text-ink">1 · Identify</h3>
+        <p class="mt-2 leading-relaxed text-muted">
+          We confirm the business exists and is who it says it is: a working phone number, a
+          real address or defined service area, and a named owner or principal. Businesses we
+          can't identify don't get listed at all.
+        </p>
+      </li>
+      <li class="rounded-card border border-line bg-surface p-5">
+        <h3 class="font-display text-lg font-semibold text-ink">2 · Verify the license</h3>
+        <p class="mt-2 leading-relaxed text-muted">
+          Where a category requires a license or registration, we look the business up in the
+          official government registry — not a data broker — and record three things on the
+          listing: the license number, the registry we checked, and the date we checked it.
+          Badge copy always reads
+          <span class="font-mono text-sm">“License verified against {"{source}"} on {"{date}"}”</span>.
+        </p>
+      </li>
+      <li class="rounded-card border border-line bg-surface p-5">
+        <h3 class="font-display text-lg font-semibold text-ink">3 · Check reviews</h3>
+        <p class="mt-2 leading-relaxed text-muted">
+          We read reviews across Google, Yelp, and Facebook and look for patterns — recurring
+          complaints, dispute handling, consistency over time — not just the average. We show
+          ratings with their source and count, and we never edit, reorder, or hide reviews
+          based on sentiment or payment.
+        </p>
+      </li>
+      <li class="rounded-card border border-line bg-surface p-5">
+        <h3 class="font-display text-lg font-semibold text-ink">4 · Confirm they're taking work</h3>
+        <p class="mt-2 leading-relaxed text-muted">
+          A great business that never answers is a bad recommendation. We confirm each listed
+          business is active and reachable, and listings show typical response times once we
+          have enough data to report them honestly.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="mt-12" aria-labelledby="sources-heading">
+    <h2 id="sources-heading" class="font-display text-2xl font-semibold text-ink">
+      Where our license data comes from
+    </h2>
+    <p class="mt-2 leading-relaxed text-muted">
+      Every verification names its source. These are the official registries we check, by state:
+    </p>
+    <div class="mt-6 space-y-6">
+      {SOURCES.map((group) => (
+        <div class="rounded-card border border-line bg-surface p-5">
+          <h3 class="font-display text-lg font-semibold text-ink">{group.state}</h3>
+          <dl class="mt-3 space-y-3">
+            {group.rows.map((row) => (
+              <div class="grid gap-1 sm:grid-cols-[1fr_1fr] sm:gap-4">
+                <dt class="text-sm text-muted">{row.what}</dt>
+                <dd class="font-mono text-sm text-ink">{row.source}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
+    </div>
+    <p class="mt-4 text-sm leading-relaxed text-faint">
+      Registration or licensure confirms a business met a state's registration requirements at
+      the time we checked. It is not a government endorsement of the business's competency, and
+      it is not a guarantee of work quality.
+    </p>
+  </section>
+
+  <section class="mt-12" aria-labelledby="badges-heading">
+    <h2 id="badges-heading" class="font-display text-2xl font-semibold text-ink">
+      What each badge means
+    </h2>
+    <ul class="mt-6 space-y-3">
+      {BADGES.map((badge) => (
+        <li class="flex flex-col gap-2 rounded-card border border-line bg-surface p-5 sm:flex-row sm:gap-5">
+          <span
+            class:list={[
+              "inline-flex h-fit w-fit shrink-0 items-center rounded-chip px-3 py-1 text-xs font-semibold",
+              badge.tone === "ok" && "bg-ok-wash text-ok",
+              badge.tone === "warn" && "bg-warn-wash text-warn",
+              badge.tone === "danger" && "bg-danger-wash text-danger",
+              badge.tone === "neutral" && "bg-inset text-muted",
+            ]}
+          >
+            {badge.label}
+          </span>
+          <p class="text-sm leading-relaxed text-muted">{badge.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="mt-12" aria-labelledby="ranking-heading">
+    <h2 id="ranking-heading" class="font-display text-2xl font-semibold text-ink">
+      How listings are ordered
+    </h2>
+    <p class="mt-2 leading-relaxed text-muted">
+      List pages have two zones, and they never mix:
+    </p>
+    <ul class="mt-4 space-y-4">
+      <li class="rounded-card border border-line bg-surface p-5">
+        <h3 class="text-base font-semibold text-ink">The featured block — always labeled</h3>
+        <p class="mt-2 text-sm leading-relaxed text-muted">
+          At most three paid placements can appear at the top of a list page, always marked
+          “Featured” or “Sponsored,” with sponsored link attributes for search engines. Paid
+          placement is the only thing money buys here.
+        </p>
+      </li>
+      <li class="rounded-card border border-line bg-surface p-5">
+        <h3 class="text-base font-semibold text-ink">The organic list — a transparent score</h3>
+        <p class="mt-2 text-sm leading-relaxed text-muted">
+          Everything below the featured block is ordered by a score built from four public
+          factors, in this priority: whether the license is verified, how many reviews the
+          business has, its rating across platforms, and how recently we re-checked the
+          listing. Payment, claimed status, and agency relationships have zero weight.
+        </p>
+      </li>
+    </ul>
+    <p class="mt-4 text-sm leading-relaxed text-faint">
+      Businesses that are clients of our agency are always disclosed as sponsored wherever they
+      appear. They receive no ranking benefit.
+    </p>
+  </section>
+
+  <section class="mt-12" aria-labelledby="freshness-heading">
+    <h2 id="freshness-heading" class="font-display text-2xl font-semibold text-ink">
+      Freshness and corrections
+    </h2>
+    <p class="mt-2 leading-relaxed text-muted">
+      Verification isn't permanent. Licenses lapse, businesses close, phone numbers change.
+      Every listing shows when it was last verified, and re-checks are scheduled — not
+      best-effort. If you spot something wrong on any listing, tell us and we'll re-verify it
+      against the source registry. See our
+      <a href="/editorial-policy" class="font-medium text-brand underline underline-offset-2">editorial policy</a>
+      for how corrections work.
+    </p>
+  </section>
+</article>

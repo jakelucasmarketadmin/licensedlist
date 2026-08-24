@@ -1,0 +1,65 @@
+---
+import { SITE_NAME, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
+---
+
+<article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+  <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">Legal</p>
+  <h1 class="mt-3 font-display text-4xl font-bold text-ink">Privacy policy</h1>
+  <p class="mt-2 text-sm text-faint">Updated August 2026</p>
+
+  <div class="prose-tokens mt-8 max-w-prose space-y-8">
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">What we collect</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        Browsing {SITE_NAME} requires no account. We collect information you choose to give us —
+        for example when you email us, submit a quote request, claim a listing, or leave a
+        review — such as your name, contact details, and the content of your message. Our
+        hosting provider records standard technical logs (IP address, browser type, pages
+        requested) to run and secure the service.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">How quote requests are shared</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        When you submit a quote request, it is shared with the local businesses you select — or,
+        where the form says so, with up to three matching local providers — so they can contact
+        you about your project by the methods you consent to on the form. We record the consent
+        text you agreed to and when you agreed. We do not sell consumer contact information to
+        anyone else.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Analytics and cookies</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        We use privacy-respecting analytics to understand which pages are useful. Where a
+        consent banner is shown, analytics load only after you accept. We do not use
+        third-party advertising trackers.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Business listing data</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        Listings contain business information — names, addresses, phone numbers, license
+        records — gathered from the businesses themselves and from official public registries.
+        If a listing shows your business information and you want it corrected, email us and
+        we'll re-verify it against the source.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Your choices</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        You can ask us what personal information we hold about you, ask us to correct it, or
+        ask us to delete it, subject to records we're required to keep (such as consent logs).
+        New Jersey, New York, and Pennsylvania residents may have additional rights under state
+        law; we honor them regardless of which state you're in.
+      </p>
+    </section>
+    <section>
+      <h2 class="font-display text-xl font-semibold text-ink">Contact</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted">
+        Privacy questions and requests:
+        <a href={`mailto:${BUSINESS_CONTACT_EMAIL}`} class="font-medium text-brand underline underline-offset-2">{BUSINESS_CONTACT_EMAIL}</a>.
+      </p>
+    </section>
+  </div>
+</article>

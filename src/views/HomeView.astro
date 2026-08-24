@@ -1,0 +1,215 @@
+---
+import HeroSearch from "@/components/site/HeroSearch.astro";
+import VerifySpecimen from "@/components/site/VerifySpecimen.astro";
+import { STATES } from "@/lib/site";
+
+// Home category grid — 12 tiles. Icons are inline lucide paths (ISC license).
+const CATEGORY_TILES: { name: string; icon: string }[] = [
+  {
+    name: "Roofers",
+    icon: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+  },
+  {
+    name: "Plumbers",
+    icon: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  },
+  {
+    name: "Electricians",
+    icon: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  },
+  {
+    name: "HVAC",
+    icon: '<path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>',
+  },
+  {
+    name: "Landscapers",
+    icon: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  },
+  {
+    name: "House cleaners",
+    icon: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
+  },
+  {
+    name: "Painters",
+    icon: '<path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/>',
+  },
+  {
+    name: "Auto repair",
+    icon: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  },
+  {
+    name: "Dentists",
+    icon: '<path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/>',
+  },
+  {
+    name: "Attorneys",
+    icon: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+  },
+  {
+    name: "Accountants",
+    icon: '<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
+  },
+  {
+    name: "Salons & barbers",
+    icon: '<circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/>',
+  },
+];
+
+const STEPS = [
+  {
+    title: "Identify",
+    body: "We confirm the business is real — a working phone, a real address or service area, and an owner we can name.",
+  },
+  {
+    title: "Verify the license",
+    body: "Where a trade requires one, we look the business up in the official state or county registry and record the source and date.",
+  },
+  {
+    title: "Check reviews",
+    body: "We read reviews across platforms and flag patterns, not just averages. Ratings are never edited or filtered by sentiment.",
+  },
+  {
+    title: "Confirm they're taking work",
+    body: "A listing only helps if someone answers. We confirm the business is active and responsive before it earns a badge.",
+  },
+];
+---
+
+<!-- Hero -->
+<section class="border-b border-line bg-surface">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_400px] lg:items-center lg:gap-16 lg:py-20">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+        Local business directory · NJ · NY · PA
+      </p>
+      <h1 class="mt-4 font-display text-4xl font-bold text-ink sm:text-5xl">
+        Find trusted local pros in New Jersey, New&nbsp;York &amp; Pennsylvania
+      </h1>
+      <p class="mt-4 max-w-prose text-lg text-muted">
+        Verified licenses. Real reviews. Fast responses.
+      </p>
+      <div class="mt-8">
+        <HeroSearch />
+      </div>
+      <p class="mt-4 text-sm text-muted">
+        Every “verified” badge names the official registry it was checked against — and the date
+        we checked. <a href="/how-we-verify" class="font-medium text-brand underline underline-offset-2">How we verify</a>
+      </p>
+    </div>
+    <div class="hidden lg:block">
+      <VerifySpecimen />
+    </div>
+  </div>
+</section>
+
+<!-- Category grid -->
+<section class="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="browse-heading">
+  <h2 id="browse-heading" class="font-display text-2xl font-semibold text-ink">
+    Browse by category
+  </h2>
+  <p class="mt-1 text-muted">Start with what you need done.</p>
+  <ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+    {CATEGORY_TILES.map((tile) => (
+      <li>
+        <a
+          href={`/search?what=${encodeURIComponent(tile.name)}`}
+          class="flex min-h-[48px] items-center gap-3 rounded-card border border-line bg-surface px-4 py-3 transition-colors hover:border-brand hover:bg-brand-wash"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="shrink-0 text-brand"
+            aria-hidden="true"
+            set:html={tile.icon}
+          />
+          <span class="text-sm font-medium text-ink">{tile.name}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<!-- How we verify -->
+<section class="bg-brand-deep text-white" aria-labelledby="verify-heading">
+  <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 id="verify-heading" class="font-display text-2xl font-semibold">How we verify</h2>
+        <p class="mt-1 max-w-prose text-white/80">
+          Four checks, in order, before any business earns a badge.
+        </p>
+      </div>
+      <a
+        href="/how-we-verify"
+        class="rounded-chip border border-white/40 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+      >
+        Read the full methodology
+      </a>
+    </div>
+    <ol class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {STEPS.map((step, i) => (
+        <li class="rounded-card border border-white/15 p-5">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-white/60">Step {i + 1}</p>
+          <h3 class="mt-2 font-display text-lg font-semibold">{step.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-white/80">{step.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<!-- Coverage -->
+<section class="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="coverage-heading">
+  <h2 id="coverage-heading" class="font-display text-2xl font-semibold text-ink">
+    Where we're launching
+  </h2>
+  <p class="mt-1 max-w-prose text-muted">
+    We're building coverage county by county, starting where our team lives and works.
+  </p>
+  <div class="mt-6 grid gap-4 lg:grid-cols-3">
+    {STATES.map((state) => (
+      <article class="rounded-card border border-line bg-surface p-5">
+        <div class="flex items-baseline gap-2">
+          <h3 class="font-display text-lg font-semibold text-ink">{state.name}</h3>
+          <span class="font-mono text-xs text-faint">{state.abbr}</span>
+        </div>
+        <ul class="mt-3 flex flex-wrap gap-1.5">
+          {state.launchCounties.map((county) => (
+            <li class="rounded-chip bg-inset px-2.5 py-1 text-xs font-medium text-muted">
+              {county}
+            </li>
+          ))}
+        </ul>
+        <p class="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-faint">
+          {state.licenseNote}
+        </p>
+      </article>
+    ))}
+  </div>
+</section>
+
+<!-- Business CTA band -->
+<section class="border-t border-line bg-surface">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-4 py-12 sm:px-6">
+    <div class="max-w-prose">
+      <h2 class="font-display text-2xl font-semibold text-ink">Own a local business?</h2>
+      <p class="mt-2 text-muted">
+        Listing is free. Verification is what sets you apart — and paid placement is always
+        labeled and never changes rankings or reviews.
+      </p>
+    </div>
+    <a
+      href="/for-businesses"
+      class="rounded-chip bg-accent px-6 py-3 text-base font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
+    >
+      List your business
+    </a>
+  </div>
+</section>

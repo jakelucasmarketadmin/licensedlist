@@ -1,0 +1,53 @@
+---
+import { SITE_NAME } from "@/lib/site";
+---
+
+<article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+  <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">About</p>
+  <h1 class="mt-3 font-display text-4xl font-bold text-ink">
+    A directory that checks
+  </h1>
+  <div class="mt-6 max-w-prose space-y-5 text-base leading-relaxed text-muted">
+    <p>
+      {SITE_NAME} is a local business directory for New Jersey, New York, and Pennsylvania,
+      built by a small team that has spent years doing web and marketing work for local
+      businesses across the same three states.
+    </p>
+    <p>
+      That work taught us two things. First: the difference between a good local business and a
+      bad one is enormous, and almost none of it shows up in a star rating. Second: the
+      directories people actually use don't check anything — anyone can buy a listing, and
+      "verified" usually means a credit card cleared.
+    </p>
+    <p>
+      So the rule this directory is built on is simple: <strong class="text-ink">badges must
+      mean something a stranger can check.</strong> When a listing here says a license is
+      verified, it names the official state registry we looked it up in and the date we looked.
+      When a placement is paid, it says so. When we don't have enough data to say something
+      honestly, we say "not enough data" instead of making it up.
+    </p>
+    <p>
+      We're starting small — a set of launch counties in each state where we can verify
+      businesses properly — and expanding only as fast as the checking allows.
+    </p>
+  </div>
+
+  <section class="mt-12 rounded-card border border-line bg-surface p-6" aria-labelledby="disclosure-heading">
+    <h2 id="disclosure-heading" class="font-display text-xl font-semibold text-ink">
+      Disclosures
+    </h2>
+    <ul class="mt-3 max-w-prose space-y-3 text-sm leading-relaxed text-muted">
+      <li>
+        {SITE_NAME} is operated by a web-design and marketing agency. Some listed businesses
+        are agency clients — those listings are always labeled as sponsored and receive no
+        ranking benefit. The full rules are in our
+        <a href="/editorial-policy" class="font-medium text-brand underline underline-offset-2">editorial policy</a>.
+      </li>
+      <li>
+        Some copy on this site is drafted with AI assistance and reviewed by a person before
+        publishing. Verification decisions — license checks, badges, listing status — are
+        always made by a person against the source registry.
+      </li>
+    </ul>
+  </section>
+</article>

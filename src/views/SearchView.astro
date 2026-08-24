@@ -1,0 +1,56 @@
+---
+import HeroSearch from "@/components/site/HeroSearch.astro";
+
+interface Props {
+  what: string;
+  where: string;
+}
+
+const { what, where } = Astro.props;
+const hasQuery = Boolean(what || where);
+const queryLabel = [what, where].filter(Boolean).join(" in ");
+---
+
+<section class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+  <h1 class="font-display text-3xl font-bold text-ink">Search the directory</h1>
+  <div class="mt-6">
+    <HeroSearch />
+  </div>
+
+  <div class="mt-10 rounded-card border border-line bg-surface p-6">
+    {hasQuery ? (
+      <>
+        <h2 class="font-display text-xl font-semibold text-ink">
+          No listings yet for “{queryLabel}”
+        </h2>
+        <p class="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+          We're verifying our launch businesses county by county across New Jersey, New York,
+          and Pennsylvania right now, and listings go live only after they pass
+          verification — so search results here will start off small and grow.
+        </p>
+      </>
+    ) : (
+      <>
+        <h2 class="font-display text-xl font-semibold text-ink">Start with what and where</h2>
+        <p class="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+          Try a service and a town — like “Roofers” in “Hackensack, NJ.” Listings are being
+          verified county by county and go live as they pass.
+        </p>
+      </>
+    )}
+    <div class="mt-4 flex flex-wrap gap-3">
+      <a
+        href="/how-we-verify"
+        class="rounded-chip border border-line-strong px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-inset"
+      >
+        How verification works
+      </a>
+      <a
+        href="/for-businesses"
+        class="rounded-chip border border-line-strong px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-inset"
+      >
+        List your business
+      </a>
+    </div>
+  </div>
+</section>
