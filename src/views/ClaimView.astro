@@ -1,0 +1,108 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import { fetchBusinesses, isPublished, isDemo } from "@/lib/businesses";
+
+interface Props {
+  query: string;
+  preview?: boolean;
+}
+const { query, preview } = Astro.props;
+
+const all = await fetchBusinesses();
+const pool = all.filter((b) => isPublished(b) || (preview && isDemo(b)));
+const results = query
+  ? pool
+      .filter((b) => (b.name ?? "").toLowerCase().includes(query.toLowerCase()))
+      .slice(0, 10)
+  : [];
+
+const STEPS = [
+  { title: "Find", body: "Search for your business below." },
+  { title: "Verify", body: "We confirm you're the owner by calling the number on file or emailing the business domain." },
+  { title: "Complete", body: "Fix your details, add photos and hours, and respond to reviews. Free forever — no credit card." },
+];
+---
+
+<article class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo
+    trail={[
+      { name: "Home", path: "/" },
+      { name: "For businesses", path: "/for-businesses" },
+      { name: "Claim your listing", path: "/claim" },
+    ]}
+  />
+
+  <header class="mt-4 max-w-prose">
+    <h1 class="font-display text-4xl font-bold text-ink">Claim your listing</h1>
+    <p class="mt-3 text-lg text-muted">Free forever. No credit card.</p>
+  </header>
+
+  <ol class="mt-8 grid gap-4 sm:grid-cols-3">
+    {STEPS.map((step, i) => (
+      <li class="rounded-card border border-line bg-surface p-4">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-faint">Step {i + 1}</p>
+        <h2 class="mt-1 font-display text-base font-semibold text-ink">{step.title}</h2>
+        <p class="mt-1 text-xs leading-relaxed text-muted">{step.body}</p>
+      </li>
+    ))}
+  </ol>
+
+  <form action="/claim" method="get" class="mt-8" role="search" aria-label="Find your business">
+    <label for="claim-q" class="block text-sm font-medium text-ink">Business name</label>
+    <div class="mt-2 flex gap-2">
+      <input
+        id="claim-q"
+        name="q"
+        type="text"
+        value={query}
+        placeholder="Start typing your business name…"
+        class="w-full rounded-[10px] border border-line-strong bg-surface px-4 py-3 text-base text-ink placeholder:text-faint focus:border-brand focus:outline-none"
+      />
+      <button
+        type="submit"
+        class="rounded-chip bg-accent px-6 py-3 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
+      >
+        Search
+      </button>
+    </div>
+  </form>
+
+  {query && (
+    <section class="mt-6" aria-label="Search results">
+      {results.length > 0 ? (
+        <ul class="space-y-2">
+          {results.map((b) => (
+            <li class="flex flex-wrap items-center justify-between gap-3 rounded-card border border-line bg-surface p-4">
+              <div>
+                <p class="font-medium text-ink">{b.name}</p>
+                <p class="text-sm text-muted">{b.city}, {b.state}</p>
+              </div>
+              <a
+                href={`/claim/${b.slug}${preview ? "?preview=demo" : ""}`}
+                class="rounded-chip border border-line-strong px-4 py-2 text-sm font-semibold text-ink hover:bg-inset"
+              >
+                This is my business
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="rounded-card border border-dashed border-line-strong bg-surface p-6">
+          <h2 class="font-display text-lg font-semibold text-ink">
+            We don't have a listing for “{query}” yet
+          </h2>
+          <p class="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+            That's easy to fix — request a free listing and we'll build it, run license
+            verification, and send it to you for review.
+          </p>
+          <a
+            href="/for-businesses/get-listed"
+            class="mt-4 inline-block rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover"
+          >
+            Get listed free
+          </a>
+        </div>
+      )}
+    </section>
+  )}
+</article>

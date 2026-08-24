@@ -1,0 +1,2 @@
+businessSlugs,categorySlug,townSlug,name,phone,email,message,photosJson,urgency,consentText,consentAt,consentUserAgent,consentIp,source,status,ghlSynced
+,,,DEMO — delete after import,000-000-0000,demo@example.com,,,flexible,,2026-08-24,,,business-profile,new,false

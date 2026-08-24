@@ -130,3 +130,26 @@ export interface Claims {
   memberId?: string;
   createdAt?: Date;
 }
+
+/** Collection ID: leads */
+export interface Leads {
+  _id: string;
+  _createdDate?: Date;
+  /** comma list of business slugs the lead was shared with */
+  businessSlugs?: string;
+  categorySlug?: string;
+  townSlug?: string;
+  name?: string;
+  phone?: string;
+  email?: string;
+  message?: string;
+  photosJson?: string;
+  urgency?: string;
+  consentText?: string;
+  consentAt?: Date;
+  consentUserAgent?: string;
+  consentIp?: string;
+  source?: string;
+  status?: string;
+  ghlSynced?: boolean;
+}

@@ -1,0 +1,45 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import TrustBadge from "@/components/site/TrustBadge.astro";
+import ClaimForm from "@/components/site/ClaimForm.tsx";
+import { isDemo, type DirectoryBusiness } from "@/lib/businesses";
+
+interface Props {
+  business: DirectoryBusiness;
+}
+const { business: b } = Astro.props;
+---
+
+<article class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo
+    trail={[
+      { name: "Home", path: "/" },
+      { name: "Claim your listing", path: "/claim" },
+      { name: b.name ?? "Business", path: `/claim/${b.slug}` },
+    ]}
+  />
+
+  {isDemo(b) && (
+    <p class="mt-4 rounded-card border border-warn bg-warn-wash px-4 py-3 text-sm font-medium text-warn">
+      Sample listing — claims against sample records are for flow testing only.
+    </p>
+  )}
+
+  <header class="mt-4">
+    <h1 class="font-display text-3xl font-bold text-ink">Claim {b.name}</h1>
+    <div class="mt-3 flex flex-wrap items-center gap-3">
+      <span class="text-sm text-muted">{b.city}, {b.state}</span>
+      <TrustBadge licenseStatus={b.licenseStatus} licenseSource={b.licenseSource} licenseVerifiedAt={b.licenseVerifiedAt} size="sm" />
+    </div>
+  </header>
+
+  <div class="mt-6 rounded-card border border-line bg-surface p-6">
+    <ClaimForm client:load businessSlug={b.slug ?? ""} businessName={b.name ?? ""} />
+  </div>
+
+  <p class="mt-4 max-w-prose text-sm leading-relaxed text-faint">
+    Claiming requires that you're authorized to represent this business. Once verified, you can
+    fix details, add photos and hours, and respond to reviews — free forever. Verification
+    protects you: it stops anyone else from editing your listing.
+  </p>
+</article>

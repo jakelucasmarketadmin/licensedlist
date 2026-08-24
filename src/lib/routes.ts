@@ -67,6 +67,20 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     path: "/categories",
     crumb: "Categories",
   },
+  "/pricing": {
+    title: `Plans & Pricing for Businesses · ${SITE_NAME}`,
+    description:
+      "Free listings forever. Verified $29/mo, Featured $99/mo (max 3 per category per county). Paid placement is always labeled and never changes rankings or reviews.",
+    path: "/pricing",
+    crumb: "Pricing",
+  },
+  "/claim": {
+    title: `Claim Your Business Listing · ${SITE_NAME}`,
+    description:
+      "Find your business, verify you own it, and take control of your listing — free forever, no credit card.",
+    path: "/claim",
+    crumb: "Claim your listing",
+  },
   "/search": {
     title: `Search · ${SITE_NAME}`,
     description: `Search ${SITE_NAME} for verified local businesses in New Jersey, New York & Pennsylvania.`,

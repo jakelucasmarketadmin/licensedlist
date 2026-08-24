@@ -17,6 +17,9 @@ import ListingsView from "@/views/ListingsView.astro";
 import BusinessProfileView from "@/views/BusinessProfileView.astro";
 import CategoryHubView from "@/views/CategoryHubView.astro";
 import CategoriesIndexView from "@/views/CategoriesIndexView.astro";
+import PricingView from "@/views/PricingView.astro";
+import ClaimView from "@/views/ClaimView.astro";
+import ClaimBusinessView from "@/views/ClaimBusinessView.astro";
 import { SITE_NAME } from "@/lib/site";
 import { ROUTE_SEO } from "@/lib/routes";
 import { matchHubPath, getState, getCounty, getTown } from "@/lib/geo";
@@ -63,6 +66,8 @@ const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/terms": TermsView,
   "/search": SearchView,
   "/categories": CategoriesIndexView,
+  "/pricing": PricingView,
+  "/claim": ClaimView,
 };
 
 let seo: PageSeo | undefined = ROUTE_SEO[pathname];
@@ -109,6 +114,21 @@ if (!View && segments.length === 2 && segments[0] === "business") {
       breadcrumbJsonLd(origin, trail),
       localBusinessJsonLd(origin, { ...business, schemaType: category?.schemaType }),
     ];
+  }
+}
+
+// --- Claim a specific listing: /claim/{slug} ---------------------------------
+if (!View && segments.length === 2 && segments[0] === "claim") {
+  const business = await getBusinessBySlug(segments[1], true);
+  if (business) {
+    View = ClaimBusinessView;
+    viewProps = { business };
+    seo = {
+      title: `Claim ${business.name} · ${SITE_NAME}`,
+      description: `Verify ownership of ${business.name} and take control of the listing — free forever.`,
+      path: pathname,
+      robots: "noindex, follow",
+    };
   }
 }
 
@@ -301,6 +321,11 @@ const notFoundSeo: PageSeo = {
   robots: "noindex, nofollow",
 };
 
+const claimProps =
+  pathname === "/claim"
+    ? { query: (Astro.url.searchParams.get("q") ?? "").slice(0, 80), preview }
+    : {};
+
 const searchProps =
   pathname === "/search"
     ? {
@@ -317,5 +342,5 @@ const RenderView = View ?? NotFoundView;
 ---
 
 <SiteLayout seo={seo ?? notFoundSeo} jsonLd={View ? jsonLd : []}>
-  <RenderView {...viewProps} {...searchProps} />
+  <RenderView {...viewProps} {...searchProps} {...claimProps} />
 </SiteLayout>
