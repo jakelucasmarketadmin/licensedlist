@@ -1,0 +1,73 @@
+---
+/**
+ * The signature element: a specimen of the verification record every listed
+ * business gets. Clearly labeled as a sample — no real business facts here.
+ */
+---
+
+<figure
+  class="relative overflow-hidden rounded-card border border-line-strong bg-surface p-5 shadow-sm"
+  aria-label="Sample verification record"
+>
+  <span
+    aria-hidden="true"
+    class="pointer-events-none absolute -right-6 top-8 rotate-[18deg] select-none font-mono text-3xl font-medium uppercase tracking-[0.35em] text-line"
+  >
+    Specimen
+  </span>
+
+  <div class="flex items-start justify-between gap-3">
+    <div>
+      <p class="font-display text-lg font-semibold text-ink">Sample Roofing Co.</p>
+      <p class="text-sm text-muted">Roofers · Hackensack, NJ</p>
+    </div>
+    <span
+      class="inline-flex shrink-0 items-center gap-1.5 rounded-chip bg-ok-wash px-3 py-1 text-xs font-semibold text-ok"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="13"
+        height="13"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+        <path d="m9 12 2 2 4-4"></path>
+      </svg>
+      License verified
+    </span>
+  </div>
+
+  <div class="ledger mt-4 rounded-[10px] bg-inset px-4 py-2">
+    <div class="ledger-row">
+      <span class="ledger-key">License</span>
+      <span class="ledger-val">NJ HIC #13VH-SAMPLE</span>
+    </div>
+    <div class="ledger-row">
+      <span class="ledger-key">Source</span>
+      <span class="ledger-val">NJ Division of Consumer Affairs</span>
+    </div>
+    <div class="ledger-row">
+      <span class="ledger-key">Checked</span>
+      <span class="ledger-val">August 2026</span>
+    </div>
+    <div class="ledger-row">
+      <span class="ledger-key">Reviews</span>
+      <span class="ledger-val">4.8 across Google &amp; Yelp (127 total)</span>
+    </div>
+    <div class="ledger-row">
+      <span class="ledger-key">Response</span>
+      <span class="ledger-val">Replies in about 2 hours</span>
+    </div>
+  </div>
+
+  <figcaption class="mt-3 text-xs text-faint">
+    A sample record. Every verified listing shows the registry it was checked against and the
+    date we checked.
+  </figcaption>
+</figure>

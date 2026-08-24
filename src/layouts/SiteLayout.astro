@@ -1,0 +1,57 @@
+---
+import Header from "@/components/site/Header.astro";
+import Footer from "@/components/site/Footer.astro";
+import { SITE_NAME } from "@/lib/site";
+import { resolveOrigin, type PageSeo } from "@/lib/seo";
+
+interface Props {
+  seo: PageSeo;
+  /** JSON-LD nodes rendered as individual script tags. */
+  jsonLd?: object[];
+}
+
+const { seo, jsonLd = [] } = Astro.props;
+const origin = resolveOrigin(Astro.url.origin);
+const canonical = `${origin}${seo.path === "/" ? "/" : seo.path}`;
+const robots = seo.robots ?? "index, follow";
+const isIndexable = !robots.includes("noindex");
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta name="robots" content={robots} />
+    {isIndexable && <link rel="canonical" href={canonical} />}
+
+    <meta property="og:type" content={seo.ogType ?? "website"} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    {isIndexable && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    {jsonLd.map((node) => (
+      <script type="application/ld+json" set:html={JSON.stringify(node)} />
+    ))}
+  </head>
+  <body class="min-h-screen bg-paper text-ink font-sans">
+    <a href="#main" class="skip-link">Skip to main content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

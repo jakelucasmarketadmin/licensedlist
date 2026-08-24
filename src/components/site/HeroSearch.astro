@@ -1,0 +1,66 @@
+---
+import { STARTER_CATEGORIES, STARTER_TOWNS } from "@/lib/site";
+---
+
+<form action="/search" method="get" class="w-full" role="search" aria-label="Find a local business">
+  <div
+    class="flex flex-col gap-2 rounded-card border border-line-strong bg-surface p-2 shadow-sm sm:flex-row sm:items-stretch"
+  >
+    <div class="flex-1 border-line sm:border-r sm:pr-2">
+      <label for="search-what" class="block px-3 pt-2 text-xs font-semibold uppercase tracking-wider text-faint">
+        What
+      </label>
+      <input
+        id="search-what"
+        name="what"
+        type="text"
+        list="category-suggestions"
+        placeholder="Roofer, dentist, attorney…"
+        autocomplete="off"
+        class="w-full bg-transparent px-3 pb-2 pt-1 text-base text-ink placeholder:text-faint focus:outline-none"
+      />
+    </div>
+    <div class="flex-1 border-t border-line pt-2 sm:border-t-0 sm:pt-0">
+      <label for="search-where" class="block px-3 pt-2 text-xs font-semibold uppercase tracking-wider text-faint">
+        Where
+      </label>
+      <input
+        id="search-where"
+        name="where"
+        type="text"
+        list="town-suggestions"
+        placeholder="Town or county"
+        autocomplete="off"
+        class="w-full bg-transparent px-3 pb-2 pt-1 text-base text-ink placeholder:text-faint focus:outline-none"
+      />
+    </div>
+    <button
+      type="submit"
+      class="flex min-h-[48px] items-center justify-center gap-2 rounded-[10px] bg-accent px-6 text-base font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+      Search
+    </button>
+  </div>
+
+  <datalist id="category-suggestions">
+    {STARTER_CATEGORIES.map((c) => <option value={c} />)}
+  </datalist>
+  <datalist id="town-suggestions">
+    {STARTER_TOWNS.map((t) => <option value={t} />)}
+  </datalist>
+</form>
