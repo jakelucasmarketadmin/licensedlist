@@ -49,6 +49,8 @@ export interface DirectoryBusiness {
   licenseStatus?: string;
   licenseNumber?: string;
   licenseSource?: string;
+  /** Who holds the license when it isn't the business itself (e.g. a med spa's medical director). */
+  licenseHolder?: string;
   licenseVerifiedAt?: string | Date;
   insuredStatus?: string;
   ratingGoogle?: number;
