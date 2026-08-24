@@ -1,0 +1,100 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import MethodologyStrip from "@/components/site/MethodologyStrip.astro";
+import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
+import { getCountiesByState, getTownsByCounty, type StateSeed } from "@/lib/geo";
+import { SITE_NAME } from "@/lib/site";
+
+interface Props {
+  state: StateSeed;
+}
+const { state } = Astro.props;
+const counties = getCountiesByState(state.slug);
+
+const faq = [
+  {
+    q: `Do contractors need a license in ${state.name}?`,
+    a: `For most home-improvement work, yes — ${state.abbr} requires contractors to be registered or licensed, and the licensed trades carry numbers you can look up. The section above explains where; every verified listing names the exact registry we checked.`,
+  },
+  {
+    q: "How do I check a license myself?",
+    a: `Every verified listing on ${SITE_NAME} names the exact registry we checked and the date we checked it, so you can repeat the lookup yourself. Our methodology page lists each registry by state and trade.`,
+  },
+  {
+    q: `When do ${state.name} listings go live?`,
+    a: `We publish a category page only once it has at least three verified businesses behind it. We're verifying our launch businesses county by county now — if you run a business here, a free listing puts you at the front of that queue.`,
+  },
+];
+---
+
+<article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo trail={[{ name: "Home", path: "/" }, { name: state.name, path: `/${state.slug}` }]} />
+
+  <header class="mt-4 max-w-prose">
+    <h1 class="font-display text-4xl font-bold text-ink">Local pros across {state.name}</h1>
+    <p class="mt-3 text-lg leading-relaxed text-muted">{state.intro}</p>
+  </header>
+
+  <section class="mt-10" aria-labelledby="counties-heading">
+    <h2 id="counties-heading" class="font-display text-2xl font-semibold text-ink">
+      Browse by county
+    </h2>
+    <ul class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {counties.map((county) => {
+        const towns = getTownsByCounty(state.slug, county.slug);
+        return (
+          <li>
+            <a
+              href={`/${county.pathKey}`}
+              class="block h-full rounded-card border border-line bg-surface p-5 transition-colors hover:border-brand hover:bg-brand-wash"
+            >
+              <h3 class="font-display text-lg font-semibold text-ink">{county.name}</h3>
+              <p class="mt-1 text-sm text-muted">
+                {towns.length} {towns.length === 1 ? "area" : "areas"} covered
+                {towns.length > 0 && ` · ${towns.slice(0, 3).map((t) => t.name).join(", ")}${towns.length > 3 ? "…" : ""}`}
+              </p>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+
+  <section class="mt-12" aria-labelledby="categories-heading">
+    <h2 id="categories-heading" class="font-display text-2xl font-semibold text-ink">
+      Find a service
+    </h2>
+    <div class="mt-5">
+      <CategoriesEmptyState scopeName={state.name} />
+    </div>
+  </section>
+
+  <section class="mt-12 max-w-prose" aria-labelledby="licensing-heading">
+    <h2 id="licensing-heading" class="font-display text-2xl font-semibold text-ink">
+      How licensing works in {state.name}
+    </h2>
+    <p class="mt-3 leading-relaxed text-muted">{state.licensingNotes}</p>
+    <p class="mt-3 text-sm leading-relaxed text-faint">
+      Registration or licensure is not a government endorsement of a business's competency —
+      it's a floor, not a recommendation. That's why we check reviews and responsiveness too.
+    </p>
+  </section>
+
+  <div class="mt-12">
+    <MethodologyStrip />
+  </div>
+
+  <section class="mt-12 max-w-prose" aria-labelledby="faq-heading">
+    <h2 id="faq-heading" class="font-display text-2xl font-semibold text-ink">
+      {state.abbr} hiring questions
+    </h2>
+    <dl class="mt-5 space-y-5">
+      {faq.map((item) => (
+        <div class="rounded-card border border-line bg-surface p-5">
+          <dt class="text-base font-semibold text-ink">{item.q}</dt>
+          <dd class="mt-2 text-sm leading-relaxed text-muted">{item.a}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+</article>

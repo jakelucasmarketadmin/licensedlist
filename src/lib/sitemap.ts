@@ -1,5 +1,6 @@
 import { SITE_URL } from "./site";
 import { sitemapPaths } from "./routes";
+import { hubPaths } from "./geo";
 
 /**
  * Build the sitemap XML. One shared builder because the sitemap is served at
@@ -8,7 +9,7 @@ import { sitemapPaths } from "./routes";
  * this fleet), so robots.txt gets pointed at whichever resolves in production.
  */
 export function buildSitemapXml(): string {
-  const urls = sitemapPaths()
+  const urls = [...sitemapPaths(), ...hubPaths()]
     .map((path) => {
       const loc = `${SITE_URL}${path === "/" ? "/" : path}`;
       return `  <url><loc>${loc}</loc></url>`;

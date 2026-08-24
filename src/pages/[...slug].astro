@@ -10,8 +10,12 @@ import PrivacyView from "@/views/PrivacyView.astro";
 import TermsView from "@/views/TermsView.astro";
 import SearchView from "@/views/SearchView.astro";
 import NotFoundView from "@/views/NotFoundView.astro";
+import StateHubView from "@/views/StateHubView.astro";
+import CountyHubView from "@/views/CountyHubView.astro";
+import TownHubView from "@/views/TownHubView.astro";
 import { SITE_NAME } from "@/lib/site";
 import { ROUTE_SEO } from "@/lib/routes";
+import { matchHubPath } from "@/lib/geo";
 import {
   organizationJsonLd,
   webSiteJsonLd,
@@ -41,9 +45,64 @@ const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/search": SearchView,
 };
 
-const seo = ROUTE_SEO[pathname];
-const View = seo ? VIEWS[pathname] : undefined;
+let seo = ROUTE_SEO[pathname];
+let View = seo ? VIEWS[pathname] : undefined;
+let viewProps: Record<string, unknown> = {};
 const origin = resolveOrigin();
+
+// Geography hubs: /{state}, /{state}/{county}, /{state}/{county}/{town}
+const truncate = (text: string, max = 155) =>
+  text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
+let hubTrail: { name: string; path: string }[] | null = null;
+if (!seo) {
+  const hub = matchHubPath(pathname);
+  if (hub) {
+    const { state, county, town } = hub;
+    if (hub.kind === "state") {
+      View = StateHubView;
+      viewProps = { state };
+      seo = {
+        title: `Local Pros Across ${state.name} (${state.abbr}) · ${SITE_NAME}`,
+        description: truncate(state.intro),
+        path: `/${state.slug}`,
+        crumb: state.name,
+      };
+      hubTrail = [
+        { name: "Home", path: "/" },
+        { name: state.name, path: `/${state.slug}` },
+      ];
+    } else if (hub.kind === "county" && county) {
+      View = CountyHubView;
+      viewProps = { state, county };
+      seo = {
+        title: `${county.name}, ${state.abbr} Local Services · ${SITE_NAME}`,
+        description: truncate(county.intro),
+        path: `/${county.pathKey}`,
+        crumb: county.name,
+      };
+      hubTrail = [
+        { name: "Home", path: "/" },
+        { name: state.name, path: `/${state.slug}` },
+        { name: county.name, path: `/${county.pathKey}` },
+      ];
+    } else if (hub.kind === "town" && county && town) {
+      View = TownHubView;
+      viewProps = { state, county, town };
+      seo = {
+        title: `Local Businesses in ${town.name}, ${state.abbr} · ${SITE_NAME}`,
+        description: truncate(town.intro),
+        path: `/${town.pathKey}`,
+        crumb: town.name,
+      };
+      hubTrail = [
+        { name: "Home", path: "/" },
+        { name: state.name, path: `/${state.slug}` },
+        { name: county.name, path: `/${county.pathKey}` },
+        { name: town.name, path: `/${town.pathKey}` },
+      ];
+    }
+  }
+}
 
 // Temporary M2 probe (not in ROUTE_SEO → 404-path handled separately below):
 // verifies that CMS reads work server-side before hub pages are built on them.
@@ -62,20 +121,22 @@ if (pathname === "/__data-probe") {
 // JSON-LD: WebSite + Organization on home; BreadcrumbList on every other page.
 let jsonLd: object[] = [];
 if (seo && View) {
-  jsonLd =
-    pathname === "/"
-      ? [webSiteJsonLd(origin), organizationJsonLd(origin)]
-      : [
-          breadcrumbJsonLd(origin, [
-            { name: "Home", path: "/" },
-            ...(pathname === "/for-businesses/get-listed"
-              ? [
-                  { name: "For businesses", path: "/for-businesses" },
-                  { name: seo.crumb ?? seo.title, path: seo.path },
-                ]
-              : [{ name: seo.crumb ?? seo.title, path: seo.path }]),
-          ]),
-        ];
+  if (pathname === "/") {
+    jsonLd = [webSiteJsonLd(origin), organizationJsonLd(origin)];
+  } else {
+    const trail =
+      hubTrail ??
+      [
+        { name: "Home", path: "/" },
+        ...(pathname === "/for-businesses/get-listed"
+          ? [
+              { name: "For businesses", path: "/for-businesses" },
+              { name: seo.crumb ?? seo.title, path: seo.path },
+            ]
+          : [{ name: seo.crumb ?? seo.title, path: seo.path }]),
+      ];
+    jsonLd = [breadcrumbJsonLd(origin, trail)];
+  }
 }
 
 if (!seo && probeResult === null) {
@@ -118,6 +179,6 @@ const RenderView = View ?? NotFoundView;
   </html>
 ) : (
   <SiteLayout seo={seo ?? notFoundSeo} jsonLd={jsonLd}>
-    <RenderView {...searchProps} />
+    <RenderView {...viewProps} {...searchProps} />
   </SiteLayout>
 )}

@@ -1,7 +1,9 @@
 ---
 import HeroSearch from "@/components/site/HeroSearch.astro";
 import VerifySpecimen from "@/components/site/VerifySpecimen.astro";
-import { STATES } from "@/lib/site";
+import { getStates, getCountiesByState } from "@/lib/geo";
+
+const states = getStates();
 
 // Home category grid — 12 tiles. Icons are inline lucide paths (ISC license).
 const CATEGORY_TILES: { name: string; icon: string }[] = [
@@ -174,22 +176,32 @@ const STEPS = [
     We're building coverage county by county, starting where our team lives and works.
   </p>
   <div class="mt-6 grid gap-4 lg:grid-cols-3">
-    {STATES.map((state) => (
-      <article class="rounded-card border border-line bg-surface p-5">
+    {states.map((state) => (
+      <article class="flex flex-col rounded-card border border-line bg-surface p-5">
         <div class="flex items-baseline gap-2">
-          <h3 class="font-display text-lg font-semibold text-ink">{state.name}</h3>
+          <h3 class="font-display text-lg font-semibold text-ink">
+            <a href={`/${state.slug}`} class="hover:text-brand">{state.name}</a>
+          </h3>
           <span class="font-mono text-xs text-faint">{state.abbr}</span>
         </div>
         <ul class="mt-3 flex flex-wrap gap-1.5">
-          {state.launchCounties.map((county) => (
-            <li class="rounded-chip bg-inset px-2.5 py-1 text-xs font-medium text-muted">
-              {county}
+          {getCountiesByState(state.slug).map((county) => (
+            <li>
+              <a
+                href={`/${county.pathKey}`}
+                class="inline-block rounded-chip bg-inset px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-brand-wash hover:text-brand"
+              >
+                {county.name.replace(/ County$/, "")}
+              </a>
             </li>
           ))}
         </ul>
-        <p class="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-faint">
-          {state.licenseNote}
-        </p>
+        <a
+          href={`/${state.slug}`}
+          class="mt-4 border-t border-line pt-3 text-sm font-medium text-brand hover:underline"
+        >
+          Explore {state.name} →
+        </a>
       </article>
     ))}
   </div>

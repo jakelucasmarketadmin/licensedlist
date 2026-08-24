@@ -1,0 +1,96 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import MethodologyStrip from "@/components/site/MethodologyStrip.astro";
+import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
+import {
+  getTownsByCounty,
+  getNearbyCounties,
+  type StateSeed,
+  type CountySeed,
+} from "@/lib/geo";
+
+interface Props {
+  state: StateSeed;
+  county: CountySeed;
+}
+const { state, county } = Astro.props;
+const towns = getTownsByCounty(state.slug, county.slug);
+const nearby = getNearbyCounties(county);
+---
+
+<article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo
+    trail={[
+      { name: "Home", path: "/" },
+      { name: state.name, path: `/${state.slug}` },
+      { name: county.name, path: `/${county.pathKey}` },
+    ]}
+  />
+
+  <header class="mt-4 max-w-prose">
+    <h1 class="font-display text-4xl font-bold text-ink">{county.name} local services</h1>
+    <p class="mt-3 text-lg leading-relaxed text-muted">{county.intro}</p>
+  </header>
+
+  <section class="mt-10" aria-labelledby="towns-heading">
+    <h2 id="towns-heading" class="font-display text-2xl font-semibold text-ink">
+      Browse by area
+    </h2>
+    <ul class="mt-5 flex flex-wrap gap-2">
+      {towns.map((town) => (
+        <li>
+          <a
+            href={`/${town.pathKey}`}
+            class="inline-flex min-h-[40px] items-center rounded-chip border border-line bg-surface px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-brand hover:bg-brand-wash"
+          >
+            {town.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="mt-12" aria-labelledby="categories-heading">
+    <h2 id="categories-heading" class="font-display text-2xl font-semibold text-ink">
+      Find a service in {county.name}
+    </h2>
+    <div class="mt-5">
+      <CategoriesEmptyState scopeName={county.name} />
+    </div>
+  </section>
+
+  <section class="mt-12 max-w-prose" aria-labelledby="permits-heading">
+    <h2 id="permits-heading" class="font-display text-2xl font-semibold text-ink">
+      Permits &amp; licensing in {county.name}
+    </h2>
+    <p class="mt-3 leading-relaxed text-muted">{county.permitNotes}</p>
+    <p class="mt-3 text-sm text-faint">
+      Statewide rules are on the
+      <a href={`/${state.slug}`} class="font-medium text-brand underline underline-offset-2">{state.name} hub</a>.
+    </p>
+  </section>
+
+  <div class="mt-12">
+    <MethodologyStrip />
+  </div>
+
+  {nearby.length > 0 && (
+    <section class="mt-12" aria-labelledby="nearby-heading">
+      <h2 id="nearby-heading" class="font-display text-xl font-semibold text-ink">
+        Nearby counties
+      </h2>
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {nearby.map((c) => (
+          <li>
+            <a
+              href={`/${c.pathKey}`}
+              class="inline-flex min-h-[40px] items-center rounded-chip border border-line bg-surface px-4 py-2 text-sm font-medium text-muted transition-colors hover:border-brand hover:text-ink"
+            >
+              {c.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</article>

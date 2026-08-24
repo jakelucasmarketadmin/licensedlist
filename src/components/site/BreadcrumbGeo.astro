@@ -1,0 +1,22 @@
+---
+interface Props {
+  /** Ordered trail; the last item is the current page (rendered unlinked). */
+  trail: { name: string; path: string }[];
+}
+const { trail } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="text-sm text-faint">
+  <ol class="flex flex-wrap items-center gap-1">
+    {trail.map((crumb, i) => (
+      <li class="flex items-center gap-1">
+        {i > 0 && <span aria-hidden="true">/</span>}
+        {i < trail.length - 1 ? (
+          <a href={crumb.path} class="hover:text-ink">{crumb.name}</a>
+        ) : (
+          <span class="text-muted" aria-current="page">{crumb.name}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

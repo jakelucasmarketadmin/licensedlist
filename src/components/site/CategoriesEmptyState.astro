@@ -1,0 +1,35 @@
+---
+/**
+ * Rendered on hub pages while no category in this scope has ≥3 published
+ * listings (the publishing threshold). Honest empty state — never fake counts.
+ */
+interface Props {
+  /** e.g. "Bergen County" or "Hackensack" */
+  scopeName: string;
+}
+const { scopeName } = Astro.props;
+---
+
+<div class="rounded-card border border-dashed border-line-strong bg-surface p-6">
+  <h3 class="font-display text-lg font-semibold text-ink">
+    Listings coming soon in {scopeName}
+  </h3>
+  <p class="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+    We publish a category page only once it has at least three verified businesses behind it —
+    no filler, no scraped listings. Businesses here are being verified now.
+  </p>
+  <div class="mt-4 flex flex-wrap gap-3">
+    <a
+      href="/for-businesses/get-listed"
+      class="rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
+    >
+      Own a business here? Get listed free
+    </a>
+    <a
+      href="/how-we-verify"
+      class="rounded-chip border border-line-strong px-5 py-2.5 text-sm font-semibold text-ink hover:bg-inset"
+    >
+      How verification works
+    </a>
+  </div>
+</div>
