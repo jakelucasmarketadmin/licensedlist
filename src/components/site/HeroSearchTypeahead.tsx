@@ -88,7 +88,7 @@ function TypeaheadField({
 
   let lastGroup = "";
   return (
-    <div ref={wrapRef} className={`relative ${className ?? ""}`}>
+    <div ref={wrapRef} className={className}>
       <label htmlFor={id} className="block px-3 pt-2 text-xs font-semibold uppercase tracking-wider text-faint">
         {label}
       </label>
@@ -118,7 +118,7 @@ function TypeaheadField({
           id={listId}
           role="listbox"
           aria-label={`${label} suggestions`}
-          className="absolute left-0 right-0 top-full z-30 mt-1 max-h-[min(60vh,22rem)] overflow-y-auto overscroll-contain rounded-card border border-line-strong bg-surface py-1 shadow-lg"
+          className="absolute left-0 right-0 top-full z-30 mt-2 max-h-[min(60vh,22rem)] overflow-y-auto overscroll-contain rounded-card border border-line-strong bg-surface py-1 shadow-lg"
         >
           {rows.map((row, i) => {
             const header = row.group !== lastGroup ? row.group : null;
@@ -233,7 +233,7 @@ export default function HeroSearchTypeahead({ popular }: Props) {
 
   return (
     <form action="/search" method="get" className="w-full" role="search" aria-label="Find a local business">
-      <div className="flex flex-col gap-2 rounded-card border border-line-strong bg-surface p-2 shadow-sm sm:flex-row sm:items-stretch">
+      <div className="relative flex flex-col gap-2 rounded-card border border-line-strong bg-surface p-2 shadow-sm sm:flex-row sm:items-stretch">
         <TypeaheadField
           id="search-what"
           name="what"
