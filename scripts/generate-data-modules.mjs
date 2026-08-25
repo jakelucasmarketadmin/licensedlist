@@ -5,7 +5,7 @@
 // same CSVs are imported into the Wix CMS collections (see docs/DECISIONS.md).
 //
 // Usage: node scripts/generate-data-modules.mjs
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -170,6 +170,45 @@ export const GUIDE_SEED: GuideSeed[] = ${JSON.stringify(guides, null, 2)};
     join(root, 'data/import/guides.csv'),
     [header.join(','), ...guides.map((g) => header.map((h) => esc(g[h])).join(','))].join(String.fromCharCode(10)) + String.fromCharCode(10),
   );
+}
+
+
+// ---- town photos (optional file; module regenerates when present) ----
+{
+  const photosPath = join(root, 'data/geo/town-photos.csv');
+  if (existsSync(photosPath)) {
+    const photos = parseCsv(readFileSync(photosPath, 'utf8')).filter((p) => p.url);
+    for (const p of photos) {
+      if (!['county', 'town'].includes(p.scope)) fail(`town-photo bad scope ${p.scope}`);
+      if (!stateSlugs.has(p.stateSlug)) fail(`town-photo bad state ${p.stateSlug}`);
+      if (!counties.some((c) => c.stateSlug === p.stateSlug && c.slug === p.countySlug))
+        fail(`town-photo bad county ${p.stateSlug}/${p.countySlug}`);
+      if (p.scope === 'town' && !towns.some((t) => t.stateSlug === p.stateSlug && t.slug === p.townSlug))
+        fail(`town-photo bad town ${p.stateSlug}/${p.townSlug}`);
+      if (!/^https:\/\/upload\.wikimedia\.org\//.test(p.url)) fail(`town-photo non-Commons url ${p.url}`);
+      if (!p.license || !p.author || !p.sourceUrl) fail(`town-photo ${p.url} missing credit fields`);
+    }
+    writeFileSync(
+      join(root, 'src/data/town-photos.generated.ts'),
+      `${banner}
+export interface TownPhotoSeed {
+  scope: "county" | "town";
+  stateSlug: string;
+  countySlug: string;
+  townSlug: string;
+  url: string;
+  author: string;
+  license: string;
+  sourceUrl: string;
+  caption: string;
+  alt: string;
+}
+
+export const TOWN_PHOTO_SEED: TownPhotoSeed[] = ${JSON.stringify(photos, null, 2)};
+`,
+    );
+    console.log(`town photos: ${photos.length}`);
+  }
 }
 
 console.log(

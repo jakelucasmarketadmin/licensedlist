@@ -1,0 +1,44 @@
+---
+/**
+ * Illustrated category tile: Phosphor duotone icon on the group's tint
+ * gradient. Server-rendered (SSR entry) — zero client JS. Also used as the
+ * photo fallback on cards via `asFallback`.
+ */
+import * as Phosphor from "@phosphor-icons/react/dist/ssr";
+import { categoryArt } from "@/data/category-art";
+import { getCategory } from "@/lib/taxonomy";
+
+interface Props {
+  slug: string;
+  /** Compact = fallback art panel (no label link), default = nav tile. */
+  asFallback?: boolean;
+  class?: string;
+}
+const { slug, asFallback = false, class: className } = Astro.props;
+const category = getCategory(slug);
+const art = categoryArt(slug);
+const Icon = (Phosphor as Record<string, any>)[art.icon] ?? Phosphor.Storefront;
+const tint = `var(--tint-${art.tint})`;
+---
+
+{asFallback ? (
+  <div
+    class:list={["flex h-full w-full items-center justify-center", className]}
+    style={`background: linear-gradient(135deg, ${tint}, color-mix(in srgb, ${tint} 55%, var(--surface)));`}
+    aria-hidden="true"
+  >
+    <Icon size={44} weight="duotone" color="var(--ink)" />
+  </div>
+) : (
+  <a
+    href={`/${slug}`}
+    class:list={[
+      "card-hover flex min-h-[104px] flex-col justify-between rounded-card border border-line p-4",
+      className,
+    ]}
+    style={`background: linear-gradient(135deg, ${tint}, color-mix(in srgb, ${tint} 45%, var(--surface)));`}
+  >
+    <Icon size={30} weight="duotone" color="var(--ink)" aria-hidden="true" />
+    <span class="mt-3 text-sm font-semibold text-ink">{category?.name ?? slug}</span>
+  </a>
+)}

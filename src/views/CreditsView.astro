@@ -1,0 +1,40 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import { allCredits } from "@/lib/town-photos";
+import { getCounty, getTownBySlug } from "@/lib/geo";
+
+const credits = allCredits();
+const placeLabel = (p: (typeof credits)[number]) => {
+  if (p.scope === "town") {
+    const t = getTownBySlug(p.townSlug, p.stateSlug);
+    return t ? `${t.name}, ${t.stateSlug.toUpperCase()}` : p.townSlug;
+  }
+  const c = getCounty(p.stateSlug, p.countySlug);
+  return c ? `${c.name}, ${p.stateSlug.toUpperCase()}` : p.countySlug;
+};
+---
+
+<article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+  <BreadcrumbGeo trail={[{ name: "Home", path: "/" }, { name: "Photo credits", path: "/credits" }]} />
+  <h1 class="mt-4 font-display text-4xl font-bold text-ink">Photo credits</h1>
+  <p class="mt-4 max-w-prose leading-relaxed text-muted">
+    Town and county photography on this site comes from Wikimedia Commons under the licenses
+    listed below. Each credit links to the original file page. Business photos are provided by
+    the businesses themselves. Category artwork is illustrative.
+  </p>
+
+  <ul class="mt-8 space-y-3">
+    {credits.map((p) => (
+      <li class="rounded-card border border-line bg-surface p-4 text-sm">
+        <p class="font-medium text-ink">{placeLabel(p)}</p>
+        <p class="mt-1 text-muted">{p.caption}</p>
+        <p class="mt-1 text-faint">
+          Photo: {p.author} ·
+          <a href={p.sourceUrl} rel="noopener" target="_blank" class="text-brand underline underline-offset-2"> source</a>
+          · {p.license}
+        </p>
+      </li>
+    ))}
+  </ul>
+  {credits.length === 0 && <p class="mt-8 text-muted">No third-party photos are in use yet.</p>}
+</article>

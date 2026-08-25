@@ -1,0 +1,38 @@
+---
+/**
+ * Responsive image with srcset (Wix Media / Commons hosts), LQIP background,
+ * fixed aspect ratio (no CLS), and lazy loading below the fold. `priority`
+ * marks the LCP image (eager + fetchpriority=high).
+ */
+import { srcsetFor, lqipFor, imageAt } from "@/lib/images";
+
+interface Props {
+  src: string;
+  alt: string;
+  /** width/height ratio, e.g. 4/3. Drives aspect-ratio and srcset heights. */
+  aspect?: number;
+  sizes?: string;
+  priority?: boolean;
+  class?: string;
+}
+const { src, alt, aspect = 4 / 3, sizes = "(min-width: 1024px) 33vw, 100vw", priority = false, class: className } = Astro.props;
+const srcset = srcsetFor(src, aspect);
+const lqip = lqipFor(src);
+const isCommons = src.startsWith("https://upload.wikimedia.org/wikipedia/commons/thumb/");
+const fallbackW = isCommons ? 960 : 800;
+const fallbackSrc = imageAt(src, fallbackW, isCommons ? undefined : Math.round(fallbackW / aspect));
+---
+
+<img
+  src={fallbackSrc}
+  srcset={srcset}
+  sizes={srcset ? sizes : undefined}
+  alt={alt}
+  width={fallbackW}
+  height={Math.round(fallbackW / aspect)}
+  loading={priority ? "eager" : "lazy"}
+  decoding={priority ? "sync" : "async"}
+  fetchpriority={priority ? "high" : undefined}
+  class:list={["h-full w-full object-cover", className]}
+  style={`aspect-ratio: ${aspect}; ${lqip ? `background-image:url('${lqip}');background-size:cover;background-position:center;` : ""}`}
+/>

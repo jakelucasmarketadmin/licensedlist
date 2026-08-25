@@ -102,6 +102,12 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     robots: "noindex, follow",
     crumb: "Owner dashboard",
   },
+  "/credits": {
+    title: `Photo Credits · ${SITE_NAME}`,
+    description: "Attribution for the town and county photography used across the directory — every image links to its Wikimedia Commons source and license.",
+    path: "/credits",
+    crumb: "Photo credits",
+  },
   "/search": {
     title: `Search · ${SITE_NAME}`,
     description: `Search ${SITE_NAME} for verified local businesses in New Jersey, New York & Pennsylvania.`,
