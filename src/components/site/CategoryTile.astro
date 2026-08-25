@@ -4,7 +4,7 @@
  * gradient. Server-rendered (SSR entry) — zero client JS. Also used as the
  * photo fallback on cards via `asFallback`.
  */
-import * as Phosphor from "@phosphor-icons/react/dist/ssr";
+import PhIcon from "@/components/site/PhIcon.astro";
 import { categoryArt } from "@/data/category-art";
 import { getCategory } from "@/lib/taxonomy";
 
@@ -17,7 +17,6 @@ interface Props {
 const { slug, asFallback = false, class: className } = Astro.props;
 const category = getCategory(slug);
 const art = categoryArt(slug);
-const Icon = (Phosphor as Record<string, any>)[art.icon] ?? Phosphor.Storefront;
 const tint = `var(--tint-${art.tint})`;
 ---
 
@@ -27,7 +26,7 @@ const tint = `var(--tint-${art.tint})`;
     style={`background: linear-gradient(135deg, ${tint}, color-mix(in srgb, ${tint} 55%, var(--surface)));`}
     aria-hidden="true"
   >
-    <Icon size={44} weight="duotone" color="var(--ink)" />
+    <PhIcon icon={art.icon} size={44} color="var(--ink)" />
   </div>
 ) : (
   <a
@@ -38,7 +37,7 @@ const tint = `var(--tint-${art.tint})`;
     ]}
     style={`background: linear-gradient(135deg, ${tint}, color-mix(in srgb, ${tint} 45%, var(--surface)));`}
   >
-    <Icon size={30} weight="duotone" color="var(--ink)" aria-hidden="true" />
+    <PhIcon icon={art.icon} size={30} color="var(--ink)" />
     <span class="mt-3 text-sm font-semibold text-ink">{category?.name ?? slug}</span>
   </a>
 )}

@@ -1,0 +1,28 @@
+---
+/**
+ * Inline Phosphor duotone icon — SVG data baked into the repo
+ * (category-icons.generated.ts), so no icon package needs installing on the
+ * host platform. Server-rendered, zero client JS.
+ */
+import { ICON_SVGS } from "@/data/category-icons.generated";
+
+interface Props {
+  icon: string;
+  size?: number;
+  color?: string;
+  class?: string;
+}
+const { icon, size = 32, color = "currentColor", class: className } = Astro.props;
+const inner = ICON_SVGS[icon] ?? ICON_SVGS.Storefront;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 256 256"
+  width={size}
+  height={size}
+  fill={color}
+  aria-hidden="true"
+  class={className}
+  set:html={inner}
+/>
