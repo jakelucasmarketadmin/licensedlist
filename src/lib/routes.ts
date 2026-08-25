@@ -34,6 +34,13 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     path: "/for-businesses/get-listed",
     crumb: "Get listed",
   },
+  "/for-businesses/get-listed-basic": {
+    title: `Get Listed (Basic Form) · ${SITE_NAME}`,
+    description: `Fallback listing form for ${SITE_NAME} — used when the main intake form is unavailable.`,
+    path: "/for-businesses/get-listed-basic",
+    robots: "noindex, follow",
+    crumb: "Get listed (basic)",
+  },
   "/for-businesses/why-verified": {
     title: `Why a Verified Listing Is Worth Having · ${SITE_NAME}`,
     description:

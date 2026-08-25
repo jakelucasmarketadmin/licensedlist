@@ -1,6 +1,6 @@
 ---
-import GetListedForm from "@/components/site/GetListedForm.tsx";
 import { SITE_NAME, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
+import { JOTFORM_FORM_ID, JOTFORM_FORM_URL } from "@/lib/jotform";
 ---
 
 <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
@@ -16,12 +16,28 @@ import { SITE_NAME, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
     before anything goes live.
   </p>
 
-  <div class="mt-8 rounded-card border border-line bg-surface p-6">
-    <GetListedForm client:load />
+  <div class="mt-8 overflow-hidden rounded-card border border-line bg-surface">
+    <iframe
+      id={`JotFormIFrame-${JOTFORM_FORM_ID}`}
+      src={JOTFORM_FORM_URL}
+      style="width:100%;height:2200px;border:none;"
+      title="Add or update your listing"
+      allow="geolocation; microphone; camera; fullscreen; payment"
+    ></iframe>
   </div>
+  <script is:inline src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
+  <script is:inline define:vars={{ formId: JOTFORM_FORM_ID }}>
+    // Auto-resize the embed to its content; the 2200px style height above is
+    // the no-JS fallback (the page just scrolls).
+    if (typeof window.jotformEmbedHandler === "function") {
+      window.jotformEmbedHandler(`iframe[id='JotFormIFrame-${formId}']`, "https://form.jotform.com/");
+    }
+  </script>
 
   <p class="mt-4 text-sm text-faint">
-    Prefer email? Send your business name, town, and license number to
+    Form not loading?
+    <a href={JOTFORM_FORM_URL} target="_blank" rel="noopener" class="font-medium text-brand underline underline-offset-2">Open it in a new tab</a>
+    — or email your business name, town, and license number to
     <a href={`mailto:${BUSINESS_CONTACT_EMAIL}`} class="font-medium text-brand underline underline-offset-2">{BUSINESS_CONTACT_EMAIL}</a>.
   </p>
 </article>

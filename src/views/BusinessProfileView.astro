@@ -2,7 +2,8 @@
 import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import TrustBadge from "@/components/site/TrustBadge.astro";
 import QuoteRequestForm from "@/components/site/QuoteRequestForm.tsx";
-import { SITE_NAME, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
+import { SITE_NAME, SITE_URL, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
+import { jotformUpdateUrl } from "@/lib/jotform";
 import { getTown, getTownBySlug as getTownAnyCounty, getCounty, getState } from "@/lib/geo";
 import { getCategory } from "@/lib/taxonomy";
 import {
@@ -33,6 +34,7 @@ const rating = blendedRating(b);
 const sourcesLabel = ratingSourcesLabel(b);
 const sponsored = isSponsoredPlacement(b);
 const isClient = b.isClient === true || b.isClient === "true";
+const claimFormUrl = jotformUpdateUrl(b.name, `${SITE_URL}/business/${b.slug}`);
 
 const DAY_LABELS: [string, string][] = [
   ["mon", "Monday"], ["tue", "Tuesday"], ["wed", "Wednesday"], ["thu", "Thursday"],
@@ -293,7 +295,9 @@ const countyListOk =
           Claim your listing free to correct details and respond to reviews.
         </p>
         <a
-          href={`/claim/${b.slug}`}
+          href={claimFormUrl}
+          target="_blank"
+          rel="nofollow noopener"
           class="mt-3 inline-block rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover"
         >
           Claim this listing

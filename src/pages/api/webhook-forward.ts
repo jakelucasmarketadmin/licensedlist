@@ -9,15 +9,34 @@ import type { APIRoute } from "astro";
  * lead/claim collections are collect-content, so visitors can't update them —
  * elevation runs server-side only). If no URL is configured, log and continue.
  */
-export const POST: APIRoute = async ({ request }) => {
-  let body: any;
-  try {
-    body = await request.json();
-  } catch {
-    return new Response(JSON.stringify({ ok: false, error: "bad json" }), { status: 400 });
+export const POST: APIRoute = async ({ request, url }) => {
+  // Two callers: our own forms POST JSON {type, itemId, payload}; the Jotform
+  // webhook integration POSTs multipart/form-data (rawRequest et al.) with the
+  // type carried as ?type=claim on the URL pasted into Jotform.
+  let type: string | undefined;
+  let itemId: string | undefined;
+  let payload: any;
+  const contentType = request.headers.get("content-type") ?? "";
+  if (contentType.includes("application/json")) {
+    let body: any;
+    try {
+      body = await request.json();
+    } catch {
+      return new Response(JSON.stringify({ ok: false, error: "bad json" }), { status: 400 });
+    }
+    ({ type, itemId, payload } = body ?? {});
+  } else {
+    try {
+      const form = await request.formData();
+      payload = Object.fromEntries(
+        [...form.entries()].filter(([, v]) => typeof v === "string"),
+      );
+    } catch {
+      return new Response(JSON.stringify({ ok: false, error: "bad body" }), { status: 400 });
+    }
+    type = url.searchParams.get("type") ?? "claim";
   }
-  const { type, itemId, payload } = body ?? {};
-  if ((type !== "lead" && type !== "claim") || typeof payload !== "object") {
+  if ((type !== "lead" && type !== "claim") || typeof payload !== "object" || payload === null) {
     return new Response(JSON.stringify({ ok: false, error: "bad request" }), { status: 400 });
   }
   const collection = type === "lead" ? "leads" : "claims";

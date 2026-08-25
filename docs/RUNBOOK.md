@@ -66,3 +66,47 @@ businesses appear as soon as the import finishes (pages cache for ~60s).
 
 Then verify: run the crawl (`scratchpad shooter/crawl.mjs` or any link checker) and confirm
 which town×category / county×category pages now meet the 3-listing rule and return 200.
+
+## 5. Weekly intake (Jotform)
+
+Businesses add or update listings through the Jotform at
+`https://form.jotform.com/262358080828059`, embedded on `/for-businesses/get-listed`
+(the old Wix form remains as a hidden fallback at `/for-businesses/get-listed-basic`).
+
+Weekly routine:
+
+```bash
+JOTFORM_API_KEY=... npx tsx scripts/jotform-to-import.ts            # all submissions
+JOTFORM_API_KEY=... npx tsx scripts/jotform-to-import.ts --since 2026-08-24
+```
+
+This writes `data/intake/{date}-submissions.csv` in the clients-import shape plus a
+trailing `reviewNotes` column. Mapping rules: towns resolve state-scoped against the
+seeded towns; category label matches name → synonyms → substring; unresolvable towns,
+counties-as-service-areas, categories, the submitted license state, uploads, and social
+links all land in `reviewNotes` — nothing is silently dropped. `licenseVerifiedAt` is
+always blank; `isClient=false`, `tier=free` unless told otherwise.
+
+Then the normal path: fix anything in `reviewNotes`, run
+`npx tsx scripts/import-businesses.ts data/intake/{date}-submissions.csv --dry-run`,
+verify licenses (docs/VERIFICATION.md), and import per §3.
+
+**Prefill parameters** (Jotform prefills by field *unique name*; inspected on the live
+form):
+
+- `q3_textbox1` — Business Name
+- `q2_radio0` — the Add/Update choice (`Update an existing listing` preselects Update)
+- `profileUrl` — passed by profile claim banners but **the form has no matching field
+  yet**; add a short-text field with unique name `profileUrl` in the Jotform builder to
+  capture which profile the update refers to.
+
+Profile claim banners link to
+`https://form.jotform.com/262358080828059?q2_radio0=Update+an+existing+listing&q3_textbox1={name}&profileUrl={SITE_URL}/business/{slug}`
+(built by `jotformUpdateUrl()` in `src/lib/jotform.ts`).
+
+**GHL forwarding**: to POST each submission to the claim webhook, paste this URL in
+Jotform → Settings → Integrations → Webhooks:
+`https://my-site-nf00gfth-tier201.wix-vibe-site.com/api/webhook-forward?type=claim`
+Our endpoint forwards the payload to `GHL_CLAIM_WEBHOOK` (server env) with 3× retry and
+logs to the webhookLog collection; if `GHL_CLAIM_WEBHOOK` is unset it no-ops safely.
+Swap the origin for the custom domain once connected.

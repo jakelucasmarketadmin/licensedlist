@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.astro";
 import HowWeVerifyView from "@/views/HowWeVerifyView.astro";
 import ForBusinessesView from "@/views/ForBusinessesView.astro";
 import GetListedView from "@/views/GetListedView.astro";
+import GetListedBasicView from "@/views/GetListedBasicView.astro";
 import AboutView from "@/views/AboutView.astro";
 import EditorialPolicyView from "@/views/EditorialPolicyView.astro";
 import PrivacyView from "@/views/PrivacyView.astro";
@@ -62,6 +63,7 @@ const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/how-we-verify": HowWeVerifyView,
   "/for-businesses": ForBusinessesView,
   "/for-businesses/get-listed": GetListedView,
+  "/for-businesses/get-listed-basic": GetListedBasicView,
   "/about": AboutView,
   "/editorial-policy": EditorialPolicyView,
   "/privacy": PrivacyView,
