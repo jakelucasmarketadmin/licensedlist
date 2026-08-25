@@ -7,7 +7,9 @@ import {
   ratingSourcesLabel,
   isSponsoredPlacement,
   isDemo,
+  additionalLicenses,
 } from "@/lib/businesses";
+import { getCategory } from "@/lib/taxonomy";
 
 interface Props {
   business: DirectoryBusiness;
@@ -15,8 +17,12 @@ interface Props {
   inFeaturedBlock?: boolean;
   /** Town context for the "Serves" line. */
   townName?: string;
+  /** Prefix the subtitle with the primary category (used off listing pages). */
+  showCategory?: boolean;
 }
-const { business: b, inFeaturedBlock = false, townName } = Astro.props;
+const { business: b, inFeaturedBlock = false, townName, showCategory = false } = Astro.props;
+const categoryName = showCategory && b.primaryCategorySlug ? getCategory(b.primaryCategorySlug)?.name : undefined;
+const extraLicenses = additionalLicenses(b);
 
 const rating = blendedRating(b);
 const reviews = totalReviewCount(b);
@@ -59,7 +65,7 @@ const verifiedDate = b.licenseVerifiedAt
         )}
       </div>
       <p class="mt-0.5 text-sm text-muted">
-        {b.city}, {b.state}
+        {categoryName && `${categoryName} · `}{b.city}, {b.state}
         {townName && extraTowns > 0 && ` · Serves ${townName} + ${extraTowns} more`}
         {b.yearsInBusiness ? ` · ${b.yearsInBusiness} yrs in business` : ""}
       </p>
@@ -92,7 +98,11 @@ const verifiedDate = b.licenseVerifiedAt
       <span class="ledger-key">License</span>
       <span class="ledger-val">
         {b.licenseStatus === "verified"
-          ? `${b.licenseNumber} · ${b.licenseSource}${verifiedDate ? ` · checked ${verifiedDate}` : ""}`
+          ? [
+              b.licenseNumber,
+              ...extraLicenses.map((l) => `${l.number}${l.label ? ` (${l.label})` : ""}`),
+            ].filter(Boolean).join(" + ") +
+            ` · ${b.licenseSource}${verifiedDate ? ` · checked ${verifiedDate}` : ""}`
           : b.licenseStatus === "not-required"
             ? "Not required for this category"
             : "Not verified — ask before you hire"}

@@ -17,6 +17,13 @@ export const SITE_TAGLINE = "Vetted across NJ, NY & PA";
 export const SITE_URL: string =
   import.meta.env.PUBLIC_SITE_URL ?? "https://my-site-nf00gfth-tier201.wix-vibe-site.com";
 
+/**
+ * The real business showcased on the home hero, /how-we-verify, and
+ * /for-businesses. Falls back to the sample specimen card when this record
+ * isn't published — safe to rotate anytime.
+ */
+export const SHOWCASE_BUSINESS_SLUG = "hofmeister-plumbing";
+
 /** Contact for business onboarding until the claim flow ships (M4). */
 export const BUSINESS_CONTACT_EMAIL = "admin@tier201.com";
 

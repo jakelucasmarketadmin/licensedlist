@@ -192,6 +192,7 @@ for (const [i, r] of raw.entries()) {
     licenseNumber: r.licenseNumber,
     licenseSource: r.licenseSource,
     licenseHolder: r.licenseHolder ?? "",
+    additionalLicensesJson: r.additionalLicensesJson ?? "",
     licenseVerifiedAt: r.licenseVerifiedAt,
     insuredStatus: r.insuredStatus || "unknown",
     ratingGoogle: r.ratingGoogle,
@@ -219,7 +220,7 @@ const MERGE_HEADER = [
   "stateSlug","countySlug","townSlug","serviceTownSlugs","pathKey","address1","address2",
   "city","state","zip","lat","lng","phone","website","email","description","whyWePicked",
   "yearsInBusiness","foundedYear","services","hoursJson","logoUrl","photosJson",
-  "licenseStatus","licenseNumber","licenseSource","licenseHolder","licenseVerifiedAt","insuredStatus",
+  "licenseStatus","licenseNumber","licenseSource","licenseHolder","additionalLicensesJson","licenseVerifiedAt","insuredStatus",
   "ratingGoogle","ratingGoogleCount","ratingYelp","ratingYelpCount","ratingFacebook",
   "ratingFacebookCount","responseTimeHours","lastVerifiedAt","sourceNotes",
 ];

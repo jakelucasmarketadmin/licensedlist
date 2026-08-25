@@ -1,6 +1,6 @@
 ---
 import HeroSearch from "@/components/site/HeroSearch.astro";
-import VerifySpecimen from "@/components/site/VerifySpecimen.astro";
+import ShowcaseListing from "@/components/site/ShowcaseListing.astro";
 import { getStates, getCountiesByState } from "@/lib/geo";
 
 const states = getStates();
@@ -111,7 +111,7 @@ const STEPS = [
       </p>
     </div>
     <div class="hidden lg:block">
-      <VerifySpecimen />
+      <ShowcaseListing />
     </div>
   </div>
 </section>

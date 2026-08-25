@@ -1,0 +1,34 @@
+---
+/**
+ * The home/marketing showcase: a real, published listing rendered with the
+ * same ResultCard used on listing pages — the card IS what a verified profile
+ * looks like. Falls back to the clearly-labeled sample specimen if the
+ * configured record isn't published (rotate via SHOWCASE_BUSINESS_SLUG).
+ */
+import ResultCard from "@/components/site/ResultCard.astro";
+import VerifySpecimen from "@/components/site/VerifySpecimen.astro";
+import { SHOWCASE_BUSINESS_SLUG } from "@/lib/site";
+import { getBusinessBySlug, isPublished, type DirectoryBusiness } from "@/lib/businesses";
+
+interface Props {
+  caption?: string;
+}
+const {
+  caption = "A real listing. Every verified badge names the registry it was checked against and the date.",
+} = Astro.props;
+
+let showcase: DirectoryBusiness | undefined;
+try {
+  const b = await getBusinessBySlug(SHOWCASE_BUSINESS_SLUG);
+  if (b && isPublished(b)) showcase = b;
+} catch { /* CMS hiccup → specimen fallback */ }
+---
+
+{showcase ? (
+  <figure aria-label="A real verified listing">
+    <ResultCard business={showcase} showCategory />
+    <figcaption class="mt-3 text-xs text-faint">{caption}</figcaption>
+  </figure>
+) : (
+  <VerifySpecimen />
+)}

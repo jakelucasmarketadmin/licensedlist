@@ -41,7 +41,8 @@ export interface DirectoryBusiness {
   foundedYear?: number;
   services?: string;
   /** JSON object {"mon":"8:00-17:00",...} */
-  hoursJson?: string;
+  /** JSON of day->hours. The CMS field is JSON-typed, so reads may return an object. */
+  hoursJson?: string | Record<string, string>;
   logoUrl?: string;
   /** comma list or JSON array of image URLs */
   photosJson?: string;
@@ -51,6 +52,8 @@ export interface DirectoryBusiness {
   licenseSource?: string;
   /** Who holds the license when it isn't the business itself (e.g. a med spa's medical director). */
   licenseHolder?: string;
+  /** JSON array of further verified licenses: [{label, number, source, verifiedAt}]. */
+  additionalLicensesJson?: string;
   licenseVerifiedAt?: string | Date;
   insuredStatus?: string;
   ratingGoogle?: number;
@@ -103,6 +106,37 @@ export const blendedRating = (b: DirectoryBusiness): number | null => {
  * order: license verified, review count, rating, freshness of verification.
  * Payment, claimed status, and agency relationships have zero weight.
  */
+export interface AdditionalLicense {
+  label?: string;
+  number: string;
+  source?: string;
+  verifiedAt?: string;
+}
+
+/** Parse the additional-licenses field; malformed JSON yields []. */
+export function additionalLicenses(b: DirectoryBusiness): AdditionalLicense[] {
+  if (!b.additionalLicensesJson) return [];
+  try {
+    const parsed = JSON.parse(b.additionalLicensesJson);
+    return Array.isArray(parsed) ? parsed.filter((l) => l && l.number) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Parse hoursJson whether the CMS returns a JSON string or an object. */
+export function parseHours(b: DirectoryBusiness): Record<string, string> | null {
+  const raw = b.hoursJson;
+  if (!raw) return null;
+  if (typeof raw === "object") return raw;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
 export function organicCompare(a: DirectoryBusiness, b: DirectoryBusiness): number {
   const lic = Number(b.licenseStatus === "verified") - Number(a.licenseStatus === "verified");
   if (lic) return lic;

@@ -1,5 +1,6 @@
 ---
 import { SITE_NAME } from "@/lib/site";
+import ShowcaseListing from "@/components/site/ShowcaseListing.astro";
 
 const SOURCES = [
   {
@@ -83,6 +84,15 @@ const BADGES = [
     what our badges mean, where our license data comes from, and how listings are ordered — so
     you never have to take our word for it.
   </p>
+
+  <section class="mt-12" aria-labelledby="example-heading">
+    <h2 id="example-heading" class="font-display text-2xl font-semibold text-ink">
+      What a verified record looks like
+    </h2>
+    <div class="mt-5">
+      <ShowcaseListing />
+    </div>
+  </section>
 
   <section class="mt-12" aria-labelledby="steps-heading">
     <h2 id="steps-heading" class="font-display text-2xl font-semibold text-ink">
