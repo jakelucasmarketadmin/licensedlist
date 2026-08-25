@@ -124,7 +124,6 @@
     "vaul": "^1.1.2",
     "zod": "^3.24.4",
     "zustand": "^5.0.6",
-    "maplibre-gl": "^6.6.0",
     "@phosphor-icons/react": "^2.1.10"
   },
   "devDependencies": {

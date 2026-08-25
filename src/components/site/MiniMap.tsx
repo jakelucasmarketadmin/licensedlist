@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import "maplibre-gl/dist/maplibre-gl.css";
+import { loadMaplibre } from "../../lib/maplibre-loader";
 import styleLight from "../../map/style-light.json";
 import styleDark from "../../map/style-dark.json";
 
@@ -32,12 +32,8 @@ export default function MiniMap({ points, className }: Props) {
     let disposed = false;
     let cleanup: (() => void) | undefined;
     (async () => {
-    const mod: any = await import("maplibre-gl");
+    const mod: any = await loadMaplibre();
     const maplibregl = mod.default ?? mod;
-    // v6 loads its worker as a separate module chunk, which bundlers mangle;
-    // we ship the exact worker + shared chunk in public/vendor/ instead
-    // (version-locked to the maplibre-gl dependency — recopy when upgrading).
-    mod.setWorkerUrl("/vendor/maplibre-gl-worker.mjs");
     if (disposed || !containerRef.current) return;
     const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const lats = valid.map((p) => p.lat);
