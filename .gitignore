@@ -46,6 +46,7 @@ docs/*
 !docs/ARCHITECTURE.md
 !docs/DECISIONS.md
 !docs/QA-REPORT.md
+!docs/RESEARCH-LEVELUP.md
 !docs/RUNBOOK.md
 !docs/screens
 !docs/screens/**
