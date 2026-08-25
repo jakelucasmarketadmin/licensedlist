@@ -110,3 +110,20 @@ Jotform → Settings → Integrations → Webhooks:
 Our endpoint forwards the payload to `GHL_CLAIM_WEBHOOK` (server env) with 3× retry and
 logs to the webhookLog collection; if `GHL_CLAIM_WEBHOOK` is unset it no-ops safely.
 Swap the origin for the custom domain once connected.
+
+## 6. Town photos (Wikimedia Commons)
+
+Curated place photography lives in `data/geo/town-photos.csv` (scope county|town, direct
+Commons thumb URL, author, license, sourceUrl, caption, alt). The generator validates every
+row (Commons host, credit fields, geo slugs) and emits `src/data/town-photos.generated.ts`;
+`/credits` renders from the same data. Rules: CC BY / CC BY-SA / PD / CC0 only; captions are
+factual; every page showing one renders the caption + credit link.
+
+To add or replace a photo: find the file on commons.wikimedia.org, check the license, copy
+the ~1600px thumb URL (Commons only serves width buckets 120/250/330/500/960/1280/1920),
+add the CSV row, run `node scripts/generate-data-modules.mjs`, commit.
+
+**Migration to Wix Media (optional, later)**: upload the files via dashboard Media Manager,
+swap the CSV `url` values for the wixstatic URLs (the image pipeline auto-detects the host
+and switches to Wix URL transforms), keep author/license/sourceUrl untouched — attribution
+obligations survive re-hosting.

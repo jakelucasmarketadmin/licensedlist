@@ -179,3 +179,32 @@ third-party ad trackers). Have counsel review before real leads flow (M4).
 **Demo/specimen data is labeled.** The only "business" on the site is the hero's
 `VerifySpecimen` card — fictional, marked "Sample … record" in copy, per the no-invented-
 facts rule.
+
+## Phase 3 Batch A (2026-08-25)
+
+- **Maps**: MapLibre GL JS + OpenFreeMap tiles (free, keyless, MIT). Base style = Positron
+  forked by `scripts/build-map-styles.mjs` into `src/map/style-{light,dark}.json`, recolored
+  to the brand palette; tiles/glyphs/sprites remain on tiles.openfreemap.org with OSM/OFM
+  attribution. Wix Vibe sets no restrictive CSP on our routes (verify after deploy: map tiles
+  + blob worker load); if a CSP ever appears it needs `worker-src blob:`, `img-src data: blob:`,
+  `connect-src https://tiles.openfreemap.org`.
+- **Home map tile deviation**: the spec's weekly-regenerated static AVIF requires Wix Media
+  upload (no API key on this machine) or public/-asset hedging; instead the bento map tile is
+  the MiniMap island loaded `client:visible` (zero cost until scrolled into view). Revisit if
+  Lighthouse shows it hurting.
+- **Town photos**: stored as CSV -> generated module (same pipeline as geo), NOT a CMS
+  collection — the set is small, curated, and code-reviewed; a `TownPhotos` collection can be
+  imported later from the same CSV if owner editing is wanted. Image URLs hotlink Wikimedia
+  Commons thumbs (permitted; credited on-page + /credits). Migration path to Wix Media is in
+  RUNBOOK §6.
+- **Commons thumb widths**: the thumb server only renders fixed buckets (probed 2026-08-25:
+  120/250/330/500/960/1280/1920 return 200; 400/480/640/800/1024/1440/1600 return 400) —
+  srcset for Commons must use those buckets (src/lib/images.ts).
+- **Clustering**: ListMap uses DOM chip markers without clustering — page listing sets are
+  currently ≤ a few dozen; switch to a clustered GeoJSON source when counts warrant.
+- **Filters**: list-page filters/sort are client-side over server-rendered cards with state in
+  the URL #fragment (per SEO rule: no query-param variants). The old ?filter= server variants
+  are gone.
+- **Fonts**: Fraunces/Hanken Grotesk/JetBrains Mono via Google Fonts css2 with display=swap +
+  preconnect; we deliberately do NOT preload specific woff2 files (Google rotates file URLs
+  per UA/version — a stale preload is worse than none).
