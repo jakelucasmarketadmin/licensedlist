@@ -123,7 +123,10 @@
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
     "zod": "^3.24.4",
-    "zustand": "^5.0.6"
+    "zustand": "^5.0.6",
+    "maplibre-gl": "^6.6.0",
+    "react-map-gl": "^8.1.2",
+    "@phosphor-icons/react": "^2.1.10"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
