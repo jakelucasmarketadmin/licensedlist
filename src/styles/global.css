@@ -9,10 +9,10 @@
    Light is the default; dark flips via prefers-color-scheme.
    --------------------------------------------------------------------------- */
 :root {
-  /* surfaces */
-  --paper: #f6f8f9;      /* page background — cool off-white, not cream */
-  --surface: #ffffff;    /* cards, header */
-  --inset: #eef2f4;      /* wells, code-like blocks, chips */
+  /* surfaces — warm neutral scale (paper, not gray) */
+  --paper: #f8f5ef;      /* page background — warm paper */
+  --surface: #fffdf8;    /* cards, header */
+  --inset: #f1ece1;      /* wells, code-like blocks, chips */
 
   /* text */
   --ink: #102438;        /* primary text — deep navy-ink */
@@ -37,9 +37,21 @@
   --danger: #b3261e;
   --danger-wash: #f9e7e6;
 
-  /* lines */
-  --line: #d9e1e7;
-  --line-strong: #b9c6cf;
+
+  /* category-group tints (tiles, pins, card accents) — see src/data/category-art.ts */
+  --tint-home-property: hsl(18,42%,89%);
+  --tint-auto: hsl(202,14%,87%);
+  --tint-food-drink: hsl(38,55%,87%);
+  --tint-health-medical: hsl(168,34%,87%);
+  --tint-beauty-personal-care: hsl(345,36%,91%);
+  --tint-professional-financial: hsl(226,28%,89%);
+  --tint-retail: hsl(285,24%,90%);
+  --tint-family-education-community: hsl(47,48%,87%);
+  --tint-neutral: hsl(40,20%,88%);
+
+  /* lines — warmed to sit on paper */
+  --line: #e2dbcd;
+  --line-strong: #c3b8a2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -71,12 +83,27 @@
 
     --line: #24384a;
     --line-strong: #375069;
+
+    --tint-home-property: hsl(18,30%,24%);
+    --tint-auto: hsl(202,11%,25%);
+    --tint-food-drink: hsl(38,32%,22%);
+    --tint-health-medical: hsl(168,28%,20%);
+    --tint-beauty-personal-care: hsl(345,22%,24%);
+    --tint-professional-financial: hsl(226,22%,24%);
+    --tint-retail: hsl(285,18%,24%);
+    --tint-family-education-community: hsl(46,30%,21%);
+    --tint-neutral: hsl(210,15%,22%);
   }
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Fraunces: a touch of SOFT for warmth, no WONK. Optical size is automatic. */
+  .font-display {
+    font-variation-settings: "SOFT" 60, "WONK" 0;
   }
 
   body {
@@ -155,5 +182,45 @@
   }
   .ledger-val {
     color: var(--ink);
+  }
+
+  /* Card hover: 2px lift + soft shadow, 200ms, transform/opacity only. */
+  .card-hover {
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  @media (hover: hover) {
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px -12px rgb(16 36 56 / 0.25);
+    }
+  }
+
+  /* The one allowed glass: hero search panel + sticky bars. */
+  .glass {
+    background: color-mix(in srgb, var(--surface) 78%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Scroll-driven reveal — pure CSS, no JS; ignored where unsupported. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation: reveal-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
+    }
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

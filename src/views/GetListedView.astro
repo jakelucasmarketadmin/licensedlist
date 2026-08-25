@@ -25,8 +25,8 @@ import { JOTFORM_FORM_ID, JOTFORM_FORM_URL } from "@/lib/jotform";
       allow="geolocation; microphone; camera; fullscreen; payment"
     ></iframe>
   </div>
-  <script is:inline src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
-  <script is:inline define:vars={{ formId: JOTFORM_FORM_ID }}>
+  <script is:inline data-astro-rerun src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
+  <script is:inline data-astro-rerun define:vars={{ formId: JOTFORM_FORM_ID }}>
     // Auto-resize the embed to its content; the 2200px style height above is
     // the no-JS fallback (the page just scrolls).
     if (typeof window.jotformEmbedHandler === "function") {

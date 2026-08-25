@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import Header from "@/components/site/Header.astro";
 import Footer from "@/components/site/Footer.astro";
 import { SITE_NAME } from "@/lib/site";
@@ -43,9 +44,11 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_ID;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Hanken+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+
+    <ClientRouter />
 
     {jsonLd.map((node) => (
       <script type="application/ld+json" set:html={JSON.stringify(node)} />

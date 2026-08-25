@@ -5,14 +5,14 @@ export default {
         extend: {
             fontFamily: {
                 // UI / body
-                sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-                // Display face for H1s and section headings only
-                display: ['"Bricolage Grotesque"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                sans: ['"Hanken Grotesk"', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+                // Editorial display serif for H1s and section headings only
+                display: ['Fraunces', 'Georgia', '"Times New Roman"', 'serif'],
                 // Verification-record / registry-ledger motif
-                mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+                mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
                 // Legacy aliases used by the generated template — keep mapped
-                heading: ['"Bricolage Grotesque"', 'Inter', 'sans-serif'],
-                paragraph: ['Inter', 'sans-serif'],
+                heading: ['Fraunces', 'Georgia', 'serif'],
+                paragraph: ['"Hanken Grotesk"', 'sans-serif'],
             },
             fontSize: {
                 xs: ['0.75rem', { lineHeight: '1.4' }],
@@ -63,7 +63,7 @@ export default {
                 primary: 'var(--brand-deep)',
             },
             borderRadius: {
-                card: '12px',
+                card: '14px',
                 chip: '999px',
             },
             maxWidth: {
