@@ -8,6 +8,12 @@
         "value": "inter",
         "createdAt": "2026-08-24T19:05:01.701Z",
         "reason": "Phase 1 master prompt §5 pins Inter for UI type; Bricolage Grotesque is the distinctive display face"
+      },
+      {
+        "rule": "overused-font",
+        "value": "fraunces",
+        "createdAt": "2026-08-25T15:21:36.598Z",
+        "reason": "Phase 3 brief (PROMPT-phase3-levelup.md A1) explicitly pins Fraunces as the display face"
       }
     ]
   }
