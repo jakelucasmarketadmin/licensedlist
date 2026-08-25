@@ -87,8 +87,12 @@ export const categoriesOf = (b: DirectoryBusiness) => {
 export const servesTown = (b: DirectoryBusiness, townSlug: string) =>
   b.townSlug === townSlug || list(b.serviceTownSlugs).includes(townSlug);
 
+// Count only sources that also carry a rating, so the number always matches
+// the "across {sources}" label (a stray count without a rating is ignored).
 export const totalReviewCount = (b: DirectoryBusiness) =>
-  (b.ratingGoogleCount ?? 0) + (b.ratingYelpCount ?? 0) + (b.ratingFacebookCount ?? 0);
+  (b.ratingGoogle ? (b.ratingGoogleCount ?? 0) : 0) +
+  (b.ratingYelp ? (b.ratingYelpCount ?? 0) : 0) +
+  (b.ratingFacebook ? (b.ratingFacebookCount ?? 0) : 0);
 
 export const blendedRating = (b: DirectoryBusiness): number | null => {
   const parts: [number, number][] = [];
