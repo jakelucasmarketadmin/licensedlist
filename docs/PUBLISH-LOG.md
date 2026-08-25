@@ -17,3 +17,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
 **Smoke 2026-08-25 00:31 UTC:** PASS — all 9 routes 200
 
 **Smoke 2026-08-25 03:03 UTC:** PASS — all 9 routes 200
+
+**Smoke 2026-08-25 16:39 UTC:** PASS — all 9 routes 200

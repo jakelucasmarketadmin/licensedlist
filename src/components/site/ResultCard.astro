@@ -97,13 +97,13 @@ const topRated = rating !== null && rating >= 4.8 && reviews >= 25;
       )}
       <div class="absolute left-2 top-2 flex flex-wrap gap-1.5">
         {b.licenseStatus === "verified" && (
-          <span class="rounded-chip bg-ok px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Verified</span>
+          <span class="rounded-chip bg-[#177245] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Verified</span>
         )}
         {inFeaturedBlock && (
-          <span class="rounded-chip bg-brand px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Featured</span>
+          <span class="rounded-chip bg-[#14456b] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Featured</span>
         )}
         {topRated && (
-          <span class="rounded-chip bg-brand-deep px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Top rated</span>
+          <span class="rounded-chip bg-[#0b2b45] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Top rated</span>
         )}
       </div>
     </div>
