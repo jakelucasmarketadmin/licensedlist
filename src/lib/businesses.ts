@@ -45,7 +45,8 @@ export interface DirectoryBusiness {
   hoursJson?: string | Record<string, string>;
   logoUrl?: string;
   /** comma list or JSON array of image URLs */
-  photosJson?: string;
+  /** JSON array of photo URLs; JSON-typed CMS reads may return the array itself. */
+  photosJson?: string | string[];
   /** verified | unverified | not-required | suspended */
   licenseStatus?: string;
   licenseNumber?: string;

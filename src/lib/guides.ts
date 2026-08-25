@@ -11,3 +11,8 @@ export function getGuide(scope: string, scopeKey: string, slugPrefix?: string): 
 export function getGuidesFor(scope: string, scopeKey: string): GuideSeed[] {
   return GUIDE_SEED.filter((g) => g.scope === scope && g.scopeKey === scopeKey);
 }
+
+/** Newest guides by updatedAt, for the home editorial row. */
+export function latestGuides(limit = 3): GuideSeed[] {
+  return [...GUIDE_SEED].sort((a, b) => (b.updatedAt || b.publishedAt).localeCompare(a.updatedAt || a.publishedAt)).slice(0, limit);
+}

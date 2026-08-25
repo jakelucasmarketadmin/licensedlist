@@ -2,6 +2,10 @@
 import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import MethodologyStrip from "@/components/site/MethodologyStrip.astro";
 import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
+import ResultCard from "@/components/site/ResultCard.astro";
+import * as Phosphor from "@phosphor-icons/react/dist/ssr";
+import { categoryArt } from "@/data/category-art";
+import { blendedRating } from "@/lib/businesses";
 import { getStates, getCountiesByState, getTownsByCounty } from "@/lib/geo";
 import type { CategorySeed } from "@/lib/taxonomy";
 import { fetchBusinesses, isPublished, categoriesOf, servesTown } from "@/lib/businesses";
@@ -23,6 +27,11 @@ const costGuide = getGuide("category", category.slug, "cost-context-");
 const businesses = (await fetchBusinesses()).filter(
   (b) => isPublished(b) && categoriesOf(b).has(category.slug),
 );
+const art = categoryArt(category.slug);
+const HeroIcon = (Phosphor as Record<string, any>)[art.icon] ?? Phosphor.Storefront;
+const topRated = [...businesses]
+  .sort((a, b) => (blendedRating(b) ?? 0) - (blendedRating(a) ?? 0))
+  .slice(0, 6);
 function countyQualifies(stateSlug: string, countySlug: string): boolean {
   if (businesses.length === 0) return false;
   const townSlugs = new Set(getTownsByCounty(stateSlug, countySlug).map((t) => t.slug));
@@ -47,14 +56,37 @@ function countyQualifies(stateSlug: string, countySlug: string): boolean {
     ]}
   />
 
-  <header class="mt-4 max-w-prose">
-    <h1 class="font-display text-4xl font-bold text-ink">{category.name} in NJ, NY &amp; PA</h1>
-    <p class="mt-3 text-lg leading-relaxed text-muted">
-      {category.licenseRequired
-        ? `A licensed trade in the tri-state area — every verified listing names the official registry we checked it against, and the date we checked.`
-        : `No practitioner license applies to this category, so reputation matters more: we verify identity, read reviews across platforms, and confirm responsiveness before listing anyone.`}
-    </p>
+  <header
+    class="reveal mt-4 overflow-hidden rounded-card border border-line p-8"
+    style={`background: linear-gradient(120deg, var(--tint-${art.tint}), color-mix(in srgb, var(--tint-${art.tint}) 40%, var(--surface)));`}
+  >
+    <div class="flex flex-wrap items-center gap-5">
+      <HeroIcon size={56} weight="duotone" color="var(--ink)" aria-hidden="true" />
+      <div class="max-w-prose">
+        <h1 class="font-display text-4xl font-bold text-ink">{category.name} in NJ, NY &amp; PA</h1>
+        <p class="mt-3 text-lg leading-relaxed text-muted">
+          {category.licenseRequired
+            ? `A licensed trade in the tri-state area — every verified listing names the official registry we checked it against, and the date we checked.`
+            : `No practitioner license applies to this category, so reputation matters more: we verify identity, read reviews across platforms, and confirm responsiveness before listing anyone.`}
+        </p>
+      </div>
+    </div>
   </header>
+
+  {topRated.length > 0 && (
+    <section class="mt-10" aria-labelledby="toprated-heading">
+      <h2 id="toprated-heading" class="font-display text-2xl font-semibold text-ink">
+        Top rated across the tri-state
+      </h2>
+      <div class="mt-4 flex snap-x gap-4 overflow-x-auto pb-2">
+        {topRated.map((b) => (
+          <div class="w-[320px] flex-none snap-start sm:w-[360px]">
+            <ResultCard business={b} showCategory />
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
 
   {sources.length > 0 && (
     <section class="mt-10 max-w-prose" aria-labelledby="lookup-heading">

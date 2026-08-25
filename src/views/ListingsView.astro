@@ -2,6 +2,7 @@
 import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import ResultCard from "@/components/site/ResultCard.astro";
 import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
+import ListMap from "@/components/site/ListMap.tsx";
 import { SITE_NAME } from "@/lib/site";
 import type { CategorySeed } from "@/lib/taxonomy";
 import type { StateSeed, CountySeed, TownSeed } from "@/lib/geo";
@@ -21,43 +22,50 @@ interface Props {
   town?: TownSeed;
   category: CategorySeed;
   listings: ListingSet;
-  /** Active server-side filter (noindex variants). */
+  /** Legacy server-side filter param — the UI now filters client-side via #fragment. */
   filter?: string;
   preview?: boolean;
   trail: { name: string; path: string }[];
   basePath: string;
 }
-const { scope, state, county, town, category, listings, filter, preview, trail, basePath } =
-  Astro.props;
+const { scope, state, county, town, category, listings, preview, trail, basePath } = Astro.props;
 
 const placeName =
   scope === "town" ? `${town!.name}, ${state.abbr}` : scope === "county" ? county!.name : state.name;
 
 const updatedLabel = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
-const applyFilter = (items: DirectoryBusiness[]) => {
-  if (filter === "verified") return items.filter((b) => b.licenseStatus === "verified");
-  if (filter === "responds-24h")
-    return items.filter((b) => b.responseTimeHours != null && b.responseTimeHours <= 24);
-  if (filter === "rating-45") return items.filter((b) => (blendedRating(b) ?? 0) >= 4.5);
-  return items;
-};
-
-const featured = filter ? [] : listings.featured;
+const featured = listings.featured;
 // Each business renders once: the Featured block up top, and the organic list
 // excludes those slugs (counts still cover every qualifying business).
 const featuredSlugs = new Set(featured.map((b) => b.slug));
-const organic = applyFilter(listings.organic).filter((b) => !featuredSlugs.has(b.slug));
+const organic = listings.organic.filter((b) => !featuredSlugs.has(b.slug));
 const totalCount = listings.organic.length;
 const verifiedCount = listings.organic.filter((b) => b.licenseStatus === "verified").length;
 
 const licenseSource = category.licenseSourcesByState[state.abbr];
 
-const FILTERS = [
-  { key: "verified", label: "Verified license" },
-  { key: "responds-24h", label: "Responds < 24h" },
-  { key: "rating-45", label: "4.5★ and up" },
-];
+// Job-type chips: the most common service terms across this page's listings.
+const serviceCounts = new Map<string, number>();
+for (const b of [...featured, ...listings.organic]) {
+  for (const s of (b.services ?? "").split(",").map((x) => x.trim().toLowerCase()).filter(Boolean)) {
+    serviceCounts.set(s, (serviceCounts.get(s) ?? 0) + 1);
+  }
+}
+const jobTypes = [...serviceCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 8)
+  .map(([term]) => term);
+
+const mapMarkers = [...featured, ...organic]
+  .filter((b) => Number.isFinite(Number(b.lat)) && Number.isFinite(Number(b.lng)))
+  .map((b) => ({
+    slug: b.slug ?? "",
+    name: b.name ?? "",
+    rating: blendedRating(b),
+    lat: Number(b.lat),
+    lng: Number(b.lng),
+  }));
 
 const relatedCategories = getCategoriesByGroup(category.groupSlug)
   .filter((c) => c.slug !== category.slug)
@@ -97,9 +105,17 @@ const faq = [
     a: "Four checks, in order: we confirm the business is real, look its license up in the official registry where one is required, read its reviews across platforms, and confirm it's active and responsive. The full methodology is public.",
   },
 ];
+
+const FILTERS = [
+  { key: "verified", label: "License verified" },
+  { key: "insured", label: "Insured" },
+  { key: "responds24", label: "Responds < 24h" },
+  { key: "rating45", label: "4.5★ and up" },
+  { key: "featured", label: "Featured only" },
+];
 ---
 
-<article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
+<article class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:py-14">
   <BreadcrumbGeo trail={trail} />
 
   {preview && (
@@ -111,7 +127,7 @@ const faq = [
 
   <header class="mt-4 max-w-prose">
     <h1 class="font-display text-4xl font-bold text-ink">
-      {totalCount > 0 && !filter ? `${totalCount} ` : ""}Best {category.name} in {placeName}
+      {totalCount > 0 ? `${totalCount} ` : ""}Best {category.name} in {placeName}
       <span class="text-muted">(Updated {updatedLabel})</span>
     </h1>
     <p class="mt-3 text-muted">
@@ -121,69 +137,320 @@ const faq = [
     </p>
   </header>
 
-  <div class="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter listings">
-    <a
-      href={basePath}
-      class:list={[
-        "inline-flex min-h-[40px] items-center rounded-chip border px-4 py-2 text-sm font-medium",
-        !filter ? "border-brand bg-brand-wash text-brand" : "border-line bg-surface text-muted hover:text-ink",
-      ]}
-    >
-      All
-    </a>
-    {FILTERS.map((f) => (
-      <a
-        href={`${basePath}?filter=${f.key}`}
-        class:list={[
-          "inline-flex min-h-[40px] items-center rounded-chip border px-4 py-2 text-sm font-medium",
-          filter === f.key
-            ? "border-brand bg-brand-wash text-brand"
-            : "border-line bg-surface text-muted hover:text-ink",
-        ]}
-      >
-        {f.label}
-      </a>
-    ))}
+  <div class="mt-8 gap-8 lg:grid lg:grid-cols-[210px_minmax(0,1fr)]">
+    <!-- Filter rail (left on desktop, chip row on mobile) -->
+    <aside class="mb-6 lg:mb-0" aria-label="Filter and sort listings" id="filter-rail">
+      <div class="lg:sticky lg:top-6">
+        <p class="text-xs font-semibold uppercase tracking-wider text-faint">Filter</p>
+        <div class="mt-3 flex flex-wrap gap-2 lg:flex-col lg:items-start">
+          {FILTERS.map((f) => (
+            <button
+              type="button"
+              data-filter={f.key}
+              aria-pressed="false"
+              class="inline-flex min-h-[40px] items-center rounded-chip border border-line bg-surface px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-ink aria-pressed:border-brand aria-pressed:bg-brand-wash aria-pressed:text-brand"
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+        {jobTypes.length > 0 && (
+          <>
+            <p class="mt-6 text-xs font-semibold uppercase tracking-wider text-faint">Job type</p>
+            <div class="mt-3 flex flex-wrap gap-2 lg:flex-col lg:items-start">
+              {jobTypes.map((t) => (
+                <button
+                  type="button"
+                  data-service-filter={t}
+                  aria-pressed="false"
+                  class="inline-flex min-h-[36px] items-center rounded-chip border border-line bg-surface px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:text-ink aria-pressed:border-brand aria-pressed:bg-brand-wash aria-pressed:text-brand"
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+        <p class="mt-6 text-xs font-semibold uppercase tracking-wider text-faint">Sort</p>
+        <select
+          id="sort-select"
+          aria-label="Sort listings"
+          class="mt-3 w-full rounded-[10px] border border-line bg-surface px-3 py-2 text-sm text-ink"
+        >
+          <option value="recommended">Recommended</option>
+          <option value="rating">Top rated</option>
+          <option value="reviews">Most reviewed</option>
+          <option value="nearest">Nearest to me</option>
+        </select>
+        <p id="filter-count" class="mt-4 text-xs text-faint" aria-live="polite"></p>
+      </div>
+    </aside>
+
+    <div class="gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div>
+        {featured.length > 0 && (
+          <section aria-labelledby="featured-heading">
+            <h2 id="featured-heading" class="text-xs font-semibold uppercase tracking-wider text-faint">
+              Featured · paid placement, always labeled
+            </h2>
+            <div class="mt-3 grid gap-4">
+              {featured.map((b) => (
+                <ResultCard business={b} inFeaturedBlock townName={town?.name} />
+              ))}
+            </div>
+            <p class="mt-2 text-xs text-faint">
+              Featured businesses also meet the same verification standard and are not ranked above
+              organic results.
+            </p>
+          </section>
+        )}
+
+        <section class:list={[featured.length > 0 && "mt-8"]} aria-labelledby="results-heading">
+          <h2 id="results-heading" class="text-xs font-semibold uppercase tracking-wider text-faint">
+            All {category.name.toLowerCase()} · transparent ranking
+          </h2>
+          {organic.length > 0 ? (
+            <div class="mt-3 grid gap-4" id="organic-list">
+              {organic.map((b) => (
+                <ResultCard business={b} townName={town?.name} />
+              ))}
+            </div>
+          ) : totalCount > 0 ? (
+            <p class="mt-3 text-sm text-muted">
+              Every qualifying business here currently holds a featured slot — they're all shown
+              above.
+            </p>
+          ) : (
+            <div class="mt-3">
+              <CategoriesEmptyState scopeName={placeName} />
+            </div>
+          )}
+          <p id="no-matches" class="mt-3 hidden text-sm text-muted">
+            No listings match the current filters —
+            <button type="button" id="clear-filters" class="font-medium text-brand underline underline-offset-2">clear filters</button>.
+          </p>
+        </section>
+      </div>
+
+      {mapMarkers.length > 0 && (
+        <div class="hidden xl:block" transition:persist="list-map">
+          <div class="sticky top-6 h-[calc(100vh-6rem)] min-h-[420px]">
+            <ListMap client:visible markers={mapMarkers} />
+          </div>
+        </div>
+      )}
+    </div>
   </div>
 
-  {featured.length > 0 && (
-    <section class="mt-8" aria-labelledby="featured-heading">
-      <h2 id="featured-heading" class="text-xs font-semibold uppercase tracking-wider text-faint">
-        Featured · paid placement, always labeled
-      </h2>
-      <div class="mt-3 grid gap-4">
-        {featured.map((b) => (
-          <ResultCard business={b} inFeaturedBlock townName={town?.name} />
-        ))}
-      </div>
-      <p class="mt-2 text-xs text-faint">
-        Featured businesses also meet the same verification standard and are not ranked above
-        organic results.
-      </p>
-    </section>
-  )}
+  {mapMarkers.length > 0 && <ListMap client:visible markers={mapMarkers} variant="sheet" />}
 
-  <section class="mt-8" aria-labelledby="results-heading">
-    <h2 id="results-heading" class="text-xs font-semibold uppercase tracking-wider text-faint">
-      All {category.name.toLowerCase()} · transparent ranking
-    </h2>
-    {organic.length > 0 ? (
-      <div class="mt-3 grid gap-4">
-        {organic.map((b) => (
-          <ResultCard business={b} townName={town?.name} />
-        ))}
+  <!-- Compare tray -->
+  <div
+    id="compare-tray"
+    class="glass fixed inset-x-0 bottom-0 z-40 hidden border-t border-line-strong px-4 py-3"
+    role="region"
+    aria-label="Compare businesses"
+  >
+    <div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3">
+      <p class="text-sm font-medium text-ink">Compare: <span id="compare-names" class="text-muted"></span></p>
+      <div class="flex gap-2">
+        <button type="button" id="compare-open" class="rounded-chip bg-brand-deep px-4 py-2 text-sm font-semibold text-white">Compare</button>
+        <button type="button" id="compare-clear" class="rounded-chip border border-line-strong px-4 py-2 text-sm font-medium text-muted">Clear</button>
       </div>
-    ) : totalCount > 0 && !filter ? (
-      <p class="mt-3 text-sm text-muted">
-        Every qualifying business here currently holds a featured slot — they're all shown
-        above.
-      </p>
-    ) : (
-      <div class="mt-3">
-        <CategoriesEmptyState scopeName={placeName} />
-      </div>
-    )}
-  </section>
+    </div>
+    <div id="compare-panel" class="mx-auto mt-3 hidden max-w-4xl overflow-x-auto"></div>
+  </div>
+
+  <script is:inline data-astro-rerun>
+    (function () {
+      var cards = function () {
+        return Array.prototype.slice.call(document.querySelectorAll("#organic-list [data-biz-card], [data-biz-card]"));
+      };
+      var state = { filters: [], services: [], sort: "recommended" };
+
+      function readHash() {
+        var h = location.hash.replace(/^#/, "");
+        if (!h) return;
+        h.split("&").forEach(function (kv) {
+          var parts = kv.split("=");
+          if (parts[0] === "filter" && parts[1]) state.filters = parts[1].split(",");
+          if (parts[0] === "job" && parts[1]) state.services = parts[1].split(",").map(decodeURIComponent);
+          if (parts[0] === "sort" && parts[1]) state.sort = parts[1];
+        });
+      }
+      function writeHash() {
+        var parts = [];
+        if (state.filters.length) parts.push("filter=" + state.filters.join(","));
+        if (state.services.length) parts.push("job=" + state.services.map(encodeURIComponent).join(","));
+        if (state.sort !== "recommended") parts.push("sort=" + state.sort);
+        history.replaceState(null, "", parts.length ? "#" + parts.join("&") : location.pathname + location.search);
+      }
+
+      var userPos = null;
+      function matches(el) {
+        var f = state.filters;
+        if (f.indexOf("verified") >= 0 && el.getAttribute("data-license") !== "verified") return false;
+        if (f.indexOf("insured") >= 0 && el.getAttribute("data-insured") !== "insured") return false;
+        if (f.indexOf("responds24") >= 0) {
+          var r = parseFloat(el.getAttribute("data-responds"));
+          if (!(r >= 0 && r <= 24)) return false;
+        }
+        if (f.indexOf("rating45") >= 0 && !(parseFloat(el.getAttribute("data-rating")) >= 4.5)) return false;
+        if (f.indexOf("featured") >= 0 && el.getAttribute("data-featured") !== "1") return false;
+        if (state.services.length) {
+          var services = (el.getAttribute("data-services") || "").toLowerCase();
+          for (var i = 0; i < state.services.length; i++) {
+            if (services.indexOf(state.services[i].toLowerCase()) === -1) return false;
+          }
+        }
+        return true;
+      }
+
+      function apply() {
+        var all = cards();
+        var visible = 0;
+        all.forEach(function (el) {
+          var ok = matches(el);
+          el.classList.toggle("hidden", !ok);
+          if (ok) visible++;
+        });
+        var counter = document.getElementById("filter-count");
+        if (counter) counter.textContent = state.filters.length || state.services.length ? visible + " of " + all.length + " shown" : "";
+        var none = document.getElementById("no-matches");
+        if (none) none.classList.toggle("hidden", visible !== 0);
+
+        var list = document.getElementById("organic-list");
+        if (list && state.sort !== "recommended") {
+          var items = Array.prototype.slice.call(list.children);
+          items.sort(function (a, b) {
+            if (state.sort === "rating") return (parseFloat(b.getAttribute("data-rating")) || 0) - (parseFloat(a.getAttribute("data-rating")) || 0);
+            if (state.sort === "reviews") return (parseInt(b.getAttribute("data-reviews")) || 0) - (parseInt(a.getAttribute("data-reviews")) || 0);
+            if (state.sort === "nearest" && userPos) {
+              var d = function (el) {
+                var lat = parseFloat(el.getAttribute("data-lat")), lng = parseFloat(el.getAttribute("data-lng"));
+                if (!isFinite(lat) || !isFinite(lng)) return 1e9;
+                return Math.pow(lat - userPos[0], 2) + Math.pow((lng - userPos[1]) * Math.cos(lat * Math.PI / 180), 2);
+              };
+              return d(a) - d(b);
+            }
+            return 0;
+          });
+          items.forEach(function (el) { list.appendChild(el); });
+        }
+        writeHash();
+        syncUi();
+      }
+
+      function syncUi() {
+        document.querySelectorAll("[data-filter]").forEach(function (btn) {
+          btn.setAttribute("aria-pressed", String(state.filters.indexOf(btn.getAttribute("data-filter")) >= 0));
+        });
+        document.querySelectorAll("[data-service-filter]").forEach(function (btn) {
+          btn.setAttribute("aria-pressed", String(state.services.indexOf(btn.getAttribute("data-service-filter")) >= 0));
+        });
+        var sel = document.getElementById("sort-select");
+        if (sel) sel.value = state.sort;
+      }
+
+      document.querySelectorAll("[data-filter]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var key = btn.getAttribute("data-filter");
+          var i = state.filters.indexOf(key);
+          if (i >= 0) state.filters.splice(i, 1); else state.filters.push(key);
+          apply();
+        });
+      });
+      document.querySelectorAll("[data-service-filter]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var key = btn.getAttribute("data-service-filter");
+          var i = state.services.indexOf(key);
+          if (i >= 0) state.services.splice(i, 1); else state.services.push(key);
+          apply();
+        });
+      });
+      var sel = document.getElementById("sort-select");
+      if (sel) sel.addEventListener("change", function () {
+        state.sort = sel.value;
+        if (state.sort === "nearest" && !userPos && navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function (pos) {
+            userPos = [pos.coords.latitude, pos.coords.longitude];
+            apply();
+          }, function () { apply(); });
+        } else apply();
+      });
+      var clear = document.getElementById("clear-filters");
+      if (clear) clear.addEventListener("click", function () {
+        state.filters = []; state.services = []; apply();
+      });
+
+      // ---- Compare tray (max 3) ----
+      var compare = [];
+      function renderTray() {
+        var tray = document.getElementById("compare-tray");
+        var names = document.getElementById("compare-names");
+        if (!tray || !names) return;
+        tray.classList.toggle("hidden", compare.length === 0);
+        names.textContent = compare.map(function (c) { return c.name; }).join(" · ");
+        document.getElementById("compare-panel").classList.add("hidden");
+      }
+      cards().forEach(function (el) {
+        var slug = el.getAttribute("data-biz-card");
+        var footer = el.querySelector(".mt-4.flex");
+        if (!footer || el.querySelector("[data-compare-btn]")) return;
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.setAttribute("data-compare-btn", slug);
+        btn.setAttribute("aria-pressed", "false");
+        btn.className = "rounded-chip border border-line px-4 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink";
+        btn.textContent = "+ Compare";
+        btn.addEventListener("click", function () {
+          var i = compare.findIndex(function (c) { return c.slug === slug; });
+          if (i >= 0) { compare.splice(i, 1); btn.setAttribute("aria-pressed", "false"); btn.textContent = "+ Compare"; }
+          else if (compare.length < 3) {
+            var nameEl = el.querySelector("h3 a");
+            compare.push({
+              slug: slug,
+              name: nameEl ? nameEl.textContent.trim() : slug,
+              rating: el.getAttribute("data-rating") || "—",
+              reviews: el.getAttribute("data-reviews") || "0",
+              license: el.getAttribute("data-license") || "—",
+              responds: el.getAttribute("data-responds") || "—",
+            });
+            btn.setAttribute("aria-pressed", "true");
+            btn.textContent = "✓ Comparing";
+          }
+          renderTray();
+        });
+        footer.appendChild(btn);
+      });
+      var openBtn = document.getElementById("compare-open");
+      if (openBtn) openBtn.addEventListener("click", function () {
+        var panel = document.getElementById("compare-panel");
+        if (!panel) return;
+        var rows = [
+          ["", "Rating", "Reviews", "License", "Responds (hrs)"],
+        ].concat(compare.map(function (c) { return [c.name, c.rating + "★", c.reviews, c.license, c.responds]; }));
+        panel.innerHTML = "<table class='w-full text-sm'><tbody>" + rows.map(function (r, i) {
+          return "<tr class='" + (i === 0 ? "text-faint" : "text-ink") + " border-b border-line'>" + r.map(function (cell, j) {
+            return "<t" + (i === 0 || j === 0 ? "h" : "d") + " class='px-3 py-2 text-left font-" + (i === 0 || j === 0 ? "medium" : "normal") + "'>" + String(cell).replace(/</g, "&lt;") + "</t" + (i === 0 || j === 0 ? "h" : "d") + ">";
+          }).join("") + "</tr>";
+        }).join("") + "</tbody></table>";
+        panel.classList.toggle("hidden");
+      });
+      var clearBtn = document.getElementById("compare-clear");
+      if (clearBtn) clearBtn.addEventListener("click", function () {
+        compare = [];
+        document.querySelectorAll("[data-compare-btn]").forEach(function (b) {
+          b.setAttribute("aria-pressed", "false");
+          b.textContent = "+ Compare";
+        });
+        renderTray();
+      });
+
+      readHash();
+      apply();
+    })();
+  </script>
 
   <section class="mt-12 max-w-prose" aria-labelledby="guide-heading">
     <h2 id="guide-heading" class="font-display text-2xl font-semibold text-ink">
