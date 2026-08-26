@@ -43,14 +43,32 @@ function highlightCard(slug: string | null) {
   });
 }
 
+/** WebGL context check — MapLibre needs GL; some Chrome setups (hardware
+ * acceleration off, GPU blocklist) can't create one. DOM pins would still
+ * render over an empty canvas, so detect up front and fall back. */
+function webglAvailable(): boolean {
+  try {
+    const c = document.createElement("canvas");
+    return Boolean(c.getContext("webgl2") ?? c.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
 function MapInner({ markers }: { markers: MapBiz[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const chipsRef = useRef(new Map<string, HTMLElement>());
   const [moved, setMoved] = useState(false);
+  const [glFailed, setGlFailed] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
+    if (!webglAvailable()) {
+      console.error("ListMap: WebGL unavailable — showing static area map");
+      setGlFailed(true);
+      return;
+    }
     let disposed = false;
     let cleanup: (() => void) | undefined;
     (async () => {
@@ -58,16 +76,24 @@ function MapInner({ markers }: { markers: MapBiz[] }) {
     const maplibregl = mod.default ?? mod;
     if (disposed || !containerRef.current) return;
     const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const map = new maplibregl.Map({
-      container: containerRef.current,
-      style: (dark ? styleDark : styleLight) as any,
-      bounds: boundsOf(markers),
-      fitBoundsOptions: { padding: 60, maxZoom: 13 },
-      attributionControl: {
-        compact: true,
-        customAttribution: "Map data © OpenStreetMap contributors · OpenFreeMap",
-      },
-    });
+    let map: any;
+    try {
+      map = new maplibregl.Map({
+        container: containerRef.current,
+        style: (dark ? styleDark : styleLight) as any,
+        bounds: boundsOf(markers),
+        fitBoundsOptions: { padding: 60, maxZoom: 13 },
+        attributionControl: {
+          compact: true,
+          customAttribution: "Map data © OpenStreetMap contributors · OpenFreeMap",
+        },
+      });
+    } catch (err) {
+      console.error("ListMap: map init failed", err);
+      setGlFailed(true);
+      return;
+    }
+    map.on("error", (e: any) => console.error("ListMap maplibre error:", e?.error ?? e));
     mapRef.current = map;
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     map.on("dragend", () => setMoved(true));
@@ -140,7 +166,22 @@ function MapInner({ markers }: { markers: MapBiz[] }) {
   if (markers.length === 0) return null;
   return (
     <div className="relative h-full w-full overflow-hidden rounded-card border border-line">
-      <div ref={containerRef} className="h-full w-full" />
+      {/* Static area map sits UNDER the GL canvas: if WebGL/tiles ever fail,
+          the panel shows geography instead of an empty box. */}
+      <img
+        src="/assets/tri-state-map.webp"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+      <div ref={containerRef} className="relative h-full w-full" />
+      {glFailed && (
+        <p className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-chip bg-brand-deep/85 px-3 py-1.5 text-xs font-medium text-white shadow-md">
+          Interactive map unavailable in this browser — showing the area map
+        </p>
+      )}
       {moved && (
         <button
           type="button"

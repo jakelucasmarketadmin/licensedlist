@@ -29,6 +29,13 @@ export default function MiniMap({ points, className }: Props) {
 
   useEffect(() => {
     if (!containerRef.current || valid.length === 0) return;
+    // No WebGL → leave the static area-map background showing (see render).
+    try {
+      const c = document.createElement("canvas");
+      if (!(c.getContext("webgl2") ?? c.getContext("webgl"))) return;
+    } catch {
+      return;
+    }
     let disposed = false;
     let cleanup: (() => void) | undefined;
     (async () => {
@@ -76,9 +83,17 @@ export default function MiniMap({ points, className }: Props) {
   if (valid.length === 0) return null;
   return (
     <div
-      ref={containerRef}
-      className={`overflow-hidden rounded-card border border-line ${className ?? "h-56"}`}
+      className={`relative overflow-hidden rounded-card border border-line ${className ?? "h-56"}`}
       aria-hidden="true"
-    />
+    >
+      <img
+        src="/assets/tri-state-map.webp"
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+      <div ref={containerRef} className="relative h-full w-full" />
+    </div>
   );
 }
