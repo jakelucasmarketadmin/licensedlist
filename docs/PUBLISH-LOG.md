@@ -28,3 +28,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   - Batch B publish: Profile 2.0, on-site review system (reviews/servicePrices/questions
     collections), Q&A, /write-review (noindex — NO new indexable URL types). Crawl: 284
     pages, 0 broken. JSON-LD: aggregateRating correctly suppressed at <3 on-site reviews.
+
+**Smoke 2026-08-26 22:03 UTC:** PASS — all 11 routes 200

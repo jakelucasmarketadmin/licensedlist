@@ -9,9 +9,11 @@ interface Props {
   seo: PageSeo;
   /** JSON-LD nodes rendered as individual script tags. */
   jsonLd?: object[];
+  /** LCP image to preload (profile mosaic / hero). */
+  preloadImage?: { href: string; imagesrcset?: string; imagesizes?: string };
 }
 
-const { seo, jsonLd = [] } = Astro.props;
+const { seo, jsonLd = [], preloadImage } = Astro.props;
 const origin = resolveOrigin();
 const canonical = `${origin}${seo.path === "/" ? "/" : seo.path}`;
 const robots = seo.robots ?? "index, follow";
@@ -43,6 +45,18 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_ID;
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://static.wixstatic.com" />
+    <link rel="preconnect" href="https://upload.wikimedia.org" />
+    {preloadImage && (
+      <link
+        rel="preload"
+        as="image"
+        href={preloadImage.href}
+        imagesrcset={preloadImage.imagesrcset}
+        imagesizes={preloadImage.imagesizes}
+        fetchpriority="high"
+      />
+    )}
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Hanken+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"

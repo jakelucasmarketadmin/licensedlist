@@ -37,6 +37,8 @@ import {
   type ListingSet,
 } from "@/lib/businesses";
 import { fetchReviewsFor, fetchServicePricesFor, fetchQuestionsFor } from "@/lib/reviews";
+import { photosOf } from "@/lib/businesses";
+import { imageAt, srcsetFor } from "@/lib/images";
 import {
   organizationJsonLd,
   webSiteJsonLd,
@@ -88,6 +90,7 @@ let View: ((props: Record<string, unknown>) => unknown) | undefined = seo
 let viewProps: Record<string, unknown> = {};
 let jsonLd: object[] = [];
 let trail: { name: string; path: string }[] | null = null;
+let preloadImage: { href: string; imagesrcset?: string; imagesizes?: string } | undefined;
 
 // --- Business profile: /business/{slug} -------------------------------------
 if (!View && segments.length === 2 && segments[0] === "business") {
@@ -120,6 +123,15 @@ if (!View && segments.length === 2 && segments[0] === "business") {
     ];
     View = BusinessProfileView;
     viewProps = { business, trail, reviews, servicePrices, questions };
+    // Preload the mosaic's main image — the profile's LCP element.
+    const mainPhoto = photosOf(business)[0];
+    if (mainPhoto) {
+      preloadImage = {
+        href: imageAt(mainPhoto, 1280),
+        imagesrcset: srcsetFor(mainPhoto),
+        imagesizes: "(min-width: 768px) 60vw, 100vw",
+      };
+    }
     seo = {
       title: `${business.name} · ${category?.name ?? "Local Business"} in ${business.city}, ${business.state} · ${SITE_NAME}`,
       description: truncate(business.description ?? `${business.name} on ${SITE_NAME}.`),
@@ -379,6 +391,6 @@ const searchProps =
 const RenderView = View ?? NotFoundView;
 ---
 
-<SiteLayout seo={seo ?? notFoundSeo} jsonLd={View ? jsonLd : []}>
+<SiteLayout seo={seo ?? notFoundSeo} jsonLd={View ? jsonLd : []} preloadImage={preloadImage}>
   <RenderView {...viewProps} {...searchProps} {...claimProps} {...reviewProps} />
 </SiteLayout>
