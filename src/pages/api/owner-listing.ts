@@ -21,15 +21,9 @@ const EDITABLE_FIELDS = [
   "website",
 ] as const;
 
-async function elevatedTools() {
-  const { auth } = await import("@wix/essentials");
-  const data: any = await import("@wix/data");
-  return {
-    query: auth.elevate(data.items.queryDataItems),
-    getItem: auth.elevate(data.items.getDataItem),
-    updateItem: auth.elevate(data.items.updateDataItem),
-  };
-}
+// Shared elevated tools — the query chain runs inside one elevated closure
+// (elevating the builder factory directly breaks; see lib/server-data.ts).
+import { elevatedData as elevatedTools } from "@/lib/server-data";
 
 async function currentMemberId(): Promise<string | null> {
   try {

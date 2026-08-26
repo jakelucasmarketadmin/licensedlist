@@ -112,8 +112,12 @@ async function fetchAll<T>(collectionId: string): Promise<T[]> {
   try {
     const { auth } = await import("@wix/essentials");
     const data: any = await import("@wix/data");
-    const query = auth.elevate(data.items.queryDataItems);
-    const res: any = await query({ dataCollectionId: collectionId }).limit(1000).find();
+    // Build+run the whole query inside one elevated closure — elevating the
+    // builder factory itself breaks (see lib/server-data.ts).
+    const run = auth.elevate(() =>
+      data.items.queryDataItems({ dataCollectionId: collectionId }).limit(1000).find(),
+    );
+    const res: any = await run();
     return (res?.items ?? []).map((it: any) => ({ _id: it._id ?? it.id, ...(it.data ?? it) }));
   } catch {
     try {

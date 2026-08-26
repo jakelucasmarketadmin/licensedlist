@@ -164,13 +164,32 @@ const BUSINESS_PATCHES: Record<string, Record<string, string>> = {
 async function tools() {
   const { auth } = await import("@wix/essentials");
   const data: any = await import("@wix/data");
+  const run = <T>(fn: () => Promise<T>): Promise<T> => (auth.elevate(fn) as () => Promise<T>)();
   return {
-    query: auth.elevate(data.items.queryDataItems),
-    insertItem: auth.elevate(data.items.insertDataItem),
-    updateItem: auth.elevate(data.items.updateDataItem),
-    getCollection: auth.elevate(data.collections.getDataCollection),
-    createCollection: auth.elevate(data.collections.createDataCollection),
-    updateCollection: auth.elevate(data.collections.updateDataCollection),
+    // Whole query built+run inside one elevated closure (builder factories
+    // can't be elevated directly — see lib/server-data.ts).
+    query: (opts: { dataCollectionId: string }) => {
+      const filters: [string, unknown][] = [];
+      let lim: number | null = null;
+      const chain = {
+        eq(k: string, v: unknown) { filters.push([k, v]); return chain; },
+        limit(n: number) { lim = n; return chain; },
+        find(): Promise<any> {
+          return run(() => {
+            let b: any = data.items.queryDataItems(opts);
+            for (const [k, v] of filters) b = b.eq(k, v);
+            if (lim !== null) b = b.limit(lim);
+            return b.find();
+          });
+        },
+      };
+      return chain;
+    },
+    insertItem: (opts: any) => run(() => data.items.insertDataItem(opts)),
+    updateItem: (id: string, opts: any) => run(() => data.items.updateDataItem(id, opts)),
+    getCollection: (id: string) => run(() => data.collections.getDataCollection(id)),
+    createCollection: (c: any) => run(() => data.collections.createDataCollection(c)),
+    updateCollection: (c: any) => run(() => data.collections.updateDataCollection(c)),
   };
 }
 
