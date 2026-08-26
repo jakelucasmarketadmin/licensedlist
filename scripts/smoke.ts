@@ -27,6 +27,11 @@ const ROUTES = [
   "/roofers",
   "/pricing",
   "/business/hofmeister-plumbing",
+  "/events",
+  "/deals",
+  "/guides",
+  "/awards",
+  "/founding-members",
   "/write-review?biz=hofmeister-plumbing",
   "/sitemap",
 ];
