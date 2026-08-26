@@ -26,6 +26,8 @@ const ROUTES = [
   "/nj/bergen-county/hackensack",
   "/roofers",
   "/pricing",
+  "/business/hofmeister-plumbing",
+  "/write-review?biz=hofmeister-plumbing",
   "/sitemap",
 ];
 
