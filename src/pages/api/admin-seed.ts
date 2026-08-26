@@ -227,9 +227,14 @@ export const POST: APIRoute = async ({ request }) => {
     if (step === "seed") {
       // Idempotent: reviews keyed by businessSlug+reviewerName, questions by
       // businessSlug+question, prices by businessSlug+service.
-      const existingOf = async (collection: string, slugField: string) => {
-        const res: any = await t.query({ dataCollectionId: collection }).limit(1000).find();
-        return (res?.items ?? []).map((it: any) => ({ _id: it._id ?? it.id, ...(it.data ?? it) }));
+      const existingOf = async (collection: string, _slugField: string) => {
+        try {
+          const res: any = await t.query({ dataCollectionId: collection }).find();
+          return (res?.items ?? []).map((it: any) => ({ _id: it._id ?? it.id, ...(it.data ?? it) }));
+        } catch (e: any) {
+          log.push(`query ${collection} failed: ${e?.message ?? e}`);
+          return [];
+        }
       };
       const reviews = await existingOf("reviews", "businessSlug");
       for (const r of DEMO_REVIEWS) {
@@ -264,20 +269,24 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // verify
-    const counts: Record<string, number> = {};
+    const counts: Record<string, string> = {};
     for (const id of ["reviews", "servicePrices", "questions"]) {
       try {
-        const res: any = await t.query({ dataCollectionId: id }).limit(1000).find();
-        counts[id] = (res?.items ?? []).length;
+        const res: any = await t.query({ dataCollectionId: id }).find();
+        counts[id] = String((res?.items ?? []).length);
       } catch (e: any) {
-        counts[id] = -1;
+        counts[id] = `ERR ${e?.message ?? e}`;
       }
     }
-    const biz: Record<string, string[]> = {};
+    const biz: Record<string, string[] | string> = {};
     for (const slug of Object.keys(BUSINESS_PATCHES)) {
-      const res: any = await t.query({ dataCollectionId: "businesses" }).eq("slug", slug).find();
-      const data = res?.items?.[0]?.data ?? res?.items?.[0] ?? {};
-      biz[slug] = ["highlights", "photosJson", "projectsJson", "teamJson", "faqJson"].filter((k) => data[k]);
+      try {
+        const res: any = await t.query({ dataCollectionId: "businesses" }).eq("slug", slug).find();
+        const data = res?.items?.[0]?.data ?? res?.items?.[0] ?? {};
+        biz[slug] = ["highlights", "photosJson", "projectsJson", "teamJson", "faqJson"].filter((k) => data[k]);
+      } catch (e: any) {
+        biz[slug] = `ERR ${e?.message ?? e}`;
+      }
     }
     return json({ ok: true, counts, biz });
   } catch (err: any) {
