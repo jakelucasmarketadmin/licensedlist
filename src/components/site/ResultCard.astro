@@ -64,6 +64,7 @@ try {
 // remove themselves on load error, revealing the next rung down.
 const townPhoto = b.stateSlug ? heroPhotoFor(b.stateSlug, b.countySlug, b.townSlug) : undefined;
 const topRated = rating !== null && rating >= 4.8 && reviews >= 25;
+const topServices = (b.services ?? "").split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
 const horizontal = layout === "horizontal";
 const mainPhoto = photos[0];
 const thumbs = photos.length >= 4 ? photos.slice(1, 5) : [];
@@ -222,6 +223,14 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
     {b.whyWePicked && (
       <p class:list={["mt-2 text-sm leading-relaxed text-muted", horizontal && "line-clamp-2"]}>
         <span class="font-medium text-ink">Why we picked them:</span> {b.whyWePicked}
+      </p>
+    )}
+
+    {horizontal && topServices.length > 0 && (
+      <p class="mt-2 flex flex-wrap items-center gap-1.5">
+        {topServices.map((s) => (
+          <span class="rounded-chip bg-inset px-2.5 py-0.5 text-xs text-muted">{s}</span>
+        ))}
       </p>
     )}
 

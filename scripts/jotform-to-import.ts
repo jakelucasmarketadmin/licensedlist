@@ -90,14 +90,33 @@ if (sinceArg) submissions = submissions.filter((s) => s.created_at >= sinceArg);
 // 2 add/update · 3 name · 4 address · 5 phone · 6 email · 7 website · 8 owner name
 // 9 owner email · 10 owner phone · 11 category · 12 states served · 13 towns text
 // 14 license number · 15 license state · 16 description · 17 social · 18 upload
-const HEADER = "name,slug,primaryCategorySlug,categorySlugs,stateSlug,countySlug,townSlug,serviceTownSlugs,address1,address2,city,state,zip,phone,website,email,description,whyWePicked,yearsInBusiness,foundedYear,services,logoUrl,photoUrls,licenseNumber,licenseSource,licenseVerifiedAt,insuredStatus,ratingGoogle,ratingGoogleCount,ratingYelp,ratingYelpCount,ratingFacebook,ratingFacebookCount,responseTimeHours,isClient,tier,hoursJson,sourceNotes,licenseHolder,reviewNotes".split(",");
+const HEADER = "name,slug,primaryCategorySlug,categorySlugs,stateSlug,countySlug,townSlug,serviceTownSlugs,address1,address2,city,state,zip,phone,website,email,description,whyWePicked,yearsInBusiness,foundedYear,services,logoUrl,photoUrls,licenseNumber,licenseSource,licenseVerifiedAt,insuredStatus,ratingGoogle,ratingGoogleCount,ratingYelp,ratingYelpCount,ratingFacebook,ratingFacebookCount,responseTimeHours,isClient,tier,hoursJson,sourceNotes,licenseHolder,highlights,projectsJson,teamJson,reviewNotes".split(",");
+
+// Batch B optional questions are matched by label (the form may gain them at
+// any qid) — see docs/RUNBOOK.md §5 for the exact labels to create.
+const HIGHLIGHT_LABEL = "highlights";           // checkbox multi-select
+const PRICES_LABEL = "services & typical prices"; // long text, "service: price" per line
+const TEAM_LABEL = "team members";               // long text, "Name — role — bio" per line
+const PROJECTS_LABEL = "recent projects";        // long text, "Title — town — description" per line
 
 const rows: Record<string, string>[] = [];
+const priceRows: Record<string, string>[] = [];
 for (const sub of submissions) {
   const a = sub.answers ?? {};
   const ans = (qid: number): any => a[String(qid)]?.answer;
   const text = (qid: number): string => {
     const v = ans(qid);
+    return typeof v === "string" ? v.trim() : "";
+  };
+  // Label-based lookup for the Batch B optional questions.
+  const byLabel = (label: string): any => {
+    const entry = Object.values(a).find(
+      (q: any) => String(q?.text ?? "").trim().toLowerCase().startsWith(label),
+    ) as any;
+    return entry?.answer;
+  };
+  const labelText = (label: string): string => {
+    const v = byLabel(label);
     return typeof v === "string" ? v.trim() : "";
   };
   const review: string[] = [];
@@ -141,6 +160,39 @@ for (const sub of submissions) {
   const addOrUpdate = text(2);
   const ownerName = ans(8) ? `${ans(8).first ?? ""} ${ans(8).last ?? ""}`.trim() : "";
 
+  // ---- Batch B optional profile extras (all label-matched, all optional) ----
+  const highlightsRaw = byLabel(HIGHLIGHT_LABEL);
+  const highlights = (Array.isArray(highlightsRaw) ? highlightsRaw : highlightsRaw ? [String(highlightsRaw)] : [])
+    .map((h: string) => slugify(String(h)))
+    .join(",");
+
+  // "service: price" lines → services list + servicePrices sidecar rows.
+  const priceLines = labelText(PRICES_LABEL).split(/\n/).map((l) => l.trim()).filter(Boolean);
+  const parsedServices: string[] = [];
+  for (const line of priceLines) {
+    const [svc, ...priceParts] = line.split(":");
+    const service = svc.trim();
+    if (!service) continue;
+    parsedServices.push(service);
+    const priceLabel = priceParts.join(":").trim();
+    if (priceLabel)
+      priceRows.push({ businessSlug: slugify(name), service, priceLabel, sortOrder: String(parsedServices.length) });
+  }
+
+  const teamEntries = labelText(TEAM_LABEL).split(/\n/).map((l) => l.trim()).filter(Boolean)
+    .map((line) => {
+      const [tName, role, ...bio] = line.split("—").map((s) => s.trim());
+      return tName ? { name: tName, ...(role ? { role } : {}), ...(bio.length ? { bio: bio.join(" — ") } : {}) } : null;
+    })
+    .filter(Boolean);
+
+  const projectEntries = labelText(PROJECTS_LABEL).split(/\n/).map((l) => l.trim()).filter(Boolean)
+    .map((line) => {
+      const [title, town, ...desc] = line.split("—").map((s) => s.trim());
+      return title ? { title, ...(town ? { town } : {}), ...(desc.length ? { description: desc.join(" — ") } : {}) } : null;
+    })
+    .filter(Boolean);
+
   rows.push({
     name,
     slug: slugify(name),
@@ -162,7 +214,7 @@ for (const sub of submissions) {
     whyWePicked: "",
     yearsInBusiness: "",
     foundedYear: "",
-    services: "",
+    services: parsedServices.join(","),
     logoUrl: "",
     photoUrls: uploads.join(","),
     licenseNumber: text(14),
@@ -176,6 +228,9 @@ for (const sub of submissions) {
     hoursJson: "",
     sourceNotes: `Jotform intake ${sub.created_at} (submission ${sub.id}; ${addOrUpdate || "?"}). Owner contact: ${ownerName} ${text(9)} ${String(ans(10)?.full ?? "")}`.trim(),
     licenseHolder: "",
+    highlights,
+    projectsJson: projectEntries.length ? JSON.stringify(projectEntries) : "",
+    teamJson: teamEntries.length ? JSON.stringify(teamEntries) : "",
     reviewNotes: review.join(" | "),
   });
 }
@@ -187,5 +242,14 @@ writeFileSync(
   outPath,
   [HEADER.join(","), ...rows.map((r) => HEADER.map((h) => esc(r[h])).join(","))].join("\n") + "\n",
 );
+if (priceRows.length) {
+  const priceHeader = ["businessSlug", "service", "priceLabel", "sortOrder"];
+  const pricePath = join(root, `data/intake/${date}-service-prices.csv`);
+  writeFileSync(
+    pricePath,
+    [priceHeader.join(","), ...priceRows.map((r) => priceHeader.map((h) => esc(r[h])).join(","))].join("\n") + "\n",
+  );
+  console.log(`servicePrices sidecar: ${pricePath} (${priceRows.length} rows)`);
+}
 const flagged = rows.filter((r) => r.reviewNotes).length;
 console.log(`${rows.length} submission(s) → ${outPath} · ${flagged} with reviewNotes`);
