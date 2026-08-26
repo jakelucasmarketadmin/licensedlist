@@ -115,7 +115,7 @@ async function fetchAll<T>(collectionId: string): Promise<T[]> {
     // Build+run the whole query inside one elevated closure — elevating the
     // builder factory itself breaks (see lib/server-data.ts).
     const run = auth.elevate(() =>
-      data.items.queryDataItems({ dataCollectionId: collectionId }).limit(1000).find(),
+      data.items.query(collectionId).limit(1000).find(),
     );
     const res: any = await run();
     return (res?.items ?? []).map((it: any) => ({ _id: it._id ?? it.id, ...(it.data ?? it) }));

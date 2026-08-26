@@ -166,8 +166,8 @@ async function tools() {
   const data: any = await import("@wix/data");
   const run = <T>(fn: () => Promise<T>): Promise<T> => (auth.elevate(fn) as () => Promise<T>)();
   return {
-    // Whole query built+run inside one elevated closure (builder factories
-    // can't be elevated directly — see lib/server-data.ts).
+    // Whole query built+run inside one elevated closure, on the new
+    // items.query API — flat items (see lib/server-data.ts).
     query: (opts: { dataCollectionId: string }) => {
       const filters: [string, unknown][] = [];
       let lim: number | null = null;
@@ -176,7 +176,7 @@ async function tools() {
         limit(n: number) { lim = n; return chain; },
         find(): Promise<any> {
           return run(() => {
-            let b: any = data.items.queryDataItems(opts);
+            let b: any = data.items.query(opts.dataCollectionId);
             for (const [k, v] of filters) b = b.eq(k, v);
             if (lim !== null) b = b.limit(lim);
             return b.find();
@@ -185,8 +185,9 @@ async function tools() {
       };
       return chain;
     },
-    insertItem: (opts: any) => run(() => data.items.insertDataItem(opts)),
-    updateItem: (id: string, opts: any) => run(() => data.items.updateDataItem(id, opts)),
+    insertItem: (opts: any) => run(() => data.items.insert(opts.dataCollectionId, opts.dataItem.data)),
+    updateItem: (id: string, opts: any) =>
+      run(() => data.items.update(opts.dataCollectionId, { ...opts.dataItem.data, _id: id })),
     getCollection: (id: string) => run(() => data.collections.getDataCollection(id)),
     createCollection: (c: any) => run(() => data.collections.createDataCollection(c)),
     updateCollection: (c: any) => run(() => data.collections.updateDataCollection(c)),

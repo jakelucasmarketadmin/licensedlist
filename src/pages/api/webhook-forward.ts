@@ -83,15 +83,14 @@ export const POST: APIRoute = async ({ request, url }) => {
       ? `delivered ${new Date().toISOString()}`
       : `FAILED after 3 attempts (${lastError}) ${new Date().toISOString()}`;
     try {
-      const { auth } = await import("@wix/essentials");
-      const data: any = await import("@wix/data");
-      const getItem = auth.elevate(data.items.getDataItem);
-      const updateItem = auth.elevate(data.items.updateDataItem);
+      const { elevatedData } = await import("@/lib/server-data");
+      const { getItem, updateItem } = await elevatedData();
       const current: any = await getItem(itemId, { dataCollectionId: collection });
-      const prior = current?.data?.webhookLog ? `${current.data.webhookLog}\n` : "";
+      const cur = current?.data ?? current ?? {};
+      const prior = cur.webhookLog ? `${cur.webhookLog}\n` : "";
       await updateItem(itemId, {
         dataCollectionId: collection,
-        dataItem: { data: { ...current.data, webhookLog: `${prior}${logLine}` } },
+        dataItem: { data: { ...cur, webhookLog: `${prior}${logLine}` } },
       });
     } catch (err) {
       console.error(`webhook-forward: webhookLog write failed for ${collection}/${itemId}`, err);

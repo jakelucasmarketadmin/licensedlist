@@ -12,9 +12,7 @@ export async function quoteRequestsThisMonth(businessSlug: string): Promise<numb
     monthStart.setHours(0, 0, 0, 0);
     // Whole query inside one elevated closure (see lib/server-data.ts gotcha).
     const run = auth.elevate(() =>
-      data.items.queryDataItems({ dataCollectionId: "leads" })
-        .eq("businessSlugs", businessSlug)
-        .find(),
+      data.items.query("leads").eq("businessSlugs", businessSlug).find(),
     );
     const res: any = await run();
     const items: any[] = res?.items ?? [];
