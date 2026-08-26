@@ -23,3 +23,8 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
 **Smoke 2026-08-25 16:48 UTC:** PASS — all 9 routes 200
 
 **Smoke 2026-08-26 20:30 UTC:** PASS — all 9 routes 200
+
+**Smoke 2026-08-26 21:16 UTC:** PASS — all 11 routes 200
+  - Batch B publish: Profile 2.0, on-site review system (reviews/servicePrices/questions
+    collections), Q&A, /write-review (noindex — NO new indexable URL types). Crawl: 284
+    pages, 0 broken. JSON-LD: aggregateRating correctly suppressed at <3 on-site reviews.
