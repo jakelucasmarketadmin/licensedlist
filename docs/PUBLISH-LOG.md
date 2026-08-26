@@ -35,3 +35,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
     mirrored to our media namespace, LQIP + eager LCP images + preload (Lighthouse mobile
     warm: profile 96 LCP 2.7s / demo profile 97 LCP 2.4s / list 90 / home 92), unclipped
     list cards, project-card grid, curated heroEligible hero pool.
+
+**Smoke 2026-08-26 22:36 UTC:** PASS — all 16 routes 200

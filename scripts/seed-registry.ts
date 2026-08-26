@@ -8,8 +8,12 @@
  *       --push https://<preview-origin> --secret <x-seed-secret>
  *
  * Sources:
- *   nyc-hic        NYC Open Data acd4-wkax (Active HIC licenses, DCWP).
- *                  Premises records only, license_status=Active, borough-scoped.
+ *   nyc-hic        NYC Open Data w7w3-xahh ("Issued Licenses", DCWP) filtered
+ *                  business_category='Home Improvement Contractor',
+ *                  license_status='Active'. NOTE: acd4-wkax is a TRAP — its
+ *                  title says "Active Home Improvement Contractor Licenses"
+ *                  but it contains the ENTIRE DCWP roster (delis, vendors,
+ *                  sidewalk cafés); only w7w3-xahh carries the category column.
  *   ny-re-offices  data.ny.gov nsde-gcv2 (Active Real Estate Offices, NY DOS).
  *                  County-scoped; no expiration in the dataset.
  *
@@ -104,16 +108,16 @@ async function fetchRows(): Promise<RegistryRow[]> {
     const borough = countyArg ? COUNTY_TO_BOROUGH[countyArg] : undefined;
     if (countyArg && !borough) throw new Error(`unknown NYC county ${countyArg}`);
     const where = [
+      "business_category='Home Improvement Contractor'",
       "license_status='Active'",
-      "license_type='Premises'",
       borough ? `address_borough='${borough.replace("'", "''")}'` : "address_borough in('Brooklyn','Queens','Manhattan','Bronx','Staten Island')",
     ].join(" AND ");
-    const raw = await socrataAll("https://data.cityofnewyork.us/resource/acd4-wkax.json", { $where: where });
+    const raw = await socrataAll("https://data.cityofnewyork.us/resource/w7w3-xahh.json", { $where: where });
     return raw
       .filter((r) => r.business_name && r.address_borough && BOROUGHS[r.address_borough])
       .map((r) => {
         const geo = BOROUGHS[r.address_borough];
-        const name = titleCase(String(r.business_name));
+        const name = titleCase(String(r.dba_trade_name || r.business_name));
         return {
           name,
           slug: `reg-${slugify(String(r.license_nbr))}`,
@@ -133,7 +137,7 @@ async function fetchRows(): Promise<RegistryRow[]> {
           licenseSource: "NYC DCWP Home Improvement Contractor",
           licenseVerifiedAt: today,
           licenseExpiresAt: r.lic_expir_dd ? String(r.lic_expir_dd).slice(0, 10) : "",
-          sourceNotes: `REGISTRY nyc-hic acd4-wkax ${today}`,
+          sourceNotes: `REGISTRY nyc-hic w7w3-xahh ${today}`,
           tier: "free" as const,
           isClient: "false" as const,
           address1: [r.address_building, r.address_street_name].filter(Boolean).join(" "),
