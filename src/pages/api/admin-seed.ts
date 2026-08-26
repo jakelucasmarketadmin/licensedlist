@@ -205,6 +205,21 @@ export const POST: APIRoute = async ({ request }) => {
   const log: string[] = [];
 
   try {
+    if (step === "debug") {
+      const data: any = await import("@wix/data");
+      const { auth } = await import("@wix/essentials");
+      const b: any = data.items.query("reviews");
+      const inside = await (auth.elevate(async () => {
+        const ib: any = data.items.query("reviews");
+        return { type: typeof ib, keys: Object.getOwnPropertyNames(Object.getPrototypeOf(ib) ?? {}).slice(0, 20), own: Object.keys(ib ?? {}).slice(0, 20) };
+      }) as any)();
+      return json({
+        ok: true,
+        itemsKeys: Object.keys(data.items ?? {}).slice(0, 40),
+        outside: { type: typeof b, proto: Object.getOwnPropertyNames(Object.getPrototypeOf(b) ?? {}).slice(0, 20), own: Object.keys(b ?? {}).slice(0, 20) },
+        inside,
+      });
+    }
     const t = await tools();
 
     if (step === "schema") {
