@@ -15,6 +15,7 @@ export interface TownPhotoSeed {
   focalX: string;
   focalY: string;
   preferred: string;
+  heroEligible: string;
 }
 
 export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
@@ -31,7 +32,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Domed Bergen County courthouse building in Hackensack, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -46,7 +48,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Street view of commercial buildings in downtown Hackensack, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": "true"
   },
   {
     "scope": "county",
@@ -61,7 +64,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Aerial photo of downtown Newark, New Jersey skyscrapers",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -76,7 +80,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Newark skyline viewed over the Passaic River",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": "true"
   },
   {
     "scope": "county",
@@ -91,7 +96,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Street scene on George Street in downtown New Brunswick, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -106,7 +112,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Downtown New Brunswick, New Jersey street with shops and pedestrians",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -121,7 +128,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Jersey City high-rise skyline along the Hudson River waterfront",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": "true"
   },
   {
     "scope": "county",
@@ -136,7 +144,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Panoramic view of the Jersey City skyline across the Hudson River",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -151,7 +160,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Downtown Main Street in Freehold Borough, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -166,7 +176,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Storefronts along Main Street in Freehold, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -181,7 +192,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Downtown Washington Street in Toms River, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -196,7 +208,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Historic Ocean County Courthouse building in Toms River, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -211,7 +224,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Boat docks along the Toms River waterfront in downtown Toms River",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -226,7 +240,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Union County Courthouse tower in Elizabeth, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -241,7 +256,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Downtown street scene in Elizabeth, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -256,7 +272,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Historic Morris County Courthouse building in Morristown, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -271,7 +288,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Museum building at Morristown National Historical Park in New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -286,7 +304,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Great Falls waterfall on the Passaic River in Paterson, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -301,7 +320,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Bridge spanning the Great Falls gorge in Paterson, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -316,7 +336,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Montgomery County Courthouse building in Norristown, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -331,7 +352,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Norristown Transportation Center rail station in Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -346,7 +368,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Rooftop view over central Norristown, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -361,7 +384,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Downtown street in Doylestown, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -376,7 +400,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Art deco County Theater movie house in Doylestown, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -391,7 +416,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Delaware County Courthouse building in Media, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -406,7 +432,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Downtown State Street in Media, Pennsylvania with trolley tracks",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -421,7 +448,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Chester County Historical Society building in West Chester, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -436,7 +464,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Historic post office building in West Chester, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -451,7 +480,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Philadelphia City Hall tower with William Penn statue",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -466,7 +496,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Philadelphia skyscraper skyline seen across the Schuylkill River",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": "true"
   },
   {
     "scope": "county",
@@ -481,7 +512,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Brooklyn Bridge with stone towers and suspension cables",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": "true"
   },
   {
     "scope": "county",
@@ -496,7 +528,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Greek Revival Brooklyn Borough Hall building with cupola",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -511,7 +544,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Stainless steel Unisphere globe sculpture in Flushing Meadows, Queens",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -526,7 +560,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "High-rise skyline of Long Island City, Queens",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -541,7 +576,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Lower Manhattan skyscraper skyline across New York Harbor",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": "true"
   },
   {
     "scope": "county",
@@ -556,7 +592,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Midtown Manhattan skyline viewed from across the Hudson River",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -571,7 +608,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Bronx County Courthouse building in the Bronx, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -586,7 +624,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Apartment buildings lining the Grand Concourse in the Bronx",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -601,7 +640,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "St. George Ferry Terminal seen from the water, Staten Island",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -616,7 +656,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Borough Hall and courthouse buildings in St. George, Staten Island",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -631,7 +672,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Nassau County Courthouse building on Long Island, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -646,7 +688,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Domed Old Nassau County Court House building near Mineola, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -661,7 +704,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Montauk Point Lighthouse on a bluff above the Atlantic Ocean",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": "true"
   },
   {
     "scope": "county",
@@ -676,7 +720,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Illuminated art deco Suffolk Theater facade in Riverhead, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -691,7 +736,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Downtown White Plains, New York skyline",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -706,7 +752,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Westchester County Courthouse building in White Plains, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -721,7 +768,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Shops along Main Street in Nyack, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -736,7 +784,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Rockland County Courthouse building in New City, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -751,7 +800,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "West entrance of the Ithaca Commons pedestrian mall in Ithaca, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -766,7 +816,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Pedestrians and storefronts on the Ithaca Commons in Ithaca, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -781,7 +832,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Delaware County clerk's office building on Courthouse Square in Delhi, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -796,7 +848,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Historic buildings along Main Street in Andes, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": "true"
   },
   {
     "scope": "town",
@@ -811,7 +864,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Westwood, New Jersey municipal building",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -826,7 +880,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Westwood, New Jersey train station house and lawn",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -841,7 +896,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Rivervale Road street view in River Vale, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -856,7 +912,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Historic stone William Holdrum House in River Vale, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -871,7 +928,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Historic Park Ridge, New Jersey train station building",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -886,7 +944,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Kinderkamack Road street view in Park Ridge, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -901,7 +960,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Emerson, New Jersey train station platform and building",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -916,7 +976,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Emerson, New Jersey municipal building",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -931,7 +992,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "East Brunswick Historical Society building in New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -946,7 +1008,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Welcome to East Brunswick township sign",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -961,7 +1024,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Green lawn of Holster Park in Clifton, New Jersey",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -976,7 +1040,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Clifton, New Jersey commuter rail station",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -991,7 +1056,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Horsham Township, Pennsylvania municipal building",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -1006,7 +1072,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Lake and office buildings at a business campus in Horsham, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -1021,7 +1088,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Crowds at a street festival in Skippack Village, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -1036,7 +1104,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Hotel Fiesole building in Skippack Village, Pennsylvania",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -1051,7 +1120,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Winter street view in the village of Dryden, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -1066,7 +1136,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Buildings along a street in Dryden, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -1081,7 +1152,8 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Main Street storefronts in downtown Margaretville, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   },
   {
     "scope": "town",
@@ -1096,6 +1168,7 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "alt": "Street view in the village of Margaretville, New York",
     "focalX": "",
     "focalY": "",
-    "preferred": ""
+    "preferred": "",
+    "heroEligible": ""
   }
 ];

@@ -50,12 +50,22 @@ export function heroPhotoFor(stateSlug: string, countySlug?: string, townSlug?: 
   return undefined;
 }
 
-/** Rotating hero pool for the home page (one per county, deterministic order). */
+/** Captions that never belong in a hero, whatever the flags say. */
+const HERO_BLOCKLIST = /sign|parking|construction/i;
+
+/**
+ * Rotating hero pool for the home page: curated `heroEligible` photos first
+ * (skyline/landscape shots — flag lives in TownPhotos and is dashboard-
+ * curated), falling back to one-per-county when nothing is flagged. Photos
+ * with sign/parking/construction captions are never eligible.
+ */
 export function homeHeroPhotos(limit = 5): TownPhotoSeed[] {
+  const usable = TOWN_PHOTO_SEED.filter((p) => p.url && !HERO_BLOCKLIST.test(p.caption));
+  const curated = usable.filter((p) => p.heroEligible === "true");
+  if (curated.length) return curated.slice(0, Math.max(limit, curated.length));
   const seen = new Set<string>();
   const picks: TownPhotoSeed[] = [];
-  for (const p of TOWN_PHOTO_SEED) {
-    if (!p.url) continue;
+  for (const p of usable) {
     const key = `${p.stateSlug}|${p.countySlug}`;
     if (seen.has(key)) continue;
     seen.add(key);

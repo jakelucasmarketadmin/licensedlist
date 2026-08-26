@@ -282,26 +282,22 @@ const tabs = [
         <section id="photos-projects" class="scroll-mt-32" aria-labelledby="projects-h">
           <h2 id="projects-h" class="font-display text-2xl font-semibold text-ink">Photos &amp; projects</h2>
           {projects.length > 0 && (
-            <div class="mt-4 space-y-5">
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
               {projects.map((p) => (
-                <article class="overflow-hidden rounded-card border border-line bg-surface">
+                <article class="flex flex-col overflow-hidden rounded-card border border-line bg-surface">
                   {p.beforePhoto && p.afterPhoto ? (
                     <div class="grid grid-cols-2 gap-0.5">
                       <figure class="relative">
-                        <img src={imageAt(p.beforePhoto, 500)} srcset={srcsetFor(p.beforePhoto)} sizes="(min-width:1024px) 33vw, 50vw" alt={`${p.title} — before`} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />
+                        <img src={imageAt(p.beforePhoto, 500)} srcset={srcsetFor(p.beforePhoto)} sizes="(min-width:640px) 25vw, 50vw" alt={`${p.title} — before`} loading="lazy" decoding="async" class="aspect-[8/9] w-full object-cover" />
                         <figcaption class="absolute left-2 top-2 rounded-chip bg-brand-deep/80 px-2 py-0.5 text-[11px] font-semibold text-white">Before</figcaption>
                       </figure>
                       <figure class="relative">
-                        <img src={imageAt(p.afterPhoto, 500)} srcset={srcsetFor(p.afterPhoto)} sizes="(min-width:1024px) 33vw, 50vw" alt={`${p.title} — after`} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />
+                        <img src={imageAt(p.afterPhoto, 500)} srcset={srcsetFor(p.afterPhoto)} sizes="(min-width:640px) 25vw, 50vw" alt={`${p.title} — after`} loading="lazy" decoding="async" class="aspect-[8/9] w-full object-cover" />
                         <figcaption class="absolute left-2 top-2 rounded-chip bg-[#177245] px-2 py-0.5 text-[11px] font-semibold text-white">After</figcaption>
                       </figure>
                     </div>
                   ) : (p.photos ?? []).length > 0 ? (
-                    <div class="grid grid-cols-3 gap-0.5">
-                      {(p.photos ?? []).slice(0, 3).map((ph, i) => (
-                        <img src={imageAt(ph, 500)} alt={`${p.title} — photo ${i + 1}`} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />
-                      ))}
-                    </div>
+                    <img src={imageAt((p.photos ?? [])[0], 960)} srcset={srcsetFor((p.photos ?? [])[0])} sizes="(min-width:640px) 50vw, 100vw" alt={`${p.title} — photo`} loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
                   ) : null}
                   <div class="p-4">
                     <h3 class="font-display text-lg font-semibold text-ink">{p.title}</h3>

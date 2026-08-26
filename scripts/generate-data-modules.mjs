@@ -205,6 +205,7 @@ export interface TownPhotoSeed {
   focalX: string;
   focalY: string;
   preferred: string;
+  heroEligible: string;
 }
 
 export const TOWN_PHOTO_SEED: TownPhotoSeed[] = ${JSON.stringify(photos, null, 2)};

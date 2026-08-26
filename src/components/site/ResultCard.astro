@@ -74,7 +74,7 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
 <article
   class:list={[
     "card-hover overflow-hidden rounded-card border border-line bg-surface",
-    horizontal && "md:flex md:max-h-[260px]",
+    horizontal && "md:flex",
   ]}
   data-biz-card={b.slug}
   data-lat={b.lat ?? ""}
@@ -93,7 +93,7 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
         class:list={[
           "group relative w-full overflow-hidden bg-inset",
           horizontal
-            ? "aspect-video max-h-[200px] md:aspect-[4/3] md:h-full md:max-h-[240px]"
+            ? "aspect-video max-h-[200px] md:aspect-[4/3] md:max-h-[240px]"
             : "aspect-[4/3]",
         ]}
         data-photo-frame
