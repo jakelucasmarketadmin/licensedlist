@@ -208,3 +208,27 @@ facts rule.
 - **Fonts**: Fraunces/Hanken Grotesk/JetBrains Mono via Google Fonts css2 with display=swap +
   preconnect; we deliberately do NOT preload specific woff2 files (Google rotates file URLs
   per UA/version — a stale preload is worse than none).
+
+## Batch B (2026-08-26)
+
+- **Profile 2.0 anatomy** (Airbnb/OpenTable): mosaic 1+4 with a `<dialog>` lightbox (plain
+  inline JS, keyboard nav), sticky tab bar with IntersectionObserver scrollspy, sticky
+  right action card carrying the quote form, mobile bottom Call/Get-a-quote bar. Sections
+  render only when data exists (tabs list adapts).
+- **Reviews are admin-read collections.** `reviews`/`questions` carry reviewer emails, so
+  no public read; SSR reads run elevated with a BaseCrudService fallback for the harness.
+  All writes flow through API routes so `verifiedHire` can never be set by a client.
+- **aggregateRating threshold ≥3** on-site published reviews (Batch B prompt overrides the
+  earlier ≥5 draft in REVIEWS.md), never for DEMO records, third-party ratings stay
+  display-only context.
+- **Review email delivery rides GHL** (`GHL_REVIEW_WEBHOOK`) rather than Wix triggered
+  emails — same rail as lead/claim forwarding, keeps templates in the agency's stack, and
+  needs no new npm deps (hard platform rule).
+- **AI reply drafts degrade gracefully**: Anthropic API when `ANTHROPIC_API_KEY` exists,
+  otherwise a rating-aware template — both labeled as suggestions, never auto-posted.
+- **Hofmeister profile extras are mirrored, not invented**: projects/photos/highlights come
+  from the client's own published site (plumb-air repo /projects). Demo profiles use stock
+  renders and "(sample)"-suffixed copy behind `?preview=demo`.
+- **Collections/fields created via a temporary `/api/admin-seed` endpoint** run against the
+  dev preview origin (elevated `@wix/data` collections API) and deleted before publish —
+  the dashboard click-path from Batch A stays the fallback.

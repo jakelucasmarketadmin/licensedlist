@@ -145,3 +145,44 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
 - Gotcha: `/v1/fill/` transforms only work on Wix Media URLs that already carry a `/v1/`
   segment; hand-building transforms onto a bare `...~mv2.jpg` URL returns 403, so the
   pipeline serves bare media URLs untouched.
+
+## 8. Reviews, Q&A & the owner inbox (Batch B)
+
+### Review invitations (the 7-day clock)
+- Owner marks a lead **won** in `/owner` → `wonAt` stamps. 7 days later the consumer gets a
+  one-time review link; 7 more days without a submission → one reminder. That's all
+  handled by `POST /api/review-invites`, which must be pinged daily:
+  - Set env `REVIEW_CRON_SECRET` (any long random string) and `GHL_REVIEW_WEBHOOK` (a GHL
+    inbound-webhook workflow that sends the actual email using payload fields
+    `email, name, businessSlug, reviewUrl, type` where type is `review-invite` or
+    `review-reminder`).
+  - Schedule the ping from GHL (recurring workflow → custom webhook) or any cron service:
+    `curl -X POST -H "x-cron-secret: $REVIEW_CRON_SECRET" https://<site>/api/review-invites`
+  - Without `REVIEW_CRON_SECRET` the endpoint answers 503 and does nothing.
+- Invitation emails MUST go to every won lead (FTC — see docs/REVIEWS.md). Never add
+  sentiment filtering to the GHL workflow.
+
+### Moderation queue
+- CMS dashboard → **Reviews** → filter `moderationStatus = pending`. Check identity + job
+  linkage only, then set `published` or `rejected`. `ownerFlag` marks owner re-check
+  requests. Same drill for **Questions** (publish only once `answer` is filled).
+
+### Owner inbox
+- `/owner` (requires approved claim) now has Inbox tabs: **Leads** (pipeline
+  new→contacted→won/lost — won starts the review clock), **Reviews** (public responses;
+  "Suggest a reply" uses `ANTHROPIC_API_KEY` when set, else a labeled template; owner
+  always edits and posts manually), **Q&A** (answers await dashboard publish).
+
+### Jotform — new optional questions (add to the intake form; label-matched, any qid)
+| Label starts with | Type | Maps to |
+| --- | --- | --- |
+| `Highlights` | checkboxes: Licensed, Insured, Family-owned, Emergency service, Free estimates, Financing, Warranty, Eco-friendly, Background-checked | `businesses.highlights` (slugged) |
+| `Services & typical prices` | long text, one `service: price` per line | `services` + `data/intake/*-service-prices.csv` sidecar → servicePrices collection |
+| `Team members` | long text, one `Name — role — bio` per line | `teamJson` |
+| `Recent projects` | long text, one `Title — town — description` per line | `projectsJson` |
+
+### Collections touched in Batch B
+- New: `reviews`, `servicePrices`, `questions` (all admin-only read/write; the site reads
+  them elevated server-side).
+- New fields: `businesses.{highlights,projectsJson,teamJson,faqJson}`,
+  `leads.{wonAt,reviewToken,reviewInviteSentAt,reviewReminderSentAt,reviewSubmittedAt}`.
