@@ -13,7 +13,7 @@
         "rule": "overused-font",
         "value": "fraunces",
         "createdAt": "2026-08-25T15:21:36.598Z",
-        "reason": "Phase 3 brief (PROMPT-phase3-levelup.md A1) explicitly pins Fraunces as the display face"
+        "reason": "Brief-pinned display face for TriVetted (user-approved design system)"
       }
     ]
   }
