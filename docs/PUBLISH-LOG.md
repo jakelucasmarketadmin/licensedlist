@@ -42,6 +42,6 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   - C0 + Batch C publish: 5 new indexable URLs (/events /deals /guides /awards
     /founding-members — within the 50/week budget; registered rows add ZERO URLs).
     Registry live: 10,083 registered rows (NYC HIC w7w3-xahh all five boroughs 9,584 +
-    Richmond RE offices 499; the acd4-wkax mislabel was purged same-day). Crawl 289 pages
+    Richmond RE offices 499; the acd4-wkax mislabel was purged same-day). Crawl 288 pages
     0 broken. New collections: events, offers, awards, subscribers (+DEMO rows behind
     preview).
