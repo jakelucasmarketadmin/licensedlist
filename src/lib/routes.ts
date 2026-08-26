@@ -108,6 +108,14 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     path: "/credits",
     crumb: "Photo credits",
   },
+  "/write-review": {
+    title: `Write a Review · ${SITE_NAME}`,
+    description:
+      "Share your experience with a local business. Reviews are moderated for identity and job linkage only — never filtered by rating.",
+    path: "/write-review",
+    robots: "noindex, follow",
+    crumb: "Write a review",
+  },
   "/search": {
     title: `Search · ${SITE_NAME}`,
     description: `Search ${SITE_NAME} for verified local businesses in New Jersey, New York & Pennsylvania.`,

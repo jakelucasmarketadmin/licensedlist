@@ -1,0 +1,62 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import WriteReviewForm from "@/components/site/WriteReviewForm.tsx";
+import { getBusinessBySlug } from "@/lib/businesses";
+import { SITE_NAME } from "@/lib/site";
+
+/**
+ * /write-review?biz={slug} (public, labeled unverified) or ?token={uuid}
+ * (one-time invitation → verified hire). Always noindex. The policy text
+ * below is the exact language referenced in docs/REVIEWS.md — keep them in
+ * sync.
+ */
+interface Props {
+  biz?: string;
+  token?: string;
+}
+const { biz = "", token = "" } = Astro.props;
+const business = biz ? await getBusinessBySlug(biz, true) : undefined;
+---
+
+<article class="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo
+    trail={[
+      { name: "Home", path: "/" },
+      ...(business ? [{ name: business.name ?? "Business", path: `/business/${business.slug}` }] : []),
+      { name: "Write a review", path: "/write-review" },
+    ]}
+  />
+
+  <div class="mt-6">
+    <WriteReviewForm
+      client:load
+      businessSlug={business?.slug}
+      businessName={business?.name}
+      token={token || undefined}
+    />
+  </div>
+
+  <div class="mt-10 rounded-card border border-line bg-surface p-5 text-sm leading-relaxed text-muted">
+    <h2 class="font-display text-lg font-semibold text-ink">Our review policy</h2>
+    <ul class="mt-3 list-disc space-y-2 pl-5">
+      <li>Write about your own, real experience with this business. One review per job.</li>
+      <li>
+        Reviews are moderated for identity and job linkage only — we never filter, edit, or
+        reorder by rating. Critical reviews are published under the same rules as positive ones.
+      </li>
+      <li>
+        “Verified hire” means the hire went through a {SITE_NAME} quote request and the review
+        link was sent after the job — to every customer, never only the happy ones.
+      </li>
+      <li>No reviews from owners, employees, relatives, competitors, or anyone paid to write one.</li>
+      <li>
+        Don't include other people's personal information, defamatory claims, or content
+        unrelated to the work.
+      </li>
+      <li>
+        Owners may post one public response; they cannot edit or remove your review. See
+        <a href="/editorial-policy" class="font-medium text-brand underline underline-offset-2">our editorial policy</a>.
+      </li>
+    </ul>
+  </div>
+</article>
