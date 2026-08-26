@@ -25,6 +25,10 @@ import ClaimBusinessView from "@/views/ClaimBusinessView.astro";
 import OwnerView from "@/views/OwnerView.astro";
 import WriteReviewView from "@/views/WriteReviewView.astro";
 import FoundingMembersView from "@/views/FoundingMembersView.astro";
+import EventsView from "@/views/EventsView.astro";
+import DealsView from "@/views/DealsView.astro";
+import GuidesIndexView from "@/views/GuidesIndexView.astro";
+import AwardsView from "@/views/AwardsView.astro";
 import WhyVerifiedView from "@/views/WhyVerifiedView.astro";
 import { SITE_NAME } from "@/lib/site";
 import { ROUTE_SEO } from "@/lib/routes";
@@ -81,6 +85,10 @@ const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/owner": OwnerView,
   "/write-review": WriteReviewView,
   "/founding-members": FoundingMembersView,
+  "/events": EventsView,
+  "/deals": DealsView,
+  "/guides": GuidesIndexView,
+  "/awards": AwardsView,
   "/credits": CreditsView,
   "/for-businesses/why-verified": WhyVerifiedView,
 };
@@ -353,6 +361,9 @@ if (View && ROUTE_SEO[pathname] && jsonLd.length === 0) {
   }
 }
 
+// Preview mode is never indexable, whatever route resolved.
+if (preview && seo && !seo.robots) seo = { ...seo, robots: "noindex, follow" };
+
 if (!View) {
   Astro.response.status = 404;
   Astro.response.statusText = "Not Found";
@@ -369,6 +380,8 @@ const claimProps =
   pathname === "/claim"
     ? { query: (Astro.url.searchParams.get("q") ?? "").slice(0, 80), preview }
     : {};
+
+const previewProps = ["/events", "/deals", "/awards"].includes(pathname) ? { preview } : {};
 
 const reviewProps =
   pathname === "/write-review"
@@ -394,5 +407,5 @@ const RenderView = View ?? NotFoundView;
 ---
 
 <SiteLayout seo={seo ?? notFoundSeo} jsonLd={View ? jsonLd : []} preloadImage={preloadImage}>
-  <RenderView {...viewProps} {...searchProps} {...claimProps} {...reviewProps} />
+  <RenderView {...viewProps} {...searchProps} {...claimProps} {...reviewProps} {...previewProps} />
 </SiteLayout>

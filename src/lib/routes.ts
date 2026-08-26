@@ -108,6 +108,34 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     path: "/credits",
     crumb: "Photo credits",
   },
+  "/events": {
+    title: `Local Events in NJ, NY & PA · ${SITE_NAME}`,
+    description:
+      "Community events across the New Jersey, New York, and Pennsylvania towns TriVetted covers — submitted locally, checked before publishing.",
+    path: "/events",
+    crumb: "Events",
+  },
+  "/deals": {
+    title: `Deals From Verified Local Pros · ${SITE_NAME}`,
+    description:
+      "Current offers from license-verified local businesses across NJ, NY & PA. Every deal comes from a listed business.",
+    path: "/deals",
+    crumb: "Deals",
+  },
+  "/guides": {
+    title: `Hiring & Licensing Guides · ${SITE_NAME}`,
+    description:
+      "Sourced guides on licensing, permits, costs, and hiring across New Jersey, New York & Pennsylvania — every claim cited.",
+    path: "/guides",
+    crumb: "Guides",
+  },
+  "/awards": {
+    title: `Best of {County} Awards — Methodology · ${SITE_NAME}`,
+    description:
+      "The TriVetted Best of {County} awards are computed from verified licenses and verified-hire reviews — never sold. Full methodology, public.",
+    path: "/awards",
+    crumb: "Awards",
+  },
   "/founding-members": {
     title: `Founding Members — Claim Your Free Verified Listing · ${SITE_NAME}`,
     description:

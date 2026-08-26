@@ -36,6 +36,9 @@ import {
   popularServices,
 } from "@/lib/reviews";
 import { quoteRequestsThisMonth } from "@/lib/leads";
+import { offersForBusiness, offerExpiryLabel, isDemoOffer } from "@/lib/offers";
+import { eventsForBusiness, eventDateLabel } from "@/lib/events";
+import { awardsForBusiness, awardLabel, isDemoAward } from "@/lib/awards";
 import { imageAt, srcsetFor, lqipStyle } from "@/lib/images";
 
 interface Props {
@@ -63,6 +66,12 @@ const sponsored = isSponsoredPlacement(b);
 const isClient = b.isClient === true || b.isClient === "true";
 const claimFormUrl = jotformUpdateUrl(b.name, `${SITE_URL}/business/${b.slug}`);
 const quoteCount = await quoteRequestsThisMonth(b.slug ?? "");
+const isPreviewReq = Astro.url.searchParams.get("preview") === "demo";
+const [bizOffers, bizEvents, bizAwards] = await Promise.all([
+  offersForBusiness(b.slug ?? "", isPreviewReq),
+  eventsForBusiness(b.slug ?? "", isPreviewReq),
+  awardsForBusiness(b.slug ?? "", isPreviewReq),
+]);
 
 const photos = photosOf(b);
 const projects = projectsOf(b);
@@ -150,6 +159,11 @@ const tabs = [
         licenseSource={b.licenseSource}
         licenseVerifiedAt={b.licenseVerifiedAt}
       />
+      {bizAwards.map((a) => (
+        <span class="rounded-chip bg-brand-deep px-2.5 py-1 text-xs font-semibold text-white" title="Data-driven annual award — computed from verified licenses and verified-hire reviews, never sold. Methodology at /awards.">
+          🏆 {awardLabel(a)}{isDemoAward(a) ? " (sample)" : ""}
+        </span>
+      ))}
       {isClient ? (
         <span class="rounded-chip bg-inset px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-faint" title="This business is a client of the agency that operates this directory. Disclosed placements receive no ranking benefit.">
           Sponsored · client of the agency
@@ -238,6 +252,33 @@ const tabs = [
             ))}
             <span class="text-[11px] text-faint">— most mentioned in reviews</span>
           </p>
+        )}
+        {bizOffers.length > 0 && (
+          <div class="mt-4 space-y-2">
+            {bizOffers.map((o) => (
+              <div class="rounded-card border border-line-strong bg-warn-wash px-4 py-3">
+                <p class="flex flex-wrap items-center gap-2 text-sm font-semibold text-ink">
+                  <span class="rounded-chip bg-accent px-2 py-0.5 text-[11px] font-bold uppercase text-accent-ink">Deal</span>
+                  {o.title}
+                  {isDemoOffer(o) && <span class="rounded-chip bg-warn-wash px-2 py-0.5 text-[11px] font-semibold uppercase text-warn">Sample</span>}
+                  {o.expiresAt && <span class="font-normal text-faint">{offerExpiryLabel(o)}</span>}
+                </p>
+                {o.details && <p class="mt-1 text-sm text-muted">{o.details}</p>}
+                {o.terms && <p class="mt-1 text-[11px] text-faint">{o.terms}</p>}
+              </div>
+            ))}
+          </div>
+        )}
+        {bizEvents.length > 0 && (
+          <ul class="mt-4 space-y-2">
+            {bizEvents.map((e) => (
+              <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-card border border-line bg-surface px-4 py-2.5 text-sm">
+                <span class="font-mono text-xs text-brand">{eventDateLabel(e)}</span>
+                <span class="font-semibold text-ink">{e.title}</span>
+                <span class="text-faint">{e.venue}</span>
+              </li>
+            ))}
+          </ul>
         )}
       </section>
 

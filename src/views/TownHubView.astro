@@ -10,6 +10,7 @@ import { qualifiedCategoriesForTown, fetchBusinesses, isPublished, servesTown, t
 import ResultCard from "@/components/site/ResultCard.astro";
 import { getCategory } from "@/lib/taxonomy";
 import { heroPhotoFor } from "@/lib/town-photos";
+import { eventsForTown, eventDateLabel, isDemoEvent } from "@/lib/events";
 
 interface Props {
   state: StateSeed;
@@ -20,6 +21,8 @@ const { state, county, town } = Astro.props;
 const nearby = getNearbyTowns(town);
 const heroPhoto = heroPhotoFor(town.stateSlug, town.countySlug, town.slug);
 const zips = (town.zips ?? []).filter(Boolean);
+const townPreview = Astro.url.searchParams.get("preview") === "demo";
+const townEvents = (await eventsForTown(town.stateSlug, town.slug, townPreview)).slice(0, 4);
 // Every published business based in or serving this town — the 3-listing rule
 // applies to category list pages, never to hub content.
 let townBusinesses: DirectoryBusiness[] = [];
@@ -193,6 +196,27 @@ const qualified = [...(await qualifiedCategoriesForTown(town.stateSlug, town.slu
       <a href={`/${state.slug}`} class="font-medium text-brand underline underline-offset-2">{state.name} hub</a>.
     </p>
   </section>
+
+  {townEvents.length > 0 && (
+    <section class="mt-12" aria-labelledby="town-events-heading">
+      <h2 id="town-events-heading" class="font-display text-2xl font-semibold text-ink">
+        Coming up in {town.name}
+      </h2>
+      <ul class="mt-4 space-y-2">
+        {townEvents.map((e) => (
+          <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-card border border-line bg-surface px-4 py-3">
+            <span class="font-mono text-xs text-brand">{eventDateLabel(e)}</span>
+            <span class="font-semibold text-ink">{e.title}</span>
+            {isDemoEvent(e) && <span class="rounded-chip bg-warn-wash px-2 py-0.5 text-[11px] font-semibold uppercase text-warn">Sample</span>}
+            <span class="text-sm text-faint">{e.venue}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-2 text-sm">
+        <a href="/events" class="font-medium text-brand underline underline-offset-2">All events</a>
+      </p>
+    </section>
+  )}
 
   <div class="mt-12">
     <MethodologyStrip />

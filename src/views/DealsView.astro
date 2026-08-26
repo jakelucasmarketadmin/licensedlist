@@ -1,0 +1,80 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import { activeOffers, offerExpiryLabel, isDemoOffer } from "@/lib/offers";
+import { getBusinessBySlug } from "@/lib/businesses";
+import { SITE_NAME } from "@/lib/site";
+
+/**
+ * /deals (C2) — active offers from verified businesses. Expired offers
+ * auto-hide at the query; DEMO rows render only behind ?preview=demo.
+ */
+interface Props {
+  preview?: boolean;
+}
+const { preview = false } = Astro.props;
+const offers = await activeOffers(preview);
+const withBiz = (
+  await Promise.all(
+    offers.map(async (o) => ({
+      offer: o,
+      biz: o.businessSlug ? await getBusinessBySlug(o.businessSlug, preview) : undefined,
+    })),
+  )
+).filter((x) => x.biz); // an offer renders only while its business is live
+---
+
+<article class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo trail={[{ name: "Home", path: "/" }, { name: "Deals", path: "/deals" }]} />
+
+  {preview && (
+    <p class="mt-4 rounded-card border border-warn bg-warn-wash px-4 py-3 text-sm font-medium text-warn">
+      Preview mode — showing clearly-labeled sample offers. This view is not indexed and not
+      visible to visitors.
+    </p>
+  )}
+
+  <header class="mt-4 max-w-prose">
+    <h1 class="font-display text-4xl font-bold text-ink">Deals from verified local pros</h1>
+    <p class="mt-3 text-lg leading-relaxed text-muted">
+      Current offers from {SITE_NAME} businesses. Every deal comes from a listed business —
+      terms are theirs, verification is ours.
+    </p>
+  </header>
+
+  {withBiz.length === 0 ? (
+    <div class="mt-10 rounded-card border border-line bg-surface p-8 text-center">
+      <h2 class="font-display text-xl font-semibold text-ink">No active deals right now</h2>
+      <p class="mx-auto mt-2 max-w-prose text-sm leading-relaxed text-muted">
+        Verified businesses can post offers free from their owner dashboard. Check back — or
+        claim your own listing and post the first one in your county.
+      </p>
+      <a href="/founding-members" class="mt-4 inline-block rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover">
+        Claim your listing
+      </a>
+    </div>
+  ) : (
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      {withBiz.map(({ offer: o, biz }) => (
+        <article class="flex flex-col rounded-card border border-line bg-surface p-5">
+          <div class="flex items-start justify-between gap-2">
+            <h2 class="font-display text-lg font-semibold text-ink">{o.title}</h2>
+            {isDemoOffer(o) && <span class="rounded-chip bg-warn-wash px-2 py-0.5 text-[11px] font-semibold uppercase text-warn">Sample</span>}
+          </div>
+          <p class="mt-0.5 text-sm text-muted">
+            <a href={`/business/${biz!.slug}`} class="font-medium text-brand underline underline-offset-2">{biz!.name}</a>
+            {biz!.city && ` · ${biz!.city}, ${biz!.state}`}
+          </p>
+          {o.details && <p class="mt-2 text-sm leading-relaxed text-muted">{o.details}</p>}
+          <div class="mt-3 flex flex-wrap items-center gap-2 border-t border-line pt-3">
+            {o.code && <code class="rounded-chip bg-inset px-3 py-1 font-mono text-sm font-semibold text-ink">{o.code}</code>}
+            {o.expiresAt && <span class="text-xs text-faint">{offerExpiryLabel(o)}</span>}
+            <a href={`/business/${biz!.slug}`} class="ml-auto rounded-chip border border-line-strong px-4 py-1.5 text-sm font-semibold text-ink hover:bg-inset">
+              View business
+            </a>
+          </div>
+          {o.terms && <p class="mt-2 text-[11px] leading-snug text-faint">{o.terms}</p>}
+        </article>
+      ))}
+    </div>
+  )}
+</article>

@@ -1,0 +1,80 @@
+---
+/**
+ * "TriVetted Weekly" capture (C5) — footer + hub pages. Double opt-in: the
+ * address isn't subscribed until the confirmation email is clicked.
+ */
+interface Props {
+  source?: string;
+  compact?: boolean;
+}
+const { source = "site", compact = false } = Astro.props;
+const uid = `nl-${Math.abs([...source].reduce((a, c) => a * 31 + c.charCodeAt(0), 7)) % 10000}`;
+---
+
+<form data-newsletter data-source={source} class:list={[!compact && "rounded-card border border-line bg-surface p-5"]}>
+  {!compact && (
+    <>
+      <h2 class="font-display text-lg font-semibold text-ink">TriVetted Weekly</h2>
+      <p class="mt-1 text-sm leading-relaxed text-muted">
+        New verified businesses, local events, and one guide — every week, free.
+      </p>
+    </>
+  )}
+  <div class="mt-3 flex gap-2">
+    <label for={uid} class="sr-only">Email address</label>
+    <input
+      id={uid}
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      placeholder="you@example.com"
+      class="w-full min-w-0 flex-1 rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none"
+    />
+    <button type="submit" class="shrink-0 rounded-chip bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover">
+      Subscribe
+    </button>
+  </div>
+  <div class="hidden" aria-hidden="true"><input name="company" tabindex="-1" autocomplete="off" /></div>
+  <p data-nl-status role="status" class="mt-2 hidden text-xs"></p>
+  <p class="mt-2 text-[11px] leading-snug text-faint">
+    Double opt-in — we send one confirmation email first. Unsubscribe anytime.
+  </p>
+</form>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    document.querySelectorAll("[data-newsletter]").forEach(function (form) {
+      if (form.dataset.wired) return;
+      form.dataset.wired = "1";
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var status = form.querySelector("[data-nl-status]");
+        var data = Object.fromEntries(new FormData(form).entries());
+        if (data.company) return;
+        data.source = form.getAttribute("data-source") || "site";
+        status.classList.remove("hidden", "text-danger", "text-ok");
+        status.classList.add("text-muted");
+        status.textContent = "Subscribing…";
+        fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (!res.ok) throw new Error(res.error);
+            form.reset();
+            status.classList.remove("text-muted");
+            status.classList.add("text-ok");
+            status.textContent = "Check your inbox for the confirmation email.";
+          })
+          .catch(function () {
+            status.classList.remove("text-muted");
+            status.classList.add("text-danger");
+            status.textContent = "Something went wrong — try again.";
+          });
+      });
+    });
+  })();
+</script>

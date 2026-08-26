@@ -1,0 +1,139 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import MiniMap from "@/components/site/MiniMap.tsx";
+import Pic from "@/components/site/Pic.astro";
+import { upcomingEvents, thisWeekend, eventDateLabel, isDemoEvent, type CommunityEvent } from "@/lib/events";
+import { getState, getCounty } from "@/lib/geo";
+import { SITE_NAME } from "@/lib/site";
+
+/**
+ * /events (C1) — this weekend, this month, by county, with a map. Real rows
+ * come from moderated submissions (no DMO feed has cleared licensing yet —
+ * docs/EVENTS-SOURCES.md); DEMO rows render only behind ?preview=demo.
+ */
+interface Props {
+  preview?: boolean;
+}
+const { preview = false } = Astro.props;
+const events = await upcomingEvents(preview);
+const weekend = thisWeekend(events);
+const weekendIds = new Set(weekend.map((e) => e._id));
+const later = events.filter((e) => !weekendIds.has(e._id));
+
+const byCounty = new Map<string, CommunityEvent[]>();
+for (const e of events) {
+  if (!e.stateSlug || !e.countySlug) continue;
+  const key = `${e.stateSlug}|${e.countySlug}`;
+  byCounty.set(key, [...(byCounty.get(key) ?? []), e]);
+}
+const countyGroups = [...byCounty.entries()]
+  .map(([key, list]) => {
+    const [stateSlug, countySlug] = key.split("|");
+    const county = getCounty(stateSlug, countySlug);
+    const state = getState(stateSlug);
+    return county && state ? { label: `${county.name}, ${state.abbr}`, list } : null;
+  })
+  .filter((g): g is NonNullable<typeof g> => Boolean(g))
+  .sort((a, b) => b.list.length - a.list.length);
+
+const mapPoints = events
+  .filter((e) => Number.isFinite(Number(e.lat)) && Number.isFinite(Number(e.lng)))
+  .map((e) => ({ label: e.title ?? "", lat: Number(e.lat), lng: Number(e.lng) }));
+---
+
+<article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo trail={[{ name: "Home", path: "/" }, { name: "Events", path: "/events" }]} />
+
+  {preview && (
+    <p class="mt-4 rounded-card border border-warn bg-warn-wash px-4 py-3 text-sm font-medium text-warn">
+      Preview mode — showing clearly-labeled sample events. This view is not indexed and not
+      visible to visitors.
+    </p>
+  )}
+
+  <header class="mt-4 max-w-prose">
+    <h1 class="font-display text-4xl font-bold text-ink">Local events across NJ, NY &amp; PA</h1>
+    <p class="mt-3 text-lg leading-relaxed text-muted">
+      Community events from the towns {SITE_NAME} covers — submitted by local businesses and
+      organizers, checked before publishing.
+    </p>
+  </header>
+
+  {events.length === 0 ? (
+    <div class="mt-10 rounded-card border border-line bg-surface p-8 text-center">
+      <h2 class="font-display text-xl font-semibold text-ink">No upcoming events yet</h2>
+      <p class="mx-auto mt-2 max-w-prose text-sm leading-relaxed text-muted">
+        Event listings are opening up with our verified-business community. Hosting something
+        locally? Send it in and we'll review it — free.
+      </p>
+      <a href="/for-businesses" class="mt-4 inline-block rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover">
+        Submit an event
+      </a>
+    </div>
+  ) : (
+    <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div class="space-y-10">
+        {weekend.length > 0 && (
+          <section aria-labelledby="weekend-heading">
+            <h2 id="weekend-heading" class="font-display text-2xl font-semibold text-ink">This weekend</h2>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
+              {weekend.map((e) => (
+                <article class="overflow-hidden rounded-card border border-line bg-surface">
+                  {e.image && <Pic src={e.image} alt="" aspect={16 / 9} sizes="(min-width:640px) 40vw, 100vw" />}
+                  <div class="p-4">
+                    <p class="font-mono text-xs text-brand">{eventDateLabel(e)}</p>
+                    <h3 class="mt-1 font-display text-lg font-semibold text-ink">
+                      {e.title}
+                      {isDemoEvent(e) && <span class="ml-2 rounded-chip bg-warn-wash px-2 py-0.5 align-middle text-[11px] font-semibold uppercase text-warn">Sample</span>}
+                    </h3>
+                    <p class="mt-0.5 text-xs text-faint">{[e.venue, e.price].filter(Boolean).join(" · ")}</p>
+                    {e.description && <p class="mt-2 text-sm leading-relaxed text-muted">{e.description}</p>}
+                    {e.url && (
+                      <a href={e.url} target="_blank" rel="nofollow noopener" class="mt-2 inline-block text-sm font-medium text-brand underline underline-offset-2">Details</a>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {later.length > 0 && (
+          <section aria-labelledby="upcoming-heading">
+            <h2 id="upcoming-heading" class="font-display text-2xl font-semibold text-ink">Coming up</h2>
+            <ul class="mt-4 space-y-3">
+              {later.map((e) => (
+                <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-card border border-line bg-surface px-4 py-3">
+                  <span class="font-mono text-xs text-brand">{eventDateLabel(e)}</span>
+                  <span class="font-semibold text-ink">{e.title}</span>
+                  {isDemoEvent(e) && <span class="rounded-chip bg-warn-wash px-2 py-0.5 text-[11px] font-semibold uppercase text-warn">Sample</span>}
+                  <span class="text-sm text-faint">{[e.venue, e.price].filter(Boolean).join(" · ")}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {countyGroups.length > 1 && (
+          <section aria-labelledby="bycounty-heading">
+            <h2 id="bycounty-heading" class="font-display text-2xl font-semibold text-ink">By county</h2>
+            <div class="mt-4 flex flex-wrap gap-2">
+              {countyGroups.map((g) => (
+                <span class="rounded-chip bg-inset px-3 py-1.5 text-sm text-muted">{g.label} · {g.list.length}</span>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+
+      {mapPoints.length > 0 && (
+        <aside>
+          <div class="lg:sticky lg:top-6">
+            <MiniMap client:visible points={mapPoints} className="h-80" />
+            <p class="mt-2 text-xs text-faint">Event locations</p>
+          </div>
+        </aside>
+      )}
+    </div>
+  )}
+</article>

@@ -19,6 +19,8 @@ import { getCategory } from "@/lib/taxonomy";
 import { heroPhotoFor } from "@/lib/town-photos";
 import { countRegistered, listRegistered } from "@/lib/registry";
 import RegistryTable from "@/components/site/RegistryTable.astro";
+import NewsletterSignup from "@/components/site/NewsletterSignup.astro";
+import { eventsForCounty, eventDateLabel, isDemoEvent } from "@/lib/events";
 
 interface Props {
   state: StateSeed;
@@ -72,6 +74,8 @@ const registeredCount = await countRegistered({ stateSlug: state.slug, countySlu
 // The roster table renders on the hub when the county has registry rows but
 // no qualifying list page to host it (NYC counties pre-launch).
 const registeredRows = registeredCount > 0 ? await listRegistered({ stateSlug: state.slug, countySlug: county.slug }, 100) : [];
+const preview = Astro.url.searchParams.get("preview") === "demo";
+const countyEvents = (await eventsForCounty(state.slug, county.slug, preview)).slice(0, 5);
 
 const mapPoints = [
   ...towns.map((t) => ({
@@ -213,6 +217,27 @@ const mapPoints = [
     </section>
   )}
 
+  {countyEvents.length > 0 && (
+    <section class="mt-12" aria-labelledby="events-heading">
+      <h2 id="events-heading" class="font-display text-2xl font-semibold text-ink">
+        Coming up in {county.name}
+      </h2>
+      <ul class="mt-4 space-y-2">
+        {countyEvents.map((e) => (
+          <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-card border border-line bg-surface px-4 py-3">
+            <span class="font-mono text-xs text-brand">{eventDateLabel(e)}</span>
+            <span class="font-semibold text-ink">{e.title}</span>
+            {isDemoEvent(e) && <span class="rounded-chip bg-warn-wash px-2 py-0.5 text-[11px] font-semibold uppercase text-warn">Sample</span>}
+            <span class="text-sm text-faint">{e.venue}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-2 text-sm">
+        <a href="/events" class="font-medium text-brand underline underline-offset-2">All events</a>
+      </p>
+    </section>
+  )}
+
   {registeredRows.length > 0 && (
     <RegistryTable
       heading={`Also licensed in ${county.name}: ${registeredCount.toLocaleString("en-US")} businesses on file`}
@@ -240,6 +265,10 @@ const mapPoints = [
       <GuideSection guide={costGuide} />
     </div>
   )}
+
+  <div class="mt-12 max-w-md">
+    <NewsletterSignup source={`county-${state.slug}-${county.slug}`} />
+  </div>
 
   {nearby.length > 0 && (
     <section class="mt-12" aria-labelledby="nearby-heading">

@@ -7,6 +7,7 @@ import Pic from "@/components/site/Pic.astro";
 import { getStates, getCountiesByState, getAllTowns } from "@/lib/geo";
 import { fetchBusinesses, isPublished, blendedRating } from "@/lib/businesses";
 import { registryTotals } from "@/lib/registry";
+import { upcomingEvents, thisWeekend, eventDateLabel } from "@/lib/events";
 import { latestGuides } from "@/lib/guides";
 import { homeHeroPhotos } from "@/lib/town-photos";
 import { categoryArt } from "@/data/category-art";
@@ -51,6 +52,13 @@ const popular = [...published]
   .slice(0, 8);
 
 const guides = latestGuides(3);
+// "This weekend" module (C3): events + newest verified listings.
+const homePreview = Astro.url.searchParams.get("preview") === "demo";
+const weekendEvents = thisWeekend(await upcomingEvents(homePreview)).slice(0, 3);
+const newestVerified = [...published]
+  .filter((b) => b.licenseStatus === "verified")
+  .sort((a, b) => new Date(b.lastVerifiedAt ?? 0).getTime() - new Date(a.lastVerifiedAt ?? 0).getTime())
+  .slice(0, 3);
 
 const POPULAR_TILE_SLUGS = [
   "roofers", "plumbers", "electricians", "hvac-contractors",
@@ -183,6 +191,50 @@ const STEPS = [
     </div>
   </div>
 </section>
+
+<!-- This weekend: events + latest guide + newest verified (C3) -->
+{(weekendEvents.length > 0 || newestVerified.length > 0) && (
+  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="weekend-heading">
+    <h2 id="weekend-heading" class="font-display text-3xl font-semibold text-ink">This weekend</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      <div class="rounded-card border border-line bg-surface p-5">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-faint">Events nearby</h3>
+        {weekendEvents.length > 0 ? (
+          <ul class="mt-3 space-y-2.5">
+            {weekendEvents.map((e) => (
+              <li>
+                <p class="font-mono text-xs text-brand">{eventDateLabel(e)}</p>
+                <p class="text-sm font-semibold text-ink">{e.title}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="mt-3 text-sm text-faint">Nothing listed yet — <a href="/events" class="underline">see all events</a>.</p>
+        )}
+        <a href="/events" class="mt-3 inline-block text-sm font-medium text-brand underline underline-offset-2">All events</a>
+      </div>
+      {guides[0] && (
+        <div class="rounded-card border border-line bg-surface p-5">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-faint">Latest guide</h3>
+          <p class="mt-3 font-display text-lg font-semibold leading-snug text-ink">{guides[0].title}</p>
+          <p class="mt-1 text-xs text-faint">By {guides[0].author}</p>
+          <a href="/guides" class="mt-3 inline-block text-sm font-medium text-brand underline underline-offset-2">All guides</a>
+        </div>
+      )}
+      <div class="rounded-card border border-line bg-surface p-5">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-faint">New &amp; verified</h3>
+        <ul class="mt-3 space-y-2.5">
+          {newestVerified.map((b) => (
+            <li>
+              <a href={`/business/${b.slug}`} class="text-sm font-semibold text-ink hover:text-brand">{b.name}</a>
+              <p class="text-xs text-faint">{b.city}, {b.state}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+)}
 
 <!-- Popular near you -->
 {popular.length > 0 && (
