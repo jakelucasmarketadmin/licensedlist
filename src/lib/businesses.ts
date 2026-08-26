@@ -68,7 +68,57 @@ export interface DirectoryBusiness {
   featuredUntil?: string | Date;
   lastVerifiedAt?: string | Date;
   sourceNotes?: string;
+  /** Comma list from the HIGHLIGHT_DEFS vocabulary (lib/reviews.ts). */
+  highlights?: string;
+  /** JSON array [{title, town, date, description, photos: [], beforePhoto?, afterPhoto?}]. */
+  projectsJson?: string | ProjectEntry[];
+  /** JSON array [{name, role, bio?, photo?}]. */
+  teamJson?: string | TeamMember[];
+  /** JSON array [{q, a}]. */
+  faqJson?: string | FaqEntry[];
 }
+
+export interface ProjectEntry {
+  title: string;
+  town?: string;
+  date?: string;
+  description?: string;
+  photos?: string[];
+  beforePhoto?: string;
+  afterPhoto?: string;
+}
+
+export interface TeamMember {
+  name: string;
+  role?: string;
+  bio?: string;
+  photo?: string;
+}
+
+export interface FaqEntry {
+  q: string;
+  a: string;
+}
+
+/** Parse a JSON-array field that CMS reads may return as string or array. */
+function parseJsonArray<T>(raw: string | T[] | undefined, valid: (x: any) => boolean): T[] {
+  if (!raw) return [];
+  try {
+    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    return Array.isArray(parsed) ? parsed.filter(valid) : [];
+  } catch {
+    return [];
+  }
+}
+
+export const projectsOf = (b: DirectoryBusiness) =>
+  parseJsonArray<ProjectEntry>(b.projectsJson, (p) => p && typeof p.title === "string");
+export const teamOf = (b: DirectoryBusiness) =>
+  parseJsonArray<TeamMember>(b.teamJson, (m) => m && typeof m.name === "string");
+export const faqOf = (b: DirectoryBusiness) =>
+  parseJsonArray<FaqEntry>(b.faqJson, (f) => f && typeof f.q === "string" && typeof f.a === "string");
+export const photosOf = (b: DirectoryBusiness) =>
+  parseJsonArray<string>(b.photosJson, (p) => typeof p === "string" && p.startsWith("http"));
 
 const list = (v?: string) => (v ? v.split(",").map((s) => s.trim()).filter(Boolean) : []);
 const truthy = (v: unknown) => v === true || v === "true";
