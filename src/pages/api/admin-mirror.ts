@@ -48,12 +48,21 @@ export const POST: APIRoute = async ({ request }) => {
 
     const mirrorOne = async (url: string): Promise<string> => {
       if (mirrorMap.has(url)) return mirrorMap.get(url)!;
-      const res: any = await importFile({ url, mimeType: "image/jpeg" }).catch((e: any) => {
-        log.push(`import FAILED ${url.slice(0, 70)}: ${e?.message ?? e}`);
-        return null;
-      });
+      // SDK signature is importFile(url, options?) — positional, not an object.
+      let res: any = await importFile(url, { mediaType: "IMAGE" }).catch((e: any) => e);
+      if (res instanceof Error || res?.message) {
+        const second: any = await importFile(url).catch((e: any) => e);
+        if (second instanceof Error || second?.message) {
+          log.push(`import FAILED ${url.slice(0, 70)}: ${String(res?.message ?? res).slice(0, 120)}`);
+          return url;
+        }
+        res = second;
+      }
       const out = res?.file?.url ?? res?.url ?? null;
-      if (!out) return url; // keep original on failure
+      if (!out) {
+        log.push(`import returned no url for ${url.slice(0, 70)}: ${JSON.stringify(res).slice(0, 150)}`);
+        return url;
+      }
       mirrorMap.set(url, out);
       log.push(`mirrored ${url.slice(30, 80)} -> ${String(out).slice(30, 80)}`);
       return out;
