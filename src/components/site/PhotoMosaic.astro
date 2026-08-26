@@ -1,6 +1,6 @@
 ---
 import CategoryTile from "@/components/site/CategoryTile.astro";
-import { imageAt, srcsetFor } from "@/lib/images";
+import { imageAt, srcsetFor, lqipStyle } from "@/lib/images";
 
 /**
  * Airbnb-style photo mosaic: 1 large + up to 4 small, "Show all N photos"
@@ -33,8 +33,10 @@ const side = photos.slice(1, 5);
           alt={`${name} — photo 1`}
           class="h-full w-full cursor-zoom-in object-cover"
           data-mosaic-open="0"
+          loading="eager"
           fetchpriority="high"
           decoding="async"
+          style={lqipStyle(main)}
         />
       </div>
       {side.length > 0 && (
@@ -48,8 +50,10 @@ const side = photos.slice(1, 5);
                 alt={`${name} — photo ${i + 2}`}
                 class="h-full w-full cursor-zoom-in object-cover"
                 data-mosaic-open={String(i + 1)}
-                loading="lazy"
+                loading="eager"
+                fetchpriority="high"
                 decoding="async"
+                style={lqipStyle(p)}
               />
             </div>
           ))}

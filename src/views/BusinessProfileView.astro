@@ -36,7 +36,7 @@ import {
   popularServices,
 } from "@/lib/reviews";
 import { quoteRequestsThisMonth } from "@/lib/leads";
-import { imageAt, srcsetFor } from "@/lib/images";
+import { imageAt, srcsetFor, lqipStyle } from "@/lib/images";
 
 interface Props {
   business: DirectoryBusiness;
@@ -297,7 +297,7 @@ const tabs = [
                       </figure>
                     </div>
                   ) : (p.photos ?? []).length > 0 ? (
-                    <img src={imageAt((p.photos ?? [])[0], 960)} srcset={srcsetFor((p.photos ?? [])[0])} sizes="(min-width:640px) 50vw, 100vw" alt={`${p.title} — photo`} loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+                    <img src={imageAt((p.photos ?? [])[0], 960, 540)} srcset={srcsetFor((p.photos ?? [])[0], 16 / 9)} sizes="(min-width:640px) 50vw, 100vw" alt={`${p.title} — photo`} loading="lazy" decoding="async" class="aspect-video w-full object-cover" style={lqipStyle((p.photos ?? [])[0])} />
                   ) : null}
                   <div class="p-4">
                     <h3 class="font-display text-lg font-semibold text-ink">{p.title}</h3>

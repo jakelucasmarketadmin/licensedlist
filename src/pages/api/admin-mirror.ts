@@ -73,7 +73,10 @@ export const POST: APIRoute = async ({ request }) => {
       // prefix from the result, then skip anything already on it.
       const bizRes: any = await q("businesses").limit(1000).find();
       const businesses: any[] = bizRes?.items ?? [];
-      const ourPrefixes = new Set<string>();
+      // 1f5d89 = this Wix account's media namespace (probed via a live import)
+      // — plumb-air client media shares it, so those photos are already under
+      // our control; only foreign hosts/accounts need mirroring.
+      const ourPrefixes = new Set<string>(["1f5d89"]);
       let converted = 0;
 
       for (const biz of businesses) {

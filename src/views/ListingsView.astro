@@ -194,8 +194,8 @@ const FILTERS = [
               Featured · paid placement, always labeled
             </h2>
             <div class="mt-3 grid gap-4">
-              {featured.map((b) => (
-                <ResultCard business={b} inFeaturedBlock townName={town?.name} layout="horizontal" />
+              {featured.map((b, i) => (
+                <ResultCard business={b} inFeaturedBlock townName={town?.name} layout="horizontal" priorityPhoto={i === 0} />
               ))}
             </div>
             <p class="mt-2 text-xs text-faint">
@@ -211,8 +211,8 @@ const FILTERS = [
           </h2>
           {organic.length > 0 ? (
             <div class="mt-3 grid gap-4" id="organic-list">
-              {organic.map((b) => (
-                <ResultCard business={b} townName={town?.name} layout="horizontal" />
+              {organic.map((b, i) => (
+                <ResultCard business={b} townName={town?.name} layout="horizontal" priorityPhoto={i < (featured.length ? 1 : 2)} />
               ))}
             </div>
           ) : totalCount > 0 ? (

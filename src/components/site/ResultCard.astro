@@ -12,7 +12,7 @@ import {
 } from "@/lib/businesses";
 import { getCategory } from "@/lib/taxonomy";
 import { heroPhotoFor, focalPosition } from "@/lib/town-photos";
-import { imageAt, srcsetFor, lqipFor } from "@/lib/images";
+import { imageAt, srcsetFor, lqipStyle } from "@/lib/images";
 
 interface Props {
   business: DirectoryBusiness;
@@ -26,6 +26,8 @@ interface Props {
   noPhoto?: boolean;
   /** "vertical" poster card (home carousels) or "horizontal" dense list card. */
   layout?: "vertical" | "horizontal";
+  /** LCP candidate (first cards above the fold): eager + fetchpriority=high. */
+  priorityPhoto?: boolean;
 }
 const {
   business: b,
@@ -34,6 +36,7 @@ const {
   showCategory = false,
   noPhoto = false,
   layout = "vertical",
+  priorityPhoto = false,
 } = Astro.props;
 
 const rating = blendedRating(b);
@@ -110,7 +113,8 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
               srcset={srcsetFor(townPhoto.url)}
               sizes={bizSizes}
               alt={townPhoto.alt}
-              loading="lazy"
+              loading={priorityPhoto ? "eager" : "lazy"}
+              fetchpriority={priorityPhoto ? "high" : undefined}
               decoding="async"
               class="h-full w-full object-cover"
               style={`object-position:${focalPosition(townPhoto)};`}
@@ -133,9 +137,11 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
               srcset={srcsetFor(mainPhoto)}
               sizes={bizSizes}
               alt={`${b.name} — photo`}
-              loading="lazy"
+              loading={priorityPhoto ? "eager" : "lazy"}
+              fetchpriority={priorityPhoto ? "high" : undefined}
               decoding="async"
               class="h-full w-full object-cover"
+              style={lqipStyle(mainPhoto)}
               onerror="var f=this.closest('[data-photo-frame]');if(f){f.querySelectorAll('[data-rung-town]').forEach(function(e){e.classList.remove('hidden')})}var r=this.closest('[data-rung-biz]');if(r){r.remove()}"
             />
           </div>
