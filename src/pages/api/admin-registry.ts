@@ -27,6 +27,7 @@ async function tools() {
     insert: auth.elevate(data.items.insert) as any,
     bulkInsert: (data.items.bulkInsert ? auth.elevate(data.items.bulkInsert) : null) as any,
     remove: auth.elevate(data.items.remove) as any,
+    bulkRemove: (data.items.bulkRemove ? auth.elevate(data.items.bulkRemove) : null) as any,
     getCollection: auth.elevate(data.collections.getDataCollection) as any,
     updateCollection: auth.elevate(data.collections.updateDataCollection) as any,
   };
@@ -113,19 +114,28 @@ export const POST: APIRoute = async ({ request }) => {
     if (step === "purge") {
       if (body.confirm !== "yes") return json({ ok: false, error: "confirm required" }, 400);
       const prefix = String(body.sourcePrefix ?? "REGISTRY");
+      // bulkRemove in paced batches; returns after ≤10 batches (re-run until
+      // remaining=0) to stay inside the per-minute request quota (WDE0014).
       let removed = 0;
-      for (;;) {
-        const res = await t.q("businesses").eq("status", "registered").limit(500).find();
-        const items: any[] = (res?.items ?? []).filter((it: any) =>
-          String((it.data ?? it).sourceNotes ?? "").startsWith(prefix),
-        );
-        if (!items.length) break;
-        for (const it of items) {
-          await t.remove("businesses", it._id ?? it.id);
-          removed++;
+      for (let round = 0; round < 10; round++) {
+        const res = await t.q("businesses").eq("status", "registered").limit(1000).find();
+        const ids: string[] = (res?.items ?? [])
+          .filter((it: any) => String((it.data ?? it).sourceNotes ?? "").startsWith(prefix))
+          .map((it: any) => it._id ?? it.id);
+        if (!ids.length) return json({ ok: true, removed, remaining: 0 });
+        if (t.bulkRemove) {
+          const r: any = await t.bulkRemove("businesses", ids.slice(0, 500));
+          removed += ids.slice(0, 500).length;
+          void r;
+        } else {
+          for (const id of ids.slice(0, 100)) {
+            await t.remove("businesses", id);
+            removed++;
+          }
         }
+        await new Promise((r) => setTimeout(r, 2000));
       }
-      return json({ ok: true, removed });
+      return json({ ok: true, removed, remaining: "unknown — run purge again" });
     }
 
     // counts
