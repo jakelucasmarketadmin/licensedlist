@@ -226,13 +226,36 @@ export const isSponsoredPlacement = (b: DirectoryBusiness) =>
 let cache: { at: number; items: DirectoryBusiness[] } | null = null;
 const CACHE_MS = 60_000;
 
+/**
+ * The directory universe: draft/published/suspended records. Registry rows
+ * (`status = registered|lapsed`, seeded by the thousands from public license
+ * rosters — see lib/registry.ts) are excluded AT THE QUERY so they can never
+ * blow through the 1000-item cap, gain profile pages, or count toward the
+ * 3-listing rule. Elevated filtered query on Wix; plain getAll + JS filter in
+ * the harness.
+ */
+const DIRECTORY_STATUSES = ["draft", "published", "suspended"];
+
 export async function fetchBusinesses(): Promise<DirectoryBusiness[]> {
   if (cache && Date.now() - cache.at < CACHE_MS) return cache.items;
   try {
-    const result: any = await BaseCrudService.getAll("businesses", {}, { limit: 1000 });
-    const items: DirectoryBusiness[] = Array.isArray(result) ? result : (result?.items ?? []);
+    let items: DirectoryBusiness[] | null = null;
+    try {
+      const { auth } = await import("@wix/essentials");
+      const data: any = await import("@wix/data");
+      const q: any = auth.elevate(data.items.query);
+      const res: any = await q("businesses")
+        .hasSome("status", DIRECTORY_STATUSES)
+        .limit(1000)
+        .find();
+      items = (res?.items ?? []).map((it: any) => ({ _id: it._id ?? it.id, ...(it.data ?? it) }));
+    } catch {
+      const result: any = await BaseCrudService.getAll("businesses", {}, { limit: 1000 });
+      const raw: DirectoryBusiness[] = Array.isArray(result) ? result : (result?.items ?? []);
+      items = raw.filter((b) => DIRECTORY_STATUSES.includes(b.status ?? ""));
+    }
     // Only records with the directory schema count at all.
-    const valid = items.filter((b) => b.slug && b.status);
+    const valid = (items ?? []).filter((b) => b.slug && b.status);
     cache = { at: Date.now(), items: valid };
     return valid;
   } catch (err) {

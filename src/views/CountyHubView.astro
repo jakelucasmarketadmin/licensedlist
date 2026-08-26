@@ -17,6 +17,7 @@ import { fetchBusinesses, isPublished, categoriesOf, servesTown, type DirectoryB
 import ResultCard from "@/components/site/ResultCard.astro";
 import { getCategory } from "@/lib/taxonomy";
 import { heroPhotoFor } from "@/lib/town-photos";
+import { countRegistered } from "@/lib/registry";
 
 interface Props {
   state: StateSeed;
@@ -66,6 +67,8 @@ const bizGroups = [...bizByCategory.entries()]
   .map(([slug, items]) => ({ category: getCategory(slug), items }))
   .sort((a, b) => b.items.length - a.items.length);
 
+const registeredCount = await countRegistered({ stateSlug: state.slug, countySlug: county.slug });
+
 const mapPoints = [
   ...towns.map((t) => ({
     label: t.name,
@@ -109,6 +112,9 @@ const mapPoints = [
       ) : null}
       <div class="flex gap-2"><dt class="ledger-key !flex-none">State</dt><dd class="ledger-val">{state.name}</dd></div>
       <div class="flex gap-2"><dt class="ledger-key !flex-none">Towns listed</dt><dd class="ledger-val">{towns.length}</dd></div>
+      {registeredCount > 0 && (
+        <div class="flex gap-2"><dt class="ledger-key !flex-none">On file</dt><dd class="ledger-val">{registeredCount.toLocaleString("en-US")} licensed · {countyBusinesses.length} verified &amp; claimed</dd></div>
+      )}
     </dl>
   </header>
 

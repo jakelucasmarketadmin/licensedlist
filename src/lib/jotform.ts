@@ -17,3 +17,14 @@ export function jotformUpdateUrl(businessName?: string, profileUrl?: string): st
   if (profileUrl) params.set("profileUrl", profileUrl);
   return `${JOTFORM_FORM_URL}?${params.toString()}`;
 }
+
+/**
+ * Registry claim prefill: name + license number (C0). `licenseNumber` lights
+ * up once a field with that unique name exists on the form (RUNBOOK §5).
+ */
+export function jotformClaimRegistryUrl(businessName: string, licenseNumber?: string): string {
+  const params = new URLSearchParams({ q2_radio0: "Update an existing listing" });
+  params.set("q3_textbox1", businessName);
+  if (licenseNumber) params.set("licenseNumber", licenseNumber);
+  return `${JOTFORM_FORM_URL}?${params.toString()}`;
+}

@@ -6,6 +6,7 @@ import ResultCard from "@/components/site/ResultCard.astro";
 import Pic from "@/components/site/Pic.astro";
 import { getStates, getCountiesByState, getAllTowns } from "@/lib/geo";
 import { fetchBusinesses, isPublished, blendedRating } from "@/lib/businesses";
+import { registryTotals } from "@/lib/registry";
 import { latestGuides } from "@/lib/guides";
 import { homeHeroPhotos } from "@/lib/town-photos";
 import { categoryArt } from "@/data/category-art";
@@ -22,6 +23,11 @@ const townCount = getAllTowns().length;
 const registryCount = new Set(
   published.filter((b) => b.licenseStatus === "verified").map((b) => b.licenseSource).filter(Boolean),
 ).size;
+// C0: licensed-on-file counter (registered, unclaimed roster rows).
+let registeredTotal = 0;
+try {
+  registeredTotal = (await registryTotals()).registered;
+} catch { /* line degrades */ }
 
 // Rotate the hero photo by time of day (server hour; page caches ~60s).
 const heroPool = homeHeroPhotos(5);
@@ -81,7 +87,8 @@ const STEPS = [
           <HeroSearch />
         </div>
         <p class="mt-4 font-mono text-xs text-white/80">
-          {verifiedCount} verified {verifiedCount === 1 ? "business" : "businesses"} · {townCount} towns
+          {verifiedCount} verified {verifiedCount === 1 ? "business" : "businesses"}
+          {registeredTotal > 0 && ` · ${registeredTotal.toLocaleString("en-US")} licensed businesses on file`} · {townCount} towns
           {registryCount > 0 && ` · licenses checked against ${registryCount} ${registryCount === 1 ? "registry" : "registries"}`}
         </p>
         <p class="absolute bottom-2 right-4 text-[11px] text-white/60">
@@ -100,7 +107,8 @@ const STEPS = [
       <p class="mt-4 max-w-prose text-lg text-muted">Verified licenses. Real reviews. Fast responses.</p>
       <div class="mt-8 max-w-3xl"><HeroSearch /></div>
       <p class="mt-4 font-mono text-xs text-muted">
-        {verifiedCount} verified businesses · {townCount} towns
+        {verifiedCount} verified businesses
+        {registeredTotal > 0 && ` · ${registeredTotal.toLocaleString("en-US")} licensed businesses on file`} · {townCount} towns
       </p>
     </div>
   )}

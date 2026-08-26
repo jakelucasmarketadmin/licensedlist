@@ -14,6 +14,8 @@ import {
   blendedRating,
   listForTownCategory,
 } from "@/lib/businesses";
+import { countRegistered, listRegistered } from "@/lib/registry";
+import { jotformClaimRegistryUrl } from "@/lib/jotform";
 
 interface Props {
   scope: "town" | "county" | "state";
@@ -56,6 +58,15 @@ const jobTypes = [...serviceCounts.entries()]
   .sort((a, b) => b[1] - a[1])
   .slice(0, 8)
   .map(([term]) => term);
+
+// C0: registered-but-unclaimed license roster (county-level scope; the state
+// page skips it). Never counts toward thresholds, never gets profile URLs.
+const registryScope =
+  scope !== "state" && county
+    ? { stateSlug: state.slug, countySlug: county.slug, categorySlug: category.slug }
+    : null;
+const registeredCount = registryScope ? await countRegistered(registryScope) : 0;
+const registeredRows = registeredCount > 0 ? await listRegistered(registryScope!, 100) : [];
 
 const mapMarkers = [...featured, ...organic]
   .filter((b) => Number.isFinite(Number(b.lat)) && Number.isFinite(Number(b.lng)))
@@ -230,6 +241,95 @@ const FILTERS = [
             <button type="button" id="clear-filters" class="font-medium text-brand underline underline-offset-2">clear filters</button>.
           </p>
         </section>
+
+        {registeredCount > 0 && (
+          <section class="mt-10" aria-labelledby="registry-heading" data-nosnippet>
+            <h2 id="registry-heading" class="font-display text-xl font-semibold text-ink">
+              Also licensed in {county?.name ?? placeName}: {registeredCount.toLocaleString("en-US")} {category.name.toLowerCase()}
+            </h2>
+            <p class="mt-1 max-w-prose text-sm text-muted">
+              Businesses on the official license roster that haven't claimed their {SITE_NAME}
+              listing yet. They aren't ranked or reviewed — the license record is shown as filed.
+            </p>
+            <div class="mt-4 overflow-hidden rounded-card border border-line">
+              <table class="w-full text-sm" data-registry-table>
+                <thead>
+                  <tr class="border-b border-line bg-inset text-left text-xs uppercase tracking-wider text-faint">
+                    <th class="px-3 py-2 font-semibold">Business</th>
+                    <th class="hidden px-3 py-2 font-semibold sm:table-cell">Town</th>
+                    <th class="hidden px-3 py-2 font-semibold md:table-cell">License</th>
+                    <th class="hidden px-3 py-2 font-semibold md:table-cell">Expires</th>
+                    <th class="px-3 py-2"><span class="sr-only">Claim</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {registeredRows.map((r, i) => (
+                    <tr class:list={["border-b border-line bg-surface last:border-0", i >= 25 && "hidden"]} data-registry-row data-page={Math.floor(i / 25)}>
+                      <td class="px-3 py-2 font-medium text-ink">{r.name}</td>
+                      <td class="hidden px-3 py-2 text-muted sm:table-cell">{r.city}</td>
+                      <td class="hidden px-3 py-2 font-mono text-xs text-muted md:table-cell">{r.licenseNumber}</td>
+                      <td class="hidden px-3 py-2 text-xs text-muted md:table-cell">{r.licenseExpiresAt || "—"}</td>
+                      <td class="px-3 py-2 text-right">
+                        <a
+                          href={jotformClaimRegistryUrl(r.name ?? "", r.licenseNumber)}
+                          target="_blank"
+                          rel="nofollow noopener"
+                          class="rounded-chip border border-line-strong px-3 py-1 text-xs font-semibold text-ink hover:bg-inset"
+                        >
+                          Claim this listing
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div class="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-inset px-3 py-2">
+                <p class="text-[11px] text-faint">
+                  Source: official license registry ({registeredRows[0]?.licenseSource}) · shown as filed ·
+                  {registeredCount > registeredRows.length && ` ${registeredRows.length} of ${registeredCount.toLocaleString("en-US")} shown — `}
+                  <a href="/founding-members" class="underline">claim yours free</a>
+                </p>
+                {registeredRows.length > 25 && (
+                  <nav class="flex gap-1" aria-label="Licensed businesses pages" data-registry-pager>
+                    {Array.from({ length: Math.ceil(registeredRows.length / 25) }, (_, p) => (
+                      <a
+                        href={`#licensed-p${p + 1}`}
+                        data-registry-page={p}
+                        class:list={[
+                          "rounded-chip px-2.5 py-1 text-xs font-medium",
+                          p === 0 ? "bg-brand text-white" : "text-muted hover:text-ink",
+                        ]}
+                      >
+                        {p + 1}
+                      </a>
+                    ))}
+                  </nav>
+                )}
+              </div>
+            </div>
+            <script is:inline data-astro-rerun>
+              (function () {
+                var pager = document.querySelector("[data-registry-pager]");
+                if (!pager || pager.dataset.wired) return;
+                pager.dataset.wired = "1";
+                pager.addEventListener("click", function (e) {
+                  var link = e.target.closest("[data-registry-page]");
+                  if (!link) return;
+                  var page = link.getAttribute("data-registry-page");
+                  document.querySelectorAll("[data-registry-row]").forEach(function (row) {
+                    row.classList.toggle("hidden", row.getAttribute("data-page") !== page);
+                  });
+                  pager.querySelectorAll("[data-registry-page]").forEach(function (l) {
+                    var on = l === link;
+                    l.classList.toggle("bg-brand", on);
+                    l.classList.toggle("text-white", on);
+                    l.classList.toggle("text-muted", !on);
+                  });
+                });
+              })();
+            </script>
+          </section>
+        )}
       </div>
 
       {mapMarkers.length > 0 && (
