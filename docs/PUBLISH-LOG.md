@@ -37,3 +37,11 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
     list cards, project-card grid, curated heroEligible hero pool.
 
 **Smoke 2026-08-26 22:36 UTC:** PASS — all 16 routes 200
+
+**Smoke 2026-08-26 22:46 UTC:** PASS — all 16 routes 200
+  - C0 + Batch C publish: 5 new indexable URLs (/events /deals /guides /awards
+    /founding-members — within the 50/week budget; registered rows add ZERO URLs).
+    Registry live: 10,083 registered rows (NYC HIC w7w3-xahh all five boroughs 9,584 +
+    Richmond RE offices 499; the acd4-wkax mislabel was purged same-day). Crawl 289 pages
+    0 broken. New collections: events, offers, awards, subscribers (+DEMO rows behind
+    preview).
