@@ -204,3 +204,23 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
 - Monthly refresh: re-run the seeder per source (dedupe makes it additive); expired
   licenses get flipped to `status = lapsed` (hidden). PA PALS CSVs are a manual monthly
   download (docs/REGISTRY.md).
+
+## 10. Events, deals, awards, newsletter (Batch C)
+
+- **Events:** CMS → `events` (admin-only). Submissions arrive pending; publish after a
+  reality check (real venue, real date, no spam). DEMO rows stay `source=DEMO` and render
+  only behind ?preview=demo. Jotform field list in docs/EVENTS-SOURCES.md — no DMO feed
+  cleared licensing (research log there).
+- **Deals:** CMS → `offers`. Tier rule enforced AT MODERATION: Free tier = 1 active offer
+  per business; Verified/Featured unlimited. Expired offers hide automatically
+  (expiresAt); an offer renders only while its business is published.
+- **Awards:** `scripts/awards.ts` computes winners from businesses-merge.csv + a dashboard
+  export of `reviews` (data/exports/reviews.csv). Review the output CSV, import to the
+  `awards` collection as pending, flip to published. Badge files:
+  `scripts/award-badge.ts --county "Bergen County" --year 2026`. Winners get the badge
+  image for their own site — plain link back only, never embed code.
+- **Newsletter:** capture posts to `/api/subscribe` → `subscribers` (pending) + forwards
+  to `GHL_NEWSLETTER_WEBHOOK` (set env). Build the GHL workflow with DOUBLE OPT-IN: send
+  confirmation email, only confirmed contacts join the "TriVetted Weekly" list. Digest
+  template: docs/outreach/newsletter-digest-template.md.
+- **New envs this batch:** GHL_NEWSLETTER_WEBHOOK.

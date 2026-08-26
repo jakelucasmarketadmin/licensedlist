@@ -232,3 +232,21 @@ facts rule.
 - **Collections/fields created via a temporary `/api/admin-seed` endpoint** run against the
   dev preview origin (elevated `@wix/data` collections API) and deleted before publish —
   the dashboard click-path from Batch A stays the fallback.
+
+## C0 + Batch C (2026-08-26)
+
+- **Registry pilot scope**: Staten Island + Bronx HIC + Richmond RE offices (~5.6k rows)
+  — the full five-borough HIC roster (29,573) exceeds the free-plan CMS allowance; the
+  next tranche is an owner plan decision (docs/REGISTRY.md).
+- **Registered rows live in `businesses`** with status=registered, excluded from
+  fetchBusinesses AT THE QUERY (hasSome on status) so the 1000-item cap, profile routes,
+  3-listing rule, and sitemap never see them. Registry surfaces query with server-side
+  filters (lib/registry.ts, 5-min cache).
+- **Roster tables render on county hubs too** — NYC counties have no qualifying list
+  pages yet, so the hub is where the table lives until claims create real list pages.
+- **Events launch submission-driven**: no DMO feed cleared licensing (documented probes in
+  docs/EVENTS-SOURCES.md); no scraping.
+- **Award = computed, never sold**: pipeline emits zero winners until verified-hire review
+  data clears the bar; DEMO winner behind preview shows the design.
+- **Newsletter rides GHL with double opt-in**; subscribers collection stores pending
+  status only.
