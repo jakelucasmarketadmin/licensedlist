@@ -17,7 +17,8 @@ import { fetchBusinesses, isPublished, categoriesOf, servesTown, type DirectoryB
 import ResultCard from "@/components/site/ResultCard.astro";
 import { getCategory } from "@/lib/taxonomy";
 import { heroPhotoFor } from "@/lib/town-photos";
-import { countRegistered } from "@/lib/registry";
+import { countRegistered, listRegistered } from "@/lib/registry";
+import RegistryTable from "@/components/site/RegistryTable.astro";
 
 interface Props {
   state: StateSeed;
@@ -68,6 +69,9 @@ const bizGroups = [...bizByCategory.entries()]
   .sort((a, b) => b.items.length - a.items.length);
 
 const registeredCount = await countRegistered({ stateSlug: state.slug, countySlug: county.slug });
+// The roster table renders on the hub when the county has registry rows but
+// no qualifying list page to host it (NYC counties pre-launch).
+const registeredRows = registeredCount > 0 ? await listRegistered({ stateSlug: state.slug, countySlug: county.slug }, 100) : [];
 
 const mapPoints = [
   ...towns.map((t) => ({
@@ -207,6 +211,15 @@ const mapPoints = [
         })();
       </script>
     </section>
+  )}
+
+  {registeredRows.length > 0 && (
+    <RegistryTable
+      heading={`Also licensed in ${county.name}: ${registeredCount.toLocaleString("en-US")} businesses on file`}
+      rows={registeredRows}
+      totalCount={registeredCount}
+      tableId="hub-licensed"
+    />
   )}
 
   <section class="mt-12 max-w-prose" aria-labelledby="permits-heading">

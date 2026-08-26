@@ -1,0 +1,106 @@
+---
+import type { RegisteredBusiness } from "@/lib/registry";
+import { jotformClaimRegistryUrl } from "@/lib/jotform";
+import { SITE_NAME } from "@/lib/site";
+
+/**
+ * "Also licensed in {place}" — compact registry table (C0). Server-rendered,
+ * data-nosnippet, 25 rows/page via #fragment pagination (no new URLs), capped
+ * at 100 rendered rows. Used on geo×category list pages and county hubs.
+ */
+interface Props {
+  heading: string;
+  rows: RegisteredBusiness[];
+  totalCount: number;
+  /** unique per page instance (multiple tables per page get their own pager) */
+  tableId?: string;
+}
+const { heading, rows, totalCount, tableId = "registry" } = Astro.props;
+const pages = Math.ceil(rows.length / 25);
+---
+
+<section class="mt-10" aria-labelledby={`${tableId}-heading`} data-nosnippet>
+  <h2 id={`${tableId}-heading`} class="font-display text-xl font-semibold text-ink">{heading}</h2>
+  <p class="mt-1 max-w-prose text-sm text-muted">
+    Businesses on the official license roster that haven't claimed their {SITE_NAME} listing
+    yet. They aren't ranked or reviewed — the license record is shown as filed.
+  </p>
+  <div class="mt-4 overflow-hidden rounded-card border border-line">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-line bg-inset text-left text-xs uppercase tracking-wider text-faint">
+          <th class="px-3 py-2 font-semibold">Business</th>
+          <th class="hidden px-3 py-2 font-semibold sm:table-cell">Town</th>
+          <th class="hidden px-3 py-2 font-semibold md:table-cell">License</th>
+          <th class="hidden px-3 py-2 font-semibold md:table-cell">Expires</th>
+          <th class="px-3 py-2"><span class="sr-only">Claim</span></th>
+        </tr>
+      </thead>
+      <tbody data-registry-body={tableId}>
+        {rows.map((r, i) => (
+          <tr class:list={["border-b border-line bg-surface last:border-0", i >= 25 && "hidden"]} data-page={Math.floor(i / 25)}>
+            <td class="px-3 py-2 font-medium text-ink">{r.name}</td>
+            <td class="hidden px-3 py-2 text-muted sm:table-cell">{r.city}</td>
+            <td class="hidden px-3 py-2 font-mono text-xs text-muted md:table-cell">{r.licenseNumber}</td>
+            <td class="hidden px-3 py-2 text-xs text-muted md:table-cell">{r.licenseExpiresAt || "—"}</td>
+            <td class="px-3 py-2 text-right">
+              <a
+                href={jotformClaimRegistryUrl(r.name ?? "", r.licenseNumber)}
+                target="_blank"
+                rel="nofollow noopener"
+                class="rounded-chip border border-line-strong px-3 py-1 text-xs font-semibold text-ink hover:bg-inset"
+              >
+                Claim this listing
+              </a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <div class="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-inset px-3 py-2">
+      <p class="text-[11px] text-faint">
+        Source: official license registry ({rows[0]?.licenseSource}) · shown as filed ·
+        {totalCount > rows.length && ` ${rows.length} of ${totalCount.toLocaleString("en-US")} shown — `}
+        <a href="/founding-members" class="underline">claim yours free</a>
+      </p>
+      {pages > 1 && (
+        <nav class="flex flex-wrap gap-1" aria-label={`${heading} pages`} data-registry-pager={tableId}>
+          {Array.from({ length: pages }, (_, p) => (
+            <a
+              href={`#${tableId}-p${p + 1}`}
+              data-registry-page={p}
+              class:list={[
+                "rounded-chip px-2.5 py-1 text-xs font-medium",
+                p === 0 ? "bg-brand text-white" : "text-muted hover:text-ink",
+              ]}
+            >
+              {p + 1}
+            </a>
+          ))}
+        </nav>
+      )}
+    </div>
+  </div>
+  <script is:inline data-astro-rerun define:vars={{ tableId }}>
+    (function () {
+      var pager = document.querySelector('[data-registry-pager="' + tableId + '"]');
+      if (!pager || pager.dataset.wired) return;
+      pager.dataset.wired = "1";
+      var body = document.querySelector('[data-registry-body="' + tableId + '"]');
+      pager.addEventListener("click", function (e) {
+        var link = e.target.closest("[data-registry-page]");
+        if (!link || !body) return;
+        var page = link.getAttribute("data-registry-page");
+        body.querySelectorAll("[data-page]").forEach(function (row) {
+          row.classList.toggle("hidden", row.getAttribute("data-page") !== page);
+        });
+        pager.querySelectorAll("[data-registry-page]").forEach(function (l) {
+          var on = l === link;
+          l.classList.toggle("bg-brand", on);
+          l.classList.toggle("text-white", on);
+          l.classList.toggle("text-muted", !on);
+        });
+      });
+    })();
+  </script>
+</section>
