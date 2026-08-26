@@ -186,3 +186,21 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   them elevated server-side).
 - New fields: `businesses.{highlights,projectsJson,teamJson,faqJson}`,
   `leads.{wonAt,reviewToken,reviewInviteSentAt,reviewReminderSentAt,reviewSubmittedAt}`.
+
+## 9. Registry seeding & founding members (C0)
+
+- Seeding: `scripts/seed-registry.ts` (sources, counts, ingest flow) — full doc in
+  docs/REGISTRY.md. The ingest endpoint is TEMPORARY; add it back from git history
+  (api/admin-registry.ts), run on the dev preview origin, delete before publish.
+- Claim approvals for registry rows: verify the claimant against the license record
+  (name/license number match), then in the dashboard flip the row `status registered →
+  published`, fill townSlug/serviceTownSlugs/description, set `claimed = true`. If they're
+  within the first 200 approved claims in their county, also set `foundingMember = true`
+  and `foundingCounty = "{stateSlug}|{countySlug}"` — /founding-members counters read
+  these live. Founding members get the Verified plan free for life (tier = verified, no
+  billing).
+- Jotform: add a short-text field with unique name `licenseNumber` — the registry table's
+  claim buttons prefill it.
+- Monthly refresh: re-run the seeder per source (dedupe makes it additive); expired
+  licenses get flipped to `status = lapsed` (hidden). PA PALS CSVs are a manual monthly
+  download (docs/REGISTRY.md).

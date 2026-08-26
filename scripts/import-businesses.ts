@@ -249,12 +249,19 @@ const { createClient, ApiKeyStrategy } = await import("@wix/sdk");
 const { items } = await import("@wix/data");
 const client = createClient({ modules: { items }, auth: ApiKeyStrategy({ apiKey, siteId }) });
 
-// Existing records by slug (paginated per Wix Data limits).
+// Existing records by slug AND by license number (paginated). The license
+// index makes a Jotform claim MERGE into its C0 registry row (flipping it to
+// published) instead of creating a duplicate — see docs/REGISTRY.md.
 const existing = new Map<string, any>();
+const existingByLicense = new Map<string, any>();
+const normLic = (v: unknown) => String(v ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "");
 let query = client.items.query("businesses").limit(1000);
 let page = await query.find();
 for (;;) {
-  for (const item of page.items) if (item.slug) existing.set(item.slug, item);
+  for (const item of page.items) {
+    if (item.slug) existing.set(item.slug, item);
+    if (item.licenseNumber) existingByLicense.set(normLic(item.licenseNumber), item);
+  }
   if (!page.hasNext()) break;
   page = await page.next();
 }
@@ -262,7 +269,9 @@ for (;;) {
 let creates = 0, updates = 0;
 for (const { fields } of valid) {
   const slug = fields.slug as string;
-  const current = existing.get(slug);
+  const current =
+    existing.get(slug) ??
+    (fields.licenseNumber ? existingByLicense.get(normLic(fields.licenseNumber)) : undefined);
   if (dryRun) {
     console.log(`${current ? "UPDATE" : "CREATE"} ${slug} (status=${fields.status})`);
     current ? updates++ : creates++;

@@ -108,6 +108,13 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     path: "/credits",
     crumb: "Photo credits",
   },
+  "/founding-members": {
+    title: `Founding Members — Claim Your Free Verified Listing · ${SITE_NAME}`,
+    description:
+      "Your license is already on our roster. Claim your free listing and get Verified free for life while founding spots in your county last.",
+    path: "/founding-members",
+    crumb: "Founding members",
+  },
   "/write-review": {
     title: `Write a Review · ${SITE_NAME}`,
     description:
