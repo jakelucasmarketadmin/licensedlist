@@ -14,8 +14,10 @@ interface Props {
   sizes?: string;
   priority?: boolean;
   class?: string;
+  /** CSS object-position (e.g. from a town photo's focal point). */
+  position?: string;
 }
-const { src, alt, aspect = 4 / 3, sizes = "(min-width: 1024px) 33vw, 100vw", priority = false, class: className } = Astro.props;
+const { src, alt, aspect = 4 / 3, sizes = "(min-width: 1024px) 33vw, 100vw", priority = false, class: className, position } = Astro.props;
 const srcset = srcsetFor(src, aspect);
 const lqip = lqipFor(src);
 const isCommons = src.startsWith("https://upload.wikimedia.org/wikipedia/commons/thumb/");
@@ -34,5 +36,5 @@ const fallbackSrc = imageAt(src, fallbackW, isCommons ? undefined : Math.round(f
   decoding={priority ? "sync" : "async"}
   fetchpriority={priority ? "high" : undefined}
   class:list={["h-full w-full object-cover", className]}
-  style={`aspect-ratio: ${aspect}; ${lqip ? `background-image:url('${lqip}');background-size:cover;background-position:center;` : ""}`}
+  style={`aspect-ratio: ${aspect}; ${position ? `object-position:${position};` : ""} ${lqip ? `background-image:url('${lqip}');background-size:cover;background-position:center;` : ""}`}
 />

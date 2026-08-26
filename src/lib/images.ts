@@ -12,7 +12,10 @@ export const SRCSET_WIDTHS = [400, 800, 1200, 1600] as const;
 const COMMONS_WIDTHS = [330, 500, 960, 1280, 1920] as const;
 const COMMONS_LQIP = 120;
 
-const isWixMedia = (url: string) => /(^https?:)?\/\/static\.wixstatic\.com\/media\//.test(url);
+// Only Wix Media URLs that ALREADY carry a /v1/ transform segment accept
+// rewritten transforms — hand-building /v1/fill/ onto a bare ~mv2 URL 403s.
+const isWixMedia = (url: string) =>
+  /(^https?:)?\/\/static\.wixstatic\.com\/media\/.*\/v1\//.test(url);
 const isCommonsThumb = (url: string) =>
   /^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/thumb\//.test(url);
 

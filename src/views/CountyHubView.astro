@@ -13,7 +13,9 @@ import {
 import { getGuide } from "@/lib/guides";
 import GuideSection from "@/components/site/GuideSection.astro";
 import { getCategories } from "@/lib/taxonomy";
-import { fetchBusinesses, isPublished, categoriesOf, servesTown } from "@/lib/businesses";
+import { fetchBusinesses, isPublished, categoriesOf, servesTown, type DirectoryBusiness } from "@/lib/businesses";
+import ResultCard from "@/components/site/ResultCard.astro";
+import { getCategory } from "@/lib/taxonomy";
 import { heroPhotoFor } from "@/lib/town-photos";
 
 interface Props {
@@ -44,12 +46,37 @@ const qualified = getCategories()
   .filter((e) => e.count >= 3)
   .sort((a, b) => b.count - a.count);
 
-const mapPoints = towns.map((t) => ({
-  label: t.name,
-  lat: Number(t.lat),
-  lng: Number(t.lng),
-  href: `/${t.pathKey}`,
-}));
+// Every published business in (or serving) the county, for the hub section.
+let countyBusinesses: DirectoryBusiness[] = [];
+try {
+  countyBusinesses = (await fetchBusinesses()).filter((b) => {
+    if (!isPublished(b) || b.stateSlug !== state.slug) return false;
+    return (
+      b.countySlug === county.slug ||
+      (b.serviceTownSlugs ?? "").split(",").some((t) => townSlugs.has(t.trim()))
+    );
+  });
+} catch { /* fail soft */ }
+const bizByCategory = new Map<string, DirectoryBusiness[]>();
+for (const b of countyBusinesses) {
+  const key = b.primaryCategorySlug ?? "other";
+  bizByCategory.set(key, [...(bizByCategory.get(key) ?? []), b]);
+}
+const bizGroups = [...bizByCategory.entries()]
+  .map(([slug, items]) => ({ category: getCategory(slug), items }))
+  .sort((a, b) => b.items.length - a.items.length);
+
+const mapPoints = [
+  ...towns.map((t) => ({
+    label: t.name,
+    lat: Number(t.lat),
+    lng: Number(t.lng),
+    href: `/${t.pathKey}`,
+  })),
+  ...countyBusinesses
+    .filter((b) => Number.isFinite(Number(b.lat)) && Number.isFinite(Number(b.lng)))
+    .map((b) => ({ label: b.name ?? "", lat: Number(b.lat), lng: Number(b.lng), primary: true })),
+];
 ---
 
 <article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
@@ -126,6 +153,55 @@ const mapPoints = towns.map((t) => ({
       </div>
     )}
   </section>
+
+  {countyBusinesses.length > 0 && (
+    <section class="mt-12" aria-labelledby="verified-heading">
+      <h2 id="verified-heading" class="font-display text-2xl font-semibold text-ink">
+        Verified in {county.name}
+      </h2>
+      <p class="mt-1 text-sm text-muted">
+        {countyBusinesses.length} published {countyBusinesses.length === 1 ? "listing" : "listings"} based in or serving the county.
+      </p>
+      <div class="mt-5 space-y-8">
+        {bizGroups.map(({ category, items }, gi) => (
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-faint">
+              {category?.name ?? "Other"} · {items.length}
+            </h3>
+            <div class="mt-3 grid gap-4">
+              {items.map((b, i) => {
+                const globalIndex = bizGroups.slice(0, gi).reduce((n, g) => n + g.items.length, 0) + i;
+                return (
+                  <div class:list={[globalIndex >= 12 && "hidden", globalIndex >= 12 && "hub-extra-biz"]}>
+                    <ResultCard business={b} layout="horizontal" />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+      {countyBusinesses.length > 12 && (
+        <button
+          type="button"
+          id="hub-see-all"
+          class="mt-4 rounded-chip border border-line-strong px-5 py-2 text-sm font-semibold text-ink hover:bg-inset"
+        >
+          See all {countyBusinesses.length}
+        </button>
+      )}
+      <script is:inline data-astro-rerun>
+        (function () {
+          var btn = document.getElementById("hub-see-all");
+          if (!btn) return;
+          btn.addEventListener("click", function () {
+            document.querySelectorAll(".hub-extra-biz").forEach(function (el) { el.classList.remove("hidden"); });
+            btn.remove();
+          });
+        })();
+      </script>
+    </section>
+  )}
 
   <section class="mt-12 max-w-prose" aria-labelledby="permits-heading">
     <h2 id="permits-heading" class="font-display text-2xl font-semibold text-ink">

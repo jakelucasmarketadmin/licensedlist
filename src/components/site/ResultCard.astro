@@ -1,7 +1,6 @@
 ---
 import TrustBadge from "@/components/site/TrustBadge.astro";
 import CategoryTile from "@/components/site/CategoryTile.astro";
-import Pic from "@/components/site/Pic.astro";
 import {
   type DirectoryBusiness,
   blendedRating,
@@ -12,6 +11,8 @@ import {
   additionalLicenses,
 } from "@/lib/businesses";
 import { getCategory } from "@/lib/taxonomy";
+import { heroPhotoFor, focalPosition } from "@/lib/town-photos";
+import { imageAt, srcsetFor, lqipFor } from "@/lib/images";
 
 interface Props {
   business: DirectoryBusiness;
@@ -21,10 +22,19 @@ interface Props {
   townName?: string;
   /** Prefix the subtitle with the primary category (used off listing pages). */
   showCategory?: boolean;
-  /** Suppress the photo strip (compact contexts like the home showcase tile). */
+  /** Suppress the photo strip (compact contexts). */
   noPhoto?: boolean;
+  /** "vertical" poster card (home carousels) or "horizontal" dense list card. */
+  layout?: "vertical" | "horizontal";
 }
-const { business: b, inFeaturedBlock = false, townName, showCategory = false, noPhoto = false } = Astro.props;
+const {
+  business: b,
+  inFeaturedBlock = false,
+  townName,
+  showCategory = false,
+  noPhoto = false,
+  layout = "vertical",
+} = Astro.props;
 
 const rating = blendedRating(b);
 const reviews = totalReviewCount(b);
@@ -48,12 +58,23 @@ try {
     : [];
   if (Array.isArray(parsed)) photos = parsed.filter((p) => typeof p === "string" && p.startsWith("http"));
 } catch { /* no photos */ }
-const carouselId = `card-photos-${b.slug}`;
+
+// Photo fallback ladder: business photo → town/county photo (credited) →
+// category tile. The tile is the base layer; the photo rungs sit on top and
+// remove themselves on load error, revealing the next rung down.
+const townPhoto = b.stateSlug ? heroPhotoFor(b.stateSlug, b.countySlug, b.townSlug) : undefined;
 const topRated = rating !== null && rating >= 4.8 && reviews >= 25;
+const horizontal = layout === "horizontal";
+const mainPhoto = photos[0];
+const thumbs = photos.length >= 4 ? photos.slice(1, 5) : [];
+const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 1024px) 40vw, 100vw";
 ---
 
 <article
-  class="card-hover overflow-hidden rounded-card border border-line bg-surface"
+  class:list={[
+    "card-hover overflow-hidden rounded-card border border-line bg-surface",
+    horizontal && "md:flex md:max-h-[260px]",
+  ]}
   data-biz-card={b.slug}
   data-lat={b.lat ?? ""}
   data-lng={b.lng ?? ""}
@@ -66,50 +87,90 @@ const topRated = rating !== null && rating >= 4.8 && reviews >= 25;
   data-featured={inFeaturedBlock ? "1" : ""}
 >
   {!noPhoto && (
-    <div class="relative aspect-[4/3] w-full overflow-hidden bg-inset" transition:name={`biz-photo-${b.slug}`}>
-      {photos.length > 1 ? (
-        <>
-          <div
-            id={carouselId}
-            class="flex h-full snap-x snap-mandatory overflow-x-auto scroll-smooth"
-            aria-label={`Photos of ${b.name}`}
-          >
-            {photos.slice(0, 5).map((p, i) => (
-              <div id={`${carouselId}-${i}`} class="h-full w-full flex-none snap-center">
-                <Pic src={p} alt={i === 0 ? `${b.name} — photo` : ""} aspect={4 / 3} sizes="(min-width: 1024px) 40vw, 100vw" />
-              </div>
-            ))}
+    <div class:list={[horizontal ? "md:w-[38%] md:shrink-0" : ""]}>
+      <div
+        class:list={[
+          "group relative w-full overflow-hidden bg-inset",
+          horizontal
+            ? "aspect-video max-h-[200px] md:aspect-[4/3] md:h-full md:max-h-[240px]"
+            : "aspect-[4/3]",
+        ]}
+        data-photo-frame
+        transition:name={`biz-photo-${b.slug}`}
+      >
+        <div class="absolute inset-0">
+          <CategoryTile slug={b.primaryCategorySlug ?? ""} asFallback />
+        </div>
+
+        {townPhoto && (
+          <div class:list={["absolute inset-0", mainPhoto && "hidden"]} data-rung-town>
+            <img
+              src={imageAt(townPhoto.url, 960)}
+              srcset={srcsetFor(townPhoto.url)}
+              sizes={bizSizes}
+              alt={townPhoto.alt}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover"
+              style={`object-position:${focalPosition(townPhoto)};`}
+              onerror="this.closest('[data-rung-town]').remove()"
+            />
+            <a
+              href="/credits"
+              class="absolute bottom-1.5 right-1.5 rounded-chip bg-brand-deep/75 px-2 py-0.5 text-[10px] text-white/90 opacity-0 transition-opacity group-hover:opacity-100"
+              title={`${townPhoto.caption} — ${townPhoto.author}, ${townPhoto.license}`}
+            >
+              area photo · credit
+            </a>
           </div>
-          <div class="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5">
-            {photos.slice(0, 5).map((_, i) => (
-              <a
-                href={`#${carouselId}-${i}`}
-                aria-label={`Photo ${i + 1} of ${b.name}`}
-                class="h-2 w-2 rounded-chip border border-surface bg-surface/70 hover:bg-surface"
-              />
-            ))}
+        )}
+
+        {mainPhoto && (
+          <div class="absolute inset-0" data-rung-biz>
+            <img
+              src={imageAt(mainPhoto, 960)}
+              srcset={srcsetFor(mainPhoto)}
+              sizes={bizSizes}
+              alt={`${b.name} — photo`}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover"
+              onerror="var f=this.closest('[data-photo-frame]');if(f){f.querySelectorAll('[data-rung-town]').forEach(function(e){e.classList.remove('hidden')})}var r=this.closest('[data-rung-biz]');if(r){r.remove()}"
+            />
           </div>
-        </>
-      ) : photos.length === 1 ? (
-        <Pic src={photos[0]} alt={`${b.name} — photo`} aspect={4 / 3} sizes="(min-width: 1024px) 40vw, 100vw" />
-      ) : (
-        <CategoryTile slug={b.primaryCategorySlug ?? ""} asFallback />
-      )}
-      <div class="absolute left-2 top-2 flex flex-wrap gap-1.5">
-        {b.licenseStatus === "verified" && (
-          <span class="rounded-chip bg-[#177245] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Verified</span>
         )}
-        {inFeaturedBlock && (
-          <span class="rounded-chip bg-[#14456b] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Featured</span>
-        )}
-        {topRated && (
-          <span class="rounded-chip bg-[#0b2b45] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Top rated</span>
-        )}
+
+        <div class="absolute left-2 top-2 flex flex-wrap gap-1.5">
+          {b.licenseStatus === "verified" && (
+            <span class="rounded-chip bg-[#177245] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Verified</span>
+          )}
+          {inFeaturedBlock && (
+            <span class="rounded-chip bg-[#14456b] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Featured</span>
+          )}
+          {topRated && (
+            <span class="rounded-chip bg-[#0b2b45] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Top rated</span>
+          )}
+        </div>
       </div>
+
+      {horizontal && thumbs.length > 0 && (
+        <div class="hidden grid-cols-4 gap-0.5 md:grid">
+          {thumbs.map((t) => (
+            <img
+              src={imageAt(t, 330)}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              class="h-12 w-full object-cover"
+              onerror="this.remove()"
+            />
+          ))}
+        </div>
+      )}
     </div>
   )}
 
-  <div class="p-5">
+  <div class:list={[horizontal ? "min-w-0 flex-1 p-4" : "p-5"]}>
     <div class="flex flex-wrap items-start justify-between gap-2">
       <div class="min-w-0">
         <div class="flex flex-wrap items-center gap-2">
@@ -159,7 +220,7 @@ const topRated = rating !== null && rating >= 4.8 && reviews >= 25;
     )}
 
     {b.whyWePicked && (
-      <p class="mt-2 text-sm leading-relaxed text-muted">
+      <p class:list={["mt-2 text-sm leading-relaxed text-muted", horizontal && "line-clamp-2"]}>
         <span class="font-medium text-ink">Why we picked them:</span> {b.whyWePicked}
       </p>
     )}
@@ -179,20 +240,22 @@ const topRated = rating !== null && rating >= 4.8 && reviews >= 25;
               : "Not verified — ask before you hire"}
         </span>
       </div>
-      <div class="ledger-row">
-        <span class="ledger-key">Trust</span>
-        <span class="ledger-val">
-          {[
-            b.responseTimeHours != null
-              ? `replies in ~${b.responseTimeHours} ${b.responseTimeHours === 1 ? "hr" : "hrs"}`
-              : null,
-            serviceTowns.length > 1 ? `serves ${serviceTowns.length} towns` : townName ? `serves ${townName}` : null,
-          ].filter(Boolean).join(" · ") || "identity confirmed"}
-        </span>
-      </div>
+      {!horizontal && (
+        <div class="ledger-row">
+          <span class="ledger-key">Trust</span>
+          <span class="ledger-val">
+            {[
+              b.responseTimeHours != null
+                ? `replies in ~${b.responseTimeHours} ${b.responseTimeHours === 1 ? "hr" : "hrs"}`
+                : null,
+              serviceTowns.length > 1 ? `serves ${serviceTowns.length} towns` : townName ? `serves ${townName}` : null,
+            ].filter(Boolean).join(" · ") || "identity confirmed"}
+          </span>
+        </div>
+      )}
     </div>
 
-    <div class="mt-4 flex flex-wrap gap-2">
+    <div class="mt-3 flex flex-wrap gap-2">
       {b.phone && (
         <a
           href={`tel:${b.phone.replace(/[^+\d]/g, "")}`}
@@ -208,7 +271,7 @@ const topRated = rating !== null && rating >= 4.8 && reviews >= 25;
       >
         View profile
       </a>
-      {b.website && (
+      {!horizontal && b.website && (
         <a
           href={b.website}
           rel={sponsored ? "sponsored nofollow" : "nofollow"}

@@ -202,6 +202,9 @@ export interface TownPhotoSeed {
   sourceUrl: string;
   caption: string;
   alt: string;
+  focalX: string;
+  focalY: string;
+  preferred: string;
 }
 
 export const TOWN_PHOTO_SEED: TownPhotoSeed[] = ${JSON.stringify(photos, null, 2)};

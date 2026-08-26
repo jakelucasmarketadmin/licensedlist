@@ -214,6 +214,16 @@
   }
 }
 
+.pin-bounce {
+  animation: pin-bounce 500ms ease;
+}
+
+@keyframes pin-bounce {
+  0%, 100% { transform: translateY(0) scale(1.15); }
+  35% { transform: translateY(-7px) scale(1.2); }
+  65% { transform: translateY(-2px) scale(1.18); }
+}
+
 @keyframes reveal-rise {
   from {
     opacity: 0;

@@ -4,7 +4,6 @@ import ShowcaseListing from "@/components/site/ShowcaseListing.astro";
 import CategoryTile from "@/components/site/CategoryTile.astro";
 import ResultCard from "@/components/site/ResultCard.astro";
 import Pic from "@/components/site/Pic.astro";
-import MiniMap from "@/components/site/MiniMap.tsx";
 import { getStates, getCountiesByState, getAllTowns } from "@/lib/geo";
 import { fetchBusinesses, isPublished, blendedRating } from "@/lib/businesses";
 import { latestGuides } from "@/lib/guides";
@@ -46,9 +45,6 @@ const popular = [...published]
   .slice(0, 8);
 
 const guides = latestGuides(3);
-const mapPoints = published
-  .filter((b) => Number.isFinite(Number(b.lat)) && Number.isFinite(Number(b.lng)))
-  .map((b) => ({ label: b.name ?? "", lat: Number(b.lat), lng: Number(b.lng), href: `/business/${b.slug}` }));
 
 const POPULAR_TILE_SLUGS = [
   "roofers", "plumbers", "electricians", "hvac-contractors",
@@ -114,7 +110,7 @@ const STEPS = [
 <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="explore-heading">
   <h2 id="explore-heading" class="font-display text-3xl font-semibold text-ink">Explore the directory</h2>
   <div class="mt-6 grid gap-4 lg:grid-cols-3">
-    <!-- Large tile: the real showcase listing -->
+    <!-- Large tile: the real showcase listing (2 rows tall) -->
     <div class="reveal lg:row-span-2">
       <ShowcaseListing />
     </div>
@@ -132,15 +128,24 @@ const STEPS = [
       </ul>
     </div>
 
-    <!-- Map tile -->
-    {mapPoints.length > 0 && (
-      <div class="reveal rounded-card border border-line bg-surface p-5">
-        <h3 class="font-display text-lg font-semibold text-ink">Verified across the tri-state</h3>
-        <div class="mt-3">
-          <MiniMap client:visible points={mapPoints} className="h-52" />
-        </div>
-      </div>
-    )}
+    <!-- Static map tile -->
+    <a href="/nj" class="card-hover reveal group relative block overflow-hidden rounded-card border border-line">
+      <picture>
+        <source srcset="/assets/tri-state-map.webp" type="image/webp" />
+        <img
+          src="/assets/tri-state-map.png"
+          alt={`Map of the tri-state area with ${verifiedCount} verified businesses marked`}
+          width="900"
+          height="560"
+          loading="lazy"
+          decoding="async"
+          class="h-full min-h-[220px] w-full object-cover"
+        />
+      </picture>
+      <span class="absolute bottom-3 left-3 rounded-chip bg-brand-deep/85 px-3 py-1.5 text-xs font-semibold text-white">
+        {verifiedCount} verified {verifiedCount === 1 ? "business" : "businesses"} across NJ · NY · PA
+      </span>
+    </a>
 
     <!-- Where we're launching -->
     <div class="reveal rounded-card border border-line bg-surface p-5">
@@ -168,19 +173,6 @@ const STEPS = [
         ))}
       </div>
     </div>
-
-    <!-- This week's guide -->
-    {guides.length > 0 && (
-      <div class="reveal rounded-card border border-line bg-surface p-5">
-        <h3 class="font-display text-lg font-semibold text-ink">This week's guide</h3>
-        <a href={guides[0].scope === "category" ? `/${guides[0].scopeKey}` : `/${guides[0].scopeKey}`} class="mt-2 block text-sm font-medium text-brand hover:underline">
-          {guides[0].title}
-        </a>
-        <p class="mt-2 text-xs text-faint">
-          By {guides[0].author} · updated {new Date(guides[0].updatedAt || guides[0].publishedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-        </p>
-      </div>
-    )}
   </div>
 </section>
 

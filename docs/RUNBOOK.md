@@ -127,3 +127,21 @@ add the CSV row, run `node scripts/generate-data-modules.mjs`, commit.
 swap the CSV `url` values for the wixstatic URLs (the image pipeline auto-detects the host
 and switches to Wix URL transforms), keep author/license/sourceUrl untouched — attribution
 obligations survive re-hosting.
+
+## 7. Business photos (probe & mirror)
+
+Card images use a fallback ladder: business photo → town/county photo (credited, from
+`data/geo/town-photos.csv`) → illustrated category tile. Broken images remove themselves
+client-side and reveal the next rung, so a dead link never shows a gray box.
+
+- **Weekly health check** (no credentials): `npx tsx scripts/mirror-photos.ts --probe`
+  HEAD-checks every `photosJson`/`logoUrl` URL and writes `data/photo-meta.csv`.
+- **Mirror into our Wix Media** (stop hotlinking client sites):
+  `WIX_API_KEY=... WIX_SITE_ID=04efedc9-... npx tsx scripts/mirror-photos.ts --mirror`
+  imports each external photo via the Media Import API and rewrites the record's
+  photosJson to our static.wixstatic.com URLs (idempotent; failures keep the original
+  URL). The key needs **Wix Media + Wix Data** permissions (Dashboard → Settings → API
+  keys). Not yet run — waiting on an API key.
+- Gotcha: `/v1/fill/` transforms only work on Wix Media URLs that already carry a `/v1/`
+  segment; hand-building transforms onto a bare `...~mv2.jpg` URL returns 403, so the
+  pipeline serves bare media URLs untouched.

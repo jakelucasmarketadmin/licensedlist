@@ -19,15 +19,33 @@ export function photosForCounty(stateSlug: string, countySlug: string): TownPhot
   );
 }
 
+/** Pick the best of a photo set: owner-preferred flag, then a caption that
+ * reads like a downtown/main-street shot, then the first. */
+function pickBest(photos: TownPhotoSeed[]): TownPhotoSeed | undefined {
+  if (!photos.length) return undefined;
+  return (
+    photos.find((p) => p.preferred === "true") ??
+    photos.find((p) => /downtown|main street|avenue/i.test(p.caption)) ??
+    photos[0]
+  );
+}
+
+/** CSS object-position from the photo's focal point (defaults to center). */
+export function focalPosition(p: TownPhotoSeed): string {
+  const x = p.focalX && !Number.isNaN(Number(p.focalX)) ? `${p.focalX}%` : "50%";
+  const y = p.focalY && !Number.isNaN(Number(p.focalY)) ? `${p.focalY}%` : "50%";
+  return `${x} ${y}`;
+}
+
 /** Best hero photo for a geo page: town first, then its county. */
 export function heroPhotoFor(stateSlug: string, countySlug?: string, townSlug?: string): TownPhotoSeed | undefined {
   if (townSlug) {
-    const t = photosForTown(stateSlug, townSlug);
-    if (t.length) return t[0];
+    const t = pickBest(photosForTown(stateSlug, townSlug));
+    if (t) return t;
   }
   if (countySlug) {
-    const c = photosForCounty(stateSlug, countySlug);
-    if (c.length) return c[0];
+    const c = pickBest(photosForCounty(stateSlug, countySlug));
+    if (c) return c;
   }
   return undefined;
 }

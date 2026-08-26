@@ -63,7 +63,10 @@ function MapInner({ markers }: { markers: MapBiz[] }) {
       style: (dark ? styleDark : styleLight) as any,
       bounds: boundsOf(markers),
       fitBoundsOptions: { padding: 60, maxZoom: 13 },
-      attributionControl: { compact: true },
+      attributionControl: {
+        compact: true,
+        customAttribution: "Map data © OpenStreetMap contributors · OpenFreeMap",
+      },
     });
     mapRef.current = map;
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
@@ -89,13 +92,13 @@ function MapInner({ markers }: { markers: MapBiz[] }) {
       if (!card) return;
       const chip = chipsRef.current.get(card.getAttribute("data-biz-card") ?? "");
       if (chip) {
-        chip.classList.add("scale-125", "!bg-accent", "!text-accent-ink", "z-10");
+        chip.classList.add("pin-bounce", "!bg-accent", "!text-accent-ink", "z-10");
       }
     };
     const out = (e: Event) => {
       if (!(e.target as HTMLElement).closest?.("[data-biz-card]")) return;
       chipsRef.current.forEach((chip) =>
-        chip.classList.remove("scale-125", "!bg-accent", "!text-accent-ink", "z-10"),
+        chip.classList.remove("pin-bounce", "!bg-accent", "!text-accent-ink", "z-10"),
       );
     };
     document.addEventListener("mouseover", over);

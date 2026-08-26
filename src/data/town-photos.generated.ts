@@ -12,6 +12,9 @@ export interface TownPhotoSeed {
   sourceUrl: string;
   caption: string;
   alt: string;
+  focalX: string;
+  focalY: string;
+  preferred: string;
 }
 
 export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
@@ -25,7 +28,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bergen_County_Court_House.jpg",
     "caption": "Bergen County Court House in Hackensack, the county seat",
-    "alt": "Domed Bergen County courthouse building in Hackensack, New Jersey"
+    "alt": "Domed Bergen County courthouse building in Hackensack, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -37,7 +43,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 2.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hackensack,_New_Jersey_-_7026410853.jpg",
     "caption": "Buildings in downtown Hackensack, the Bergen County seat",
-    "alt": "Street view of commercial buildings in downtown Hackensack, New Jersey"
+    "alt": "Street view of commercial buildings in downtown Hackensack, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -49,7 +58,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:2025-09-12_12_25_00_Aerial_view_of_downtown_in_Newark,_Essex_County,_New_Jersey_from_an_aircraft_which_just_departed_from_Newark_Liberty_International_Airport_(cropped).jpg",
     "caption": "Aerial view of downtown Newark, the Essex County seat",
-    "alt": "Aerial photo of downtown Newark, New Jersey skyscrapers"
+    "alt": "Aerial photo of downtown Newark, New Jersey skyscrapers",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -61,7 +73,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:2021-09-19_10_21_28_View_west_up_the_Passaic_River_towards_downtown_Newark_from_the_Harry_Laderman_Bridge_for_Interstate_95W_(New_Jersey_Turnpike_Western_Spur)_along_the_border_of_Newark,_Essex_County_and_Kearny,_Hudson_County_in_New_Jersey.jpg",
     "caption": "Downtown Newark skyline seen across the Passaic River",
-    "alt": "Newark skyline viewed over the Passaic River"
+    "alt": "Newark skyline viewed over the Passaic River",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -73,7 +88,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:New_Brunswick,_New_Jersey_Street.jpg",
     "caption": "George Street overlooking New Street in downtown New Brunswick",
-    "alt": "Street scene on George Street in downtown New Brunswick, New Jersey"
+    "alt": "Street scene on George Street in downtown New Brunswick, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -85,7 +103,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rutgers_University_New_Brunswick_downtown_George_Street_view_street_scene.jpg",
     "caption": "Downtown New Brunswick street scene near the train station",
-    "alt": "Downtown New Brunswick, New Jersey street with shops and pedestrians"
+    "alt": "Downtown New Brunswick, New Jersey street with shops and pedestrians",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -97,7 +118,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jersey_City,_New_Jersey,_view_from_Hudson_River,_20231001_1149_1064.jpg",
     "caption": "Jersey City waterfront skyline seen from the Hudson River",
-    "alt": "Jersey City high-rise skyline along the Hudson River waterfront"
+    "alt": "Jersey City high-rise skyline along the Hudson River waterfront",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -109,7 +133,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jersey_City_Skyline_2024_1007.jpg",
     "caption": "The Jersey City skyline seen from Hudson River Park",
-    "alt": "Panoramic view of the Jersey City skyline across the Hudson River"
+    "alt": "Panoramic view of the Jersey City skyline across the Hudson River",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -121,7 +148,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:2018-05-28_15_08_08_View_north_along_New_Jersey_State_Route_79_and_east_along_Monmouth_County_Route_537_(Main_Street)_at_Sheriff_Street_in_Freehold_Borough,_Monmouth_County,_New_Jersey.jpg",
     "caption": "Main Street at Sheriff Street in downtown Freehold, the county seat",
-    "alt": "Downtown Main Street in Freehold Borough, New Jersey"
+    "alt": "Downtown Main Street in Freehold Borough, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -133,7 +163,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:2018-05-28_15_11_00_View_east_along_Monmouth_County_Route_537_(Main_Street)_at_New_Jersey_State_Route_79_(Broadway)_in_Freehold_Borough,_Monmouth_County,_New_Jersey.jpg",
     "caption": "Main Street at Broadway in downtown Freehold Borough",
-    "alt": "Storefronts along Main Street in Freehold, New Jersey"
+    "alt": "Storefronts along Main Street in Freehold, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -145,7 +178,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Washington_Street_wb,_downtown_Toms_River,_NJ,_Nov._2025.jpg",
     "caption": "Washington Street in downtown Toms River, the county seat",
-    "alt": "Downtown Washington Street in Toms River, New Jersey"
+    "alt": "Downtown Washington Street in Toms River, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -157,7 +193,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ocean_County_Courthouse.jpg",
     "caption": "Ocean County Courthouse in Toms River",
-    "alt": "Historic Ocean County Courthouse building in Toms River, New Jersey"
+    "alt": "Historic Ocean County Courthouse building in Toms River, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -169,7 +208,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Toms_River_docks.jpg",
     "caption": "Boat docks on the Toms River at Huddy Park downtown",
-    "alt": "Boat docks along the Toms River waterfront in downtown Toms River"
+    "alt": "Boat docks along the Toms River waterfront in downtown Toms River",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -181,7 +223,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "Public domain",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:File-UnionCoCourtHouse.JPG",
     "caption": "Union County Courthouse in Elizabeth, the county seat",
-    "alt": "Union County Courthouse tower in Elizabeth, New Jersey"
+    "alt": "Union County Courthouse tower in Elizabeth, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -193,7 +238,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elizabeth_New_Jersey_near_courthouse_and_library.jpg",
     "caption": "Street scene near the courthouse and library in Elizabeth",
-    "alt": "Downtown street scene in Elizabeth, New Jersey"
+    "alt": "Downtown street scene in Elizabeth, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -205,7 +253,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Morris_County_Courthouse,_Morristown,_NJ.jpg",
     "caption": "Morris County Courthouse in Morristown, the county seat",
-    "alt": "Historic Morris County Courthouse building in Morristown, New Jersey"
+    "alt": "Historic Morris County Courthouse building in Morristown, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -217,7 +268,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Washington_Museum_Morristown_NHP_NJ1.jpg",
     "caption": "Washington's Headquarters Museum at Morristown National Historical Park",
-    "alt": "Museum building at Morristown National Historical Park in New Jersey"
+    "alt": "Museum building at Morristown National Historical Park in New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -229,7 +283,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Great_Falls_of_the_Passaic_NJ1.jpg",
     "caption": "The Great Falls of the Passaic River in Paterson",
-    "alt": "Great Falls waterfall on the Passaic River in Paterson, New Jersey"
+    "alt": "Great Falls waterfall on the Passaic River in Paterson, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -241,7 +298,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Great_Falls_Rohrleitungsbr%C3%BCcke_%C3%BCber_den_Passaic_River,_Paterson_NJ_20150221-jag9889.jpg",
     "caption": "Pipe arch bridge at the Great Falls of the Passaic River, Paterson",
-    "alt": "Bridge spanning the Great Falls gorge in Paterson, New Jersey"
+    "alt": "Bridge spanning the Great Falls gorge in Paterson, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -253,7 +313,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 2.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Montgomery_County_Courthouse_Pennsylvania_-_Douglas_Muth.jpg",
     "caption": "Montgomery County Courthouse in Norristown, the county seat",
-    "alt": "Montgomery County Courthouse building in Norristown, Pennsylvania"
+    "alt": "Montgomery County Courthouse building in Norristown, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -265,7 +328,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 2.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Norristown_Transportation_Center_10929518073.jpg",
     "caption": "Norristown Transportation Center in the county seat",
-    "alt": "Norristown Transportation Center rail station in Pennsylvania"
+    "alt": "Norristown Transportation Center rail station in Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -277,7 +343,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:View_from_the_Montgomery_County_Courthouse.JPG",
     "caption": "Central Norristown Historic District seen from the county courthouse",
-    "alt": "Rooftop view over central Norristown, Pennsylvania"
+    "alt": "Rooftop view over central Norristown, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -289,7 +358,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Doylestown.PA.JPG",
     "caption": "Downtown Doylestown, the Bucks County seat",
-    "alt": "Downtown street in Doylestown, Pennsylvania"
+    "alt": "Downtown street in Doylestown, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -301,7 +373,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "Public domain",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:County_Cinema_Dtown.JPG",
     "caption": "The County Theater in downtown Doylestown's historic district",
-    "alt": "Art deco County Theater movie house in Doylestown, Pennsylvania"
+    "alt": "Art deco County Theater movie house in Doylestown, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -313,7 +388,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "Public domain",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Media_PA_Delco_Courthouse_South.JPG",
     "caption": "Delaware County Courthouse in Media, the county seat",
-    "alt": "Delaware County Courthouse building in Media, Pennsylvania"
+    "alt": "Delaware County Courthouse building in Media, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -325,7 +403,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:State_Street_EB_past_Olive_Street_Media_PA.jpeg",
     "caption": "State Street and the trolley line in downtown Media",
-    "alt": "Downtown State Street in Media, Pennsylvania with trolley tracks"
+    "alt": "Downtown State Street in Media, Pennsylvania with trolley tracks",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -337,7 +418,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "Public domain",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chester_County_PA_Hist_Soc.JPG",
     "caption": "Chester County Historical Society building in West Chester, the county seat",
-    "alt": "Chester County Historical Society building in West Chester, Pennsylvania"
+    "alt": "Chester County Historical Society building in West Chester, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -349,7 +433,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:US_Post_Office,_West_Chester,_Pennsylvania.jpg",
     "caption": "United States Post Office in downtown West Chester",
-    "alt": "Historic post office building in West Chester, Pennsylvania"
+    "alt": "Historic post office building in West Chester, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -361,7 +448,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:City_Hall,_Philadelphia_PA.jpg",
     "caption": "Philadelphia City Hall, seat of the consolidated city-county",
-    "alt": "Philadelphia City Hall tower with William Penn statue"
+    "alt": "Philadelphia City Hall tower with William Penn statue",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -373,7 +463,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Philadelphia_skyline_20240528.jpg",
     "caption": "Philadelphia skyline from the Schuylkill River",
-    "alt": "Philadelphia skyscraper skyline seen across the Schuylkill River"
+    "alt": "Philadelphia skyscraper skyline seen across the Schuylkill River",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -385,7 +478,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Brooklyn_Bridge_August_2017.jpg",
     "caption": "The Brooklyn Bridge over the East River",
-    "alt": "Brooklyn Bridge with stone towers and suspension cables"
+    "alt": "Brooklyn Bridge with stone towers and suspension cables",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -397,7 +493,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Borough_Hall_of_Brooklyn.jpg",
     "caption": "Brooklyn Borough Hall in Downtown Brooklyn",
-    "alt": "Greek Revival Brooklyn Borough Hall building with cupola"
+    "alt": "Greek Revival Brooklyn Borough Hall building with cupola",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -409,7 +508,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Unisphere._Flushing_Meadows,_Queens_NYC._-_panoramio.jpg",
     "caption": "The Unisphere in Flushing Meadows-Corona Park, Queens",
-    "alt": "Stainless steel Unisphere globe sculpture in Flushing Meadows, Queens"
+    "alt": "Stainless steel Unisphere globe sculpture in Flushing Meadows, Queens",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -421,7 +523,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Long_Island_City_Skyline_2025.jpg",
     "caption": "The Long Island City, Queens skyline seen from Midtown Manhattan",
-    "alt": "High-rise skyline of Long Island City, Queens"
+    "alt": "High-rise skyline of Long Island City, Queens",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -433,7 +538,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lower_Manhattan,_New_York_skyline_from_Liberty_Island_2021.jpg",
     "caption": "The Lower Manhattan skyline seen from Liberty Island",
-    "alt": "Lower Manhattan skyscraper skyline across New York Harbor"
+    "alt": "Lower Manhattan skyscraper skyline across New York Harbor",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -445,7 +553,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Manhattan_from_Weehawken,_NJ.jpg",
     "caption": "Midtown Manhattan seen across the Hudson River",
-    "alt": "Midtown Manhattan skyline viewed from across the Hudson River"
+    "alt": "Midtown Manhattan skyline viewed from across the Hudson River",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -457,7 +568,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bronx_County_Courthouse.jpg",
     "caption": "The Bronx County Courthouse in Concourse Village",
-    "alt": "Bronx County Courthouse building in the Bronx, New York"
+    "alt": "Bronx County Courthouse building in the Bronx, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -469,7 +583,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Grand_Concourse,_Bronx_-_20220616.jpg",
     "caption": "Looking north up the Grand Concourse in the Bronx",
-    "alt": "Apartment buildings lining the Grand Concourse in the Bronx"
+    "alt": "Apartment buildings lining the Grand Concourse in the Bronx",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -481,7 +598,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:St._George_Ferry_Terminal,_Staten_Island,_New_York_City,_20231002_1621_1749.jpg",
     "caption": "St. George Ferry Terminal on the Staten Island waterfront",
-    "alt": "St. George Ferry Terminal seen from the water, Staten Island"
+    "alt": "St. George Ferry Terminal seen from the water, Staten Island",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -493,7 +613,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Staten_Island_Borough_Hall_and_Richmond_County_Courthouse.jpg",
     "caption": "Staten Island Borough Hall and the Richmond County Courthouse in St. George",
-    "alt": "Borough Hall and courthouse buildings in St. George, Staten Island"
+    "alt": "Borough Hall and courthouse buildings in St. George, Staten Island",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -505,7 +628,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nassau_County_Courthouse,_Garden_City,_Nassau_County,_Long_Island,_New_York_July_12,_2022_A.jpg",
     "caption": "Nassau County Courthouse near Mineola, Long Island",
-    "alt": "Nassau County Courthouse building on Long Island, New York"
+    "alt": "Nassau County Courthouse building on Long Island, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -517,7 +643,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Old_Nassau_County_Court_House.JPG",
     "caption": "The Old Nassau County Court House in Garden City near Mineola",
-    "alt": "Domed Old Nassau County Court House building near Mineola, New York"
+    "alt": "Domed Old Nassau County Court House building near Mineola, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -529,7 +658,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Montauk_Point_Lighthouse_from_west.jpg",
     "caption": "Montauk Point Light at the eastern tip of Long Island",
-    "alt": "Montauk Point Lighthouse on a bluff above the Atlantic Ocean"
+    "alt": "Montauk Point Lighthouse on a bluff above the Atlantic Ocean",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -541,7 +673,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Suffolk_Theater.jpg",
     "caption": "The Suffolk Theater in Riverhead, the county seat, at night",
-    "alt": "Illuminated art deco Suffolk Theater facade in Riverhead, New York"
+    "alt": "Illuminated art deco Suffolk Theater facade in Riverhead, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -553,7 +688,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Downtown_White_Plains_from_the_NE.jpg",
     "caption": "Downtown White Plains, the county seat, from the northeast",
-    "alt": "Downtown White Plains, New York skyline"
+    "alt": "Downtown White Plains, New York skyline",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -565,7 +703,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Richard_J._Daronco_Courthouse_December_2013.jpg",
     "caption": "The Richard J. Daronco Westchester County Courthouse in White Plains",
-    "alt": "Westchester County Courthouse building in White Plains, New York"
+    "alt": "Westchester County Courthouse building in White Plains, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -577,7 +718,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Main_Street_wb,_Nyack,_NY,_June_2026.jpg",
     "caption": "Main Street in downtown Nyack",
-    "alt": "Shops along Main Street in Nyack, New York"
+    "alt": "Shops along Main Street in Nyack, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -589,7 +733,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:RocklandCountyCourthouse.jpg",
     "caption": "The Rockland County Courthouse in New City",
-    "alt": "Rockland County Courthouse building in New City, New York"
+    "alt": "Rockland County Courthouse building in New City, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -601,7 +748,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ithaca_Commons_(New_York).jpg",
     "caption": "The Ithaca Commons pedestrian mall at Cayuga Street",
-    "alt": "West entrance of the Ithaca Commons pedestrian mall in Ithaca, New York"
+    "alt": "West entrance of the Ithaca Commons pedestrian mall in Ithaca, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -613,7 +763,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pedestrian_mall_of_Ithaca_20240526.jpg",
     "caption": "The Ithaca Commons, downtown Ithaca's pedestrian mall",
-    "alt": "Pedestrians and storefronts on the Ithaca Commons in Ithaca, New York"
+    "alt": "Pedestrians and storefronts on the Ithaca Commons in Ithaca, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -625,7 +778,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:County_Clerk_Office_Delhi_NY.JPG",
     "caption": "The Courthouse Square District in Delhi, the county seat",
-    "alt": "Delaware County clerk's office building on Courthouse Square in Delhi, New York"
+    "alt": "Delaware County clerk's office building on Courthouse Square in Delhi, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "county",
@@ -637,7 +793,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Andes_Hist_Dist,_NY_1.JPG",
     "caption": "The Andes Historic District, a Catskills village in Delaware County",
-    "alt": "Historic buildings along Main Street in Andes, New York"
+    "alt": "Historic buildings along Main Street in Andes, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -649,7 +808,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Westwood,_NJ_municipal_building,_Dec._2024.jpg",
     "caption": "The Westwood municipal building on Washington Avenue",
-    "alt": "Westwood, New Jersey municipal building"
+    "alt": "Westwood, New Jersey municipal building",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -661,7 +823,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Westwood_Erie_TNJ_west_face_jeh.jpg",
     "caption": "The historic station house at Westwood's NJ Transit station",
-    "alt": "Westwood, New Jersey train station house and lawn"
+    "alt": "Westwood, New Jersey train station house and lawn",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -673,7 +838,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:River_Vale,_NJ,_Feb._2023.jpg",
     "caption": "Rivervale Road approaching Westwood Avenue in River Vale",
-    "alt": "Rivervale Road street view in River Vale, New Jersey"
+    "alt": "Rivervale Road street view in River Vale, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -685,7 +853,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:WILLIAM_HOLDRUM_HOUSE,_RIVER_VALE,_BERGEN_COUNTY,_NJ.jpg",
     "caption": "The 1736 William Holdrum House, a historic sandstone home in River Vale",
-    "alt": "Historic stone William Holdrum House in River Vale, New Jersey"
+    "alt": "Historic stone William Holdrum House in River Vale, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -697,7 +868,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:PARK_RIDGE_STATION,_PARK_RIDGE,_BERGEN_COUNTY,_NJ.jpg",
     "caption": "The 1872 Park Ridge railroad station",
-    "alt": "Historic Park Ridge, New Jersey train station building"
+    "alt": "Historic Park Ridge, New Jersey train station building",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -709,7 +883,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:CR_503_nb_in_Park_Ridge,_NJ,_Oct._2024.jpg",
     "caption": "Kinderkamack Road through Park Ridge",
-    "alt": "Kinderkamack Road street view in Park Ridge, New Jersey"
+    "alt": "Kinderkamack Road street view in Park Ridge, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -721,7 +898,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Emerson_Station.jpg",
     "caption": "The NJ Transit station at Emerson",
-    "alt": "Emerson, New Jersey train station platform and building"
+    "alt": "Emerson, New Jersey train station platform and building",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -733,7 +913,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Emerson,_NJ_municipal_building,_Nov._2025.jpg",
     "caption": "The Emerson municipal building on Linwood Avenue",
-    "alt": "Emerson, New Jersey municipal building"
+    "alt": "Emerson, New Jersey municipal building",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -745,7 +928,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:East_Brunswick_Historical_Society.jpg",
     "caption": "The East Brunswick Historical Society building",
-    "alt": "East Brunswick Historical Society building in New Jersey"
+    "alt": "East Brunswick Historical Society building in New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -757,7 +943,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Welcome_to_East_Brunswick.jpg",
     "caption": "Welcome sign at the entrance to East Brunswick",
-    "alt": "Welcome to East Brunswick township sign"
+    "alt": "Welcome to East Brunswick township sign",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -769,7 +958,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 4.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Clifton-NJ.jpg",
     "caption": "View across Holster Park in Clifton toward Montclair State University",
-    "alt": "Green lawn of Holster Park in Clifton, New Jersey"
+    "alt": "Green lawn of Holster Park in Clifton, New Jersey",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -781,7 +973,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 2.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Clifton_Station_2014.jpg",
     "caption": "The Clifton station on NJ Transit's Main Line",
-    "alt": "Clifton, New Jersey commuter rail station"
+    "alt": "Clifton, New Jersey commuter rail station",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -793,7 +988,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horsham_Township_municipal_building.jpg",
     "caption": "The Horsham Township municipal building",
-    "alt": "Horsham Township, Pennsylvania municipal building"
+    "alt": "Horsham Township, Pennsylvania municipal building",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -805,7 +1003,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pennsylvania_Business_Campus_Horsham_lake_and_office_buildings.jpg",
     "caption": "Lake and offices at the Pennsylvania Business Campus in Horsham",
-    "alt": "Lake and office buildings at a business campus in Horsham, Pennsylvania"
+    "alt": "Lake and office buildings at a business campus in Horsham, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -817,7 +1018,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 2.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Skippack_Village_During_October_Craft_Festival.jpg",
     "caption": "Skippack Village during the October craft festival",
-    "alt": "Crowds at a street festival in Skippack Village, Pennsylvania"
+    "alt": "Crowds at a street festival in Skippack Village, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -829,7 +1033,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Skippack_Village_Hotel_Fiesole.JPG",
     "caption": "The Hotel Fiesole on Skippack Pike in Skippack Village",
-    "alt": "Hotel Fiesole building in Skippack Village, Pennsylvania"
+    "alt": "Hotel Fiesole building in Skippack Village, Pennsylvania",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -841,7 +1048,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 2.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dryden,_New_York_-_4308180797.jpg",
     "caption": "Street view in the village of Dryden",
-    "alt": "Winter street view in the village of Dryden, New York"
+    "alt": "Winter street view in the village of Dryden, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -853,7 +1063,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 2.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dryden,_New_York_-_4308917204.jpg",
     "caption": "Street view in the village of Dryden",
-    "alt": "Buildings along a street in Dryden, New York"
+    "alt": "Buildings along a street in Dryden, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -865,7 +1078,10 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 3.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Downtown_Margaretville,_NY.jpg",
     "caption": "Downtown Margaretville in the Catskills",
-    "alt": "Main Street storefronts in downtown Margaretville, New York"
+    "alt": "Main Street storefronts in downtown Margaretville, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   },
   {
     "scope": "town",
@@ -877,6 +1093,9 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "license": "CC BY-SA 2.0",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Margaretville,_New_York_(408326472).jpg",
     "caption": "The village of Margaretville, New York",
-    "alt": "Street view in the village of Margaretville, New York"
+    "alt": "Street view in the village of Margaretville, New York",
+    "focalX": "",
+    "focalY": "",
+    "preferred": ""
   }
 ];

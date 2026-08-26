@@ -46,7 +46,10 @@ export default function MiniMap({ points, className }: Props) {
         [Math.max(...lngs) + 0.03, Math.max(...lats) + 0.03],
       ],
       fitBoundsOptions: { padding: 30, maxZoom: 12 },
-      attributionControl: { compact: true },
+      attributionControl: {
+        compact: true,
+        customAttribution: "Map data © OpenStreetMap contributors · OpenFreeMap",
+      },
       scrollZoom: false,
       dragRotate: false,
     });
