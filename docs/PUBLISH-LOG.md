@@ -30,3 +30,8 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
     pages, 0 broken. JSON-LD: aggregateRating correctly suppressed at <3 on-site reviews.
 
 **Smoke 2026-08-26 22:03 UTC:** PASS — all 11 routes 200
+  - B-fixes publish: map static-fallback layer + WebGL detection, /v1/fill transforms on all
+    wixstatic media (403 root cause = missing h + extension-less filename), 26/26 photos
+    mirrored to our media namespace, LQIP + eager LCP images + preload (Lighthouse mobile
+    warm: profile 96 LCP 2.7s / demo profile 97 LCP 2.4s / list 90 / home 92), unclipped
+    list cards, project-card grid, curated heroEligible hero pool.
