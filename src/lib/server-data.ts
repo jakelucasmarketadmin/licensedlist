@@ -13,37 +13,32 @@
 export async function elevatedData() {
   const { auth } = await import("@wix/essentials");
   const data: any = await import("@wix/data");
-  const run = <T>(fn: () => Promise<T>): Promise<T> => (auth.elevate(fn) as () => Promise<T>)();
+  // auth.elevate must wrap the SDK functions THEMSELVES (it performs the
+  // module context binding); wrapping an arbitrary closure fails with
+  // "context.initWixModules(...).apply is not a function". The machine's
+  // @wix/data is the new API: items.query/insert/update, flat items — the
+  // `item.data ?? item` pattern at call sites covers both shapes.
+  const q: any = auth.elevate(data.items.query);
+  const ins: any = auth.elevate(data.items.insert);
+  const upd: any = auth.elevate(data.items.update);
   return {
-    // Same call shape as the old data-v2 API the routes were written against,
-    // backed by the new items.query/insert/update SDK (items come back FLAT —
-    // the `item.data ?? item` pattern at call sites covers both).
     query: (opts: { dataCollectionId: string }) => {
-      const filters: [string, unknown][] = [];
-      let lim: number | null = null;
+      let b: any = q(opts.dataCollectionId);
       const chain = {
-        eq(k: string, v: unknown) { filters.push([k, v]); return chain; },
-        limit(n: number) { lim = n; return chain; },
-        find(): Promise<any> {
-          return run(() => {
-            let b: any = data.items.query(opts.dataCollectionId);
-            for (const [k, v] of filters) b = b.eq(k, v);
-            if (lim !== null) b = b.limit(lim);
-            return b.find();
-          });
-        },
+        eq(k: string, v: unknown) { b = b.eq(k, v); return chain; },
+        limit(n: number) { b = b.limit(n); return chain; },
+        find: (): Promise<any> => b.find(),
       };
       return chain;
     },
-    getItem: (id: string, opts: { dataCollectionId: string }): Promise<any> =>
-      run(async () => {
-        const r = await data.items.query(opts.dataCollectionId).eq("_id", id).find();
-        return r?.items?.[0] ?? null;
-      }),
+    getItem: async (id: string, opts: { dataCollectionId: string }): Promise<any> => {
+      const r = await q(opts.dataCollectionId).eq("_id", id).find();
+      return r?.items?.[0] ?? null;
+    },
     insertItem: (opts: { dataCollectionId: string; dataItem: { data: any } }): Promise<any> =>
-      run(() => data.items.insert(opts.dataCollectionId, opts.dataItem.data)),
+      ins(opts.dataCollectionId, opts.dataItem.data),
     updateItem: (id: string, opts: { dataCollectionId: string; dataItem: { data: any } }): Promise<any> =>
-      run(() => data.items.update(opts.dataCollectionId, { ...opts.dataItem.data, _id: id })),
+      upd(opts.dataCollectionId, { ...opts.dataItem.data, _id: id }),
   };
 }
 

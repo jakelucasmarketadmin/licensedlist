@@ -164,33 +164,27 @@ const BUSINESS_PATCHES: Record<string, Record<string, string>> = {
 async function tools() {
   const { auth } = await import("@wix/essentials");
   const data: any = await import("@wix/data");
-  const run = <T>(fn: () => Promise<T>): Promise<T> => (auth.elevate(fn) as () => Promise<T>)();
+  // Elevate SDK functions directly — elevate does the module-context binding
+  // (see lib/server-data.ts gotcha). New items API: flat items.
+  const q: any = auth.elevate(data.items.query);
+  const ins: any = auth.elevate(data.items.insert);
+  const upd: any = auth.elevate(data.items.update);
   return {
-    // Whole query built+run inside one elevated closure, on the new
-    // items.query API — flat items (see lib/server-data.ts).
     query: (opts: { dataCollectionId: string }) => {
-      const filters: [string, unknown][] = [];
-      let lim: number | null = null;
+      let b: any = q(opts.dataCollectionId);
       const chain = {
-        eq(k: string, v: unknown) { filters.push([k, v]); return chain; },
-        limit(n: number) { lim = n; return chain; },
-        find(): Promise<any> {
-          return run(() => {
-            let b: any = data.items.query(opts.dataCollectionId);
-            for (const [k, v] of filters) b = b.eq(k, v);
-            if (lim !== null) b = b.limit(lim);
-            return b.find();
-          });
-        },
+        eq(k: string, v: unknown) { b = b.eq(k, v); return chain; },
+        limit(n: number) { b = b.limit(n); return chain; },
+        find: (): Promise<any> => b.find(),
       };
       return chain;
     },
-    insertItem: (opts: any) => run(() => data.items.insert(opts.dataCollectionId, opts.dataItem.data)),
+    insertItem: (opts: any) => ins(opts.dataCollectionId, opts.dataItem.data),
     updateItem: (id: string, opts: any) =>
-      run(() => data.items.update(opts.dataCollectionId, { ...opts.dataItem.data, _id: id })),
-    getCollection: (id: string) => run(() => data.collections.getDataCollection(id)),
-    createCollection: (c: any) => run(() => data.collections.createDataCollection(c)),
-    updateCollection: (c: any) => run(() => data.collections.updateDataCollection(c)),
+      upd(opts.dataCollectionId, { ...opts.dataItem.data, _id: id }),
+    getCollection: auth.elevate(data.collections.getDataCollection) as any,
+    createCollection: auth.elevate(data.collections.createDataCollection) as any,
+    updateCollection: auth.elevate(data.collections.updateDataCollection) as any,
   };
 }
 

@@ -10,11 +10,9 @@ export async function quoteRequestsThisMonth(businessSlug: string): Promise<numb
     const monthStart = new Date();
     monthStart.setDate(1);
     monthStart.setHours(0, 0, 0, 0);
-    // Whole query inside one elevated closure (see lib/server-data.ts gotcha).
-    const run = auth.elevate(() =>
-      data.items.query("leads").eq("businessSlugs", businessSlug).find(),
-    );
-    const res: any = await run();
+    // Elevate the SDK function itself (see lib/server-data.ts gotcha).
+    const q: any = auth.elevate(data.items.query);
+    const res: any = await q("leads").eq("businessSlugs", businessSlug).find();
     const items: any[] = res?.items ?? [];
     return items.filter((it) => {
       const created = (it.data ?? it)._createdDate ?? it._createdDate;

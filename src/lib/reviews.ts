@@ -112,12 +112,9 @@ async function fetchAll<T>(collectionId: string): Promise<T[]> {
   try {
     const { auth } = await import("@wix/essentials");
     const data: any = await import("@wix/data");
-    // Build+run the whole query inside one elevated closure — elevating the
-    // builder factory itself breaks (see lib/server-data.ts).
-    const run = auth.elevate(() =>
-      data.items.query(collectionId).limit(1000).find(),
-    );
-    const res: any = await run();
+    // Elevate the SDK function itself (see lib/server-data.ts gotcha).
+    const q: any = auth.elevate(data.items.query);
+    const res: any = await q(collectionId).limit(1000).find();
     return (res?.items ?? []).map((it: any) => ({ _id: it._id ?? it.id, ...(it.data ?? it) }));
   } catch {
     try {
