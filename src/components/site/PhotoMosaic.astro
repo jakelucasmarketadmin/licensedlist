@@ -1,0 +1,138 @@
+---
+import CategoryTile from "@/components/site/CategoryTile.astro";
+import { imageAt, srcsetFor } from "@/lib/images";
+
+/**
+ * Airbnb-style photo mosaic: 1 large + up to 4 small, "Show all N photos"
+ * opening a <dialog> lightbox with keyboard nav (←/→/Esc). With no photos the
+ * frame falls back to the category tile. All plain inline JS — no client
+ * framework.
+ */
+interface Props {
+  photos: string[];
+  name: string;
+  categorySlug?: string;
+  transitionName?: string;
+}
+const { photos, name, categorySlug, transitionName } = Astro.props;
+const main = photos[0];
+const side = photos.slice(1, 5);
+---
+
+<div class="relative">
+  {main ? (
+    <div class:list={["grid gap-2 overflow-hidden rounded-card", side.length > 0 && "md:grid-cols-[3fr_2fr]"]}>
+      <div
+        class="relative aspect-[4/3] max-h-[440px] w-full overflow-hidden bg-inset md:aspect-auto md:h-full md:min-h-[320px]"
+        transition:name={transitionName}
+      >
+        <img
+          src={imageAt(main, 1280)}
+          srcset={srcsetFor(main)}
+          sizes="(min-width: 768px) 60vw, 100vw"
+          alt={`${name} — photo 1`}
+          class="h-full w-full cursor-zoom-in object-cover"
+          data-mosaic-open="0"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+      {side.length > 0 && (
+        <div class="hidden grid-cols-2 gap-2 md:grid">
+          {side.map((p, i) => (
+            <div class="relative aspect-[4/3] overflow-hidden bg-inset">
+              <img
+                src={imageAt(p, 500)}
+                srcset={srcsetFor(p)}
+                sizes="20vw"
+                alt={`${name} — photo ${i + 2}`}
+                class="h-full w-full cursor-zoom-in object-cover"
+                data-mosaic-open={String(i + 1)}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+      {photos.length > 1 && (
+        <button
+          type="button"
+          data-mosaic-open="0"
+          class="absolute bottom-3 right-3 rounded-chip border border-line-strong bg-surface px-4 py-2 text-sm font-semibold text-ink shadow-sm hover:bg-inset"
+        >
+          Show all {photos.length} photos
+        </button>
+      )}
+    </div>
+  ) : (
+    <div class="relative aspect-[21/9] max-h-[320px] overflow-hidden rounded-card" transition:name={transitionName}>
+      <CategoryTile slug={categorySlug ?? ""} asFallback />
+    </div>
+  )}
+
+  {photos.length > 0 && (
+    <dialog
+      data-mosaic-lightbox
+      class="m-auto w-[min(96vw,1100px)] rounded-card border border-line bg-brand-deep p-0 backdrop:bg-black/80"
+      aria-label={`${name} photos`}
+    >
+      <div class="relative">
+        <img
+          data-mosaic-img
+          src={imageAt(photos[0], 1280)}
+          alt={`${name} — photo`}
+          class="max-h-[80vh] w-full bg-black object-contain"
+        />
+        <button type="button" data-mosaic-close aria-label="Close photos" class="absolute right-3 top-3 rounded-chip bg-black/60 px-3 py-1.5 text-sm font-semibold text-white hover:bg-black/80">
+          Close ✕
+        </button>
+        {photos.length > 1 && (
+          <>
+            <button type="button" data-mosaic-prev aria-label="Previous photo" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-3.5 py-2 text-lg text-white hover:bg-black/80">←</button>
+            <button type="button" data-mosaic-next aria-label="Next photo" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/60 px-3.5 py-2 text-lg text-white hover:bg-black/80">→</button>
+          </>
+        )}
+        <p data-mosaic-count class="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-chip bg-black/60 px-3 py-1 text-xs text-white">
+          1 / {photos.length}
+        </p>
+      </div>
+    </dialog>
+  )}
+</div>
+
+{photos.length > 0 && (
+  <script is:inline data-astro-rerun define:vars={{ mosaicPhotos: photos.map((p) => imageAt(p, 1280)) }}>
+    (function () {
+      var dialog = document.querySelector("[data-mosaic-lightbox]");
+      if (!dialog || dialog.dataset.wired) return;
+      dialog.dataset.wired = "1";
+      var img = dialog.querySelector("[data-mosaic-img]");
+      var count = dialog.querySelector("[data-mosaic-count]");
+      var idx = 0;
+      function show(i) {
+        idx = (i + mosaicPhotos.length) % mosaicPhotos.length;
+        img.src = mosaicPhotos[idx];
+        if (count) count.textContent = (idx + 1) + " / " + mosaicPhotos.length;
+      }
+      document.querySelectorAll("[data-mosaic-open]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          show(Number(el.getAttribute("data-mosaic-open")) || 0);
+          dialog.showModal();
+        });
+      });
+      dialog.querySelector("[data-mosaic-close]").addEventListener("click", function () { dialog.close(); });
+      var prev = dialog.querySelector("[data-mosaic-prev]");
+      var next = dialog.querySelector("[data-mosaic-next]");
+      if (prev) prev.addEventListener("click", function () { show(idx - 1); });
+      if (next) next.addEventListener("click", function () { show(idx + 1); });
+      dialog.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowLeft") { e.preventDefault(); show(idx - 1); }
+        if (e.key === "ArrowRight") { e.preventDefault(); show(idx + 1); }
+      });
+      dialog.addEventListener("click", function (e) {
+        if (e.target === dialog) dialog.close();
+      });
+    })();
+  </script>
+)}

@@ -1,0 +1,94 @@
+---
+import type { SiteQuestion } from "@/lib/reviews";
+
+/**
+ * Published Q&A plus an ask form (moderated: submissions go in as `pending`
+ * via /api/submit-question and appear only after review + owner answer).
+ * Plain HTML details/summary — no FAQ rich-result markup by design.
+ */
+interface Props {
+  businessSlug: string;
+  businessName: string;
+  questions: SiteQuestion[];
+}
+const { businessSlug, businessName, questions } = Astro.props;
+const fmtDate = (d?: string | Date) =>
+  d ? new Date(d).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "";
+---
+
+<div>
+  <h2 class="font-display text-2xl font-semibold text-ink">Questions &amp; answers</h2>
+
+  {questions.length > 0 ? (
+    <ul class="mt-4 space-y-3">
+      {questions.map((q) => (
+        <li class="rounded-card border border-line bg-surface p-4">
+          <p class="text-sm font-semibold text-ink">Q: {q.question}</p>
+          <p class="mt-0.5 text-xs text-faint">
+            {q.askerName ?? "A visitor"}{q._createdDate ? ` · ${fmtDate(q._createdDate)}` : ""}
+          </p>
+          <div class="mt-2 rounded-[10px] bg-inset p-3">
+            <p class="text-xs font-semibold text-ink">
+              A: {businessName}
+              {q.answeredAt && <span class="font-normal text-faint"> · {fmtDate(q.answeredAt)}</span>}
+            </p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">{q.answer}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="mt-3 text-sm text-faint">No questions yet — ask the first one below.</p>
+  )}
+
+  <form data-qa-form class="mt-4 rounded-card border border-line bg-surface p-4">
+    <label for="qa-question" class="block text-sm font-medium text-ink">Ask {businessName} a question</label>
+    <textarea id="qa-question" name="question" required rows="2" maxlength="500" class="mt-2 w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none" placeholder="e.g. Do you handle emergency calls on weekends?"></textarea>
+    <div class="mt-2 grid gap-2 sm:grid-cols-2">
+      <input name="askerName" required maxlength="80" autocomplete="name" placeholder="Your name" class="rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none" aria-label="Your name" />
+      <input name="askerEmail" type="email" required maxlength="120" autocomplete="email" placeholder="Email (never shown publicly)" class="rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none" aria-label="Email, never shown publicly" />
+    </div>
+    <div class="hidden" aria-hidden="true"><input name="company" tabindex="-1" autocomplete="off" /></div>
+    <input type="hidden" name="businessSlug" value={businessSlug} />
+    <div class="mt-3 flex items-center gap-3">
+      <button type="submit" class="rounded-chip bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover">Send question</button>
+      <p class="text-[11px] leading-snug text-faint">Questions are reviewed before publishing; the owner's answer appears here.</p>
+    </div>
+    <p data-qa-status role="status" class="mt-2 hidden text-sm"></p>
+  </form>
+
+  <script is:inline data-astro-rerun>
+    (function () {
+      var form = document.querySelector("[data-qa-form]");
+      if (!form || form.dataset.wired) return;
+      form.dataset.wired = "1";
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var status = form.querySelector("[data-qa-status]");
+        var data = Object.fromEntries(new FormData(form).entries());
+        if (data.company) return;
+        status.classList.remove("hidden", "text-danger");
+        status.classList.add("text-muted");
+        status.textContent = "Sending…";
+        fetch("/api/submit-question", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (!res.ok) throw new Error(res.error || "failed");
+            form.reset();
+            status.classList.remove("text-muted");
+            status.classList.add("text-ok");
+            status.textContent = "Question sent — it will appear here once the owner answers and it clears review.";
+          })
+          .catch(function () {
+            status.classList.remove("text-muted");
+            status.classList.add("text-danger");
+            status.textContent = "Something went wrong — please try again.";
+          });
+      });
+    })();
+  </script>
+</div>

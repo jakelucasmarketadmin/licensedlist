@@ -109,6 +109,12 @@ export function localBusinessJsonLd(
     lat?: number;
     lng?: number;
   },
+  /**
+   * On-site verified review data ONLY (docs/REVIEWS.md): pass real published
+   * site reviews; the block is emitted only at 3+ — never from editorial
+   * scores or third-party platform numbers.
+   */
+  siteReviews?: { rating?: number; reviewerName?: string; body?: string; createdAt?: string }[],
 ) {
   const node: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -131,6 +137,26 @@ export function localBusinessJsonLd(
   }
   if (b.lat != null && b.lng != null) {
     node.geo = { "@type": "GeoCoordinates", latitude: b.lat, longitude: b.lng };
+  }
+  const rated = (siteReviews ?? []).filter(
+    (r) => Number(r.rating) >= 1 && Number(r.rating) <= 5,
+  );
+  if (rated.length >= 3) {
+    const avg = rated.reduce((s, r) => s + Number(r.rating), 0) / rated.length;
+    node.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: Math.round(avg * 10) / 10,
+      reviewCount: rated.length,
+      bestRating: 5,
+      worstRating: 1,
+    };
+    node.review = rated.slice(0, 5).map((r) => ({
+      "@type": "Review",
+      reviewRating: { "@type": "Rating", ratingValue: Number(r.rating), bestRating: 5 },
+      ...(r.reviewerName ? { author: { "@type": "Person", name: r.reviewerName } } : {}),
+      ...(r.body ? { reviewBody: r.body } : {}),
+      ...(r.createdAt ? { datePublished: r.createdAt.slice(0, 10) } : {}),
+    }));
   }
   return node;
 }

@@ -2,6 +2,10 @@
 import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import TrustBadge from "@/components/site/TrustBadge.astro";
 import QuoteRequestForm from "@/components/site/QuoteRequestForm.tsx";
+import PhotoMosaic from "@/components/site/PhotoMosaic.astro";
+import ReviewsSection from "@/components/site/ReviewsSection.astro";
+import QASection from "@/components/site/QASection.astro";
+import PhIcon from "@/components/site/PhIcon.astro";
 import { SITE_NAME, SITE_URL, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
 import { jotformUpdateUrl } from "@/lib/jotform";
 import MiniMap from "@/components/site/MiniMap.tsx";
@@ -10,6 +14,7 @@ import { getCategory } from "@/lib/taxonomy";
 import {
   type DirectoryBusiness,
   blendedRating,
+  totalReviewCount,
   ratingSourcesLabel,
   isSponsoredPlacement,
   isDemo,
@@ -17,13 +22,30 @@ import {
   listForCountyCategory,
   parseHours,
   additionalLicenses,
+  photosOf,
+  projectsOf,
+  teamOf,
+  faqOf,
 } from "@/lib/businesses";
+import {
+  type SiteReview,
+  type ServicePrice,
+  type SiteQuestion,
+  siteAverage,
+  highlightsOf,
+  popularServices,
+} from "@/lib/reviews";
+import { quoteRequestsThisMonth } from "@/lib/leads";
+import { imageAt, srcsetFor } from "@/lib/images";
 
 interface Props {
   business: DirectoryBusiness;
   trail: { name: string; path: string }[];
+  reviews?: SiteReview[];
+  servicePrices?: ServicePrice[];
+  questions?: SiteQuestion[];
 }
-const { business: b, trail } = Astro.props;
+const { business: b, trail, reviews = [], servicePrices = [], questions = [] } = Astro.props;
 
 const category = b.primaryCategorySlug ? getCategory(b.primaryCategorySlug) : undefined;
 const town =
@@ -33,32 +55,38 @@ const town =
 const county = b.stateSlug && b.countySlug ? getCounty(b.stateSlug, b.countySlug) : undefined;
 const state = b.stateSlug ? getState(b.stateSlug) : undefined;
 
-const rating = blendedRating(b);
+const externalRating = blendedRating(b);
+const externalCount = totalReviewCount(b);
 const sourcesLabel = ratingSourcesLabel(b);
+const onSiteAvg = siteAverage(reviews);
 const sponsored = isSponsoredPlacement(b);
 const isClient = b.isClient === true || b.isClient === "true";
 const claimFormUrl = jotformUpdateUrl(b.name, `${SITE_URL}/business/${b.slug}`);
+const quoteCount = await quoteRequestsThisMonth(b.slug ?? "");
+
+const photos = photosOf(b);
+const projects = projectsOf(b);
+const team = teamOf(b);
+const faq = faqOf(b);
+const highlights = highlightsOf(b);
+const popular = popularServices(b, reviews, 5).filter((c) => c.mentions > 0);
 
 const DAY_LABELS: [string, string][] = [
   ["mon", "Monday"], ["tue", "Tuesday"], ["wed", "Wednesday"], ["thu", "Thursday"],
   ["fri", "Friday"], ["sat", "Saturday"], ["sun", "Sunday"],
 ];
-// hoursJson may arrive as a JSON string or (JSON-typed CMS field) an object.
 const parsedHours = parseHours(b);
 const hours: [string, string][] = parsedHours
   ? DAY_LABELS.filter(([k]) => parsedHours[k]).map(([k, label]) => [label, String(parsedHours[k])])
   : [];
 const extraLicenses = additionalLicenses(b);
 const serviceTowns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
-const serviceTownNames = serviceTowns
-  .map((slug) => (b.stateSlug && b.countySlug ? getTown(b.stateSlug, b.countySlug, slug) : undefined) ?? getTownAnyCounty(slug, b.stateSlug))
-  .filter((t): t is NonNullable<typeof t> => Boolean(t))
-  .map((t) => t.name);
-const visibleServiceTowns = serviceTownNames.slice(0, 8);
-const hiddenServiceTowns = serviceTownNames.slice(8);
 const serviceTownObjs = serviceTowns
   .map((slug) => (b.stateSlug && b.countySlug ? getTown(b.stateSlug, b.countySlug, slug) : undefined) ?? getTownAnyCounty(slug, b.stateSlug))
   .filter((t): t is NonNullable<typeof t> => Boolean(t));
+const serviceTownNames = serviceTownObjs.map((t) => t.name);
+const visibleServiceTowns = serviceTownNames.slice(0, 6);
+const hiddenServiceTowns = serviceTownNames.slice(6);
 const profileMapPoints = [
   ...(Number.isFinite(Number(b.lat)) && Number.isFinite(Number(b.lng))
     ? [{ label: b.name ?? "", lat: Number(b.lat), lng: Number(b.lng), primary: true }]
@@ -66,6 +94,7 @@ const profileMapPoints = [
   ...serviceTownObjs.map((t) => ({ label: t.name, lat: Number(t.lat), lng: Number(t.lng) })),
 ];
 const services = (b.services ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+const priceBy = new Map(servicePrices.map((p) => [p.service?.toLowerCase(), p]));
 const verifiedDate = b.licenseVerifiedAt
   ? new Date(b.licenseVerifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })
   : null;
@@ -73,7 +102,6 @@ const lastVerified = b.lastVerifiedAt
   ? new Date(b.lastVerifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })
   : null;
 
-// Cross-links only when the target list page meets the publishing rule.
 const townListOk =
   town && category
     ? (await listForTownCategory(town.stateSlug, town.slug, category.slug)).organic.length >= 3
@@ -82,9 +110,22 @@ const countyListOk =
   county && state && category
     ? (await listForCountyCategory(state.slug, county.slug, category.slug)).organic.length >= 3
     : false;
+
+// Tab bar renders only the sections this profile actually has.
+const tabs = [
+  { id: "overview", label: "Overview", show: true },
+  { id: "services", label: "Services", show: services.length > 0 },
+  { id: "photos-projects", label: "Photos & projects", show: projects.length > 0 || photos.length > 1 },
+  { id: "verification", label: "Verification", show: true },
+  { id: "reviews", label: "Reviews", show: true },
+  { id: "qa", label: "Q&A", show: true },
+  { id: "hours-location", label: "Hours & location", show: true },
+  { id: "team", label: "Team", show: team.length > 0 },
+  { id: "faq", label: "FAQ", show: faq.length > 0 },
+].filter((t) => t.show);
 ---
 
-<article class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:py-14">
+<article class="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-6 md:pb-10 lg:pt-10" data-profile data-biz-slug={b.slug}>
   <BreadcrumbGeo trail={trail} />
 
   {isDemo(b) && (
@@ -94,307 +135,531 @@ const countyListOk =
     </p>
   )}
 
-  <header class="mt-4">
+  <div class="mt-4">
+    <PhotoMosaic photos={photos} name={b.name ?? "Business"} categorySlug={b.primaryCategorySlug} transitionName={`biz-photo-${b.slug}`} />
+  </div>
+
+  <header class="mt-6">
     <div class="flex flex-wrap items-center gap-3">
       {b.logoUrl && (
-        <img src={b.logoUrl} alt="" width="56" height="56" loading="lazy" class="h-14 w-14 rounded-[10px] border border-line object-contain bg-surface" />
+        <img src={b.logoUrl} alt="" width="56" height="56" loading="lazy" class="h-14 w-14 rounded-[10px] border border-line bg-surface object-contain" />
       )}
-      <h1 class="font-display text-4xl font-bold text-ink">{b.name}</h1>
-      {isClient ? (
-        <span class="rounded-chip bg-inset px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-faint">
-          Sponsored · client of the agency
-        </span>
-      ) : sponsored ? (
-        <span class="rounded-chip bg-inset px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-faint">
-          Sponsored
-        </span>
-      ) : null}
-    </div>
-    <p class="mt-2 text-muted">
-      {category?.name}
-      {town && ` · ${town.name}, ${state?.abbr}`}
-      {serviceTownNames.length > 1 && (
-        <>
-          {" · Serves "}{visibleServiceTowns.join(", ")}
-          {hiddenServiceTowns.length > 0 && (
-            <>
-              <span id="serves-rest" hidden>, {hiddenServiceTowns.join(", ")}</span>
-              <button
-                type="button"
-                id="serves-toggle"
-                aria-expanded="false"
-                aria-controls="serves-rest"
-                class="ml-1 font-medium text-brand underline underline-offset-2"
-              >+{hiddenServiceTowns.length} more</button>
-            </>
-          )}
-        </>
-      )}
-    </p>
-    {hiddenServiceTowns.length > 0 && (
-      <script is:inline data-astro-rerun>
-        (function () {
-          var btn = document.getElementById("serves-toggle");
-          var rest = document.getElementById("serves-rest");
-          if (!btn || !rest) return;
-          btn.addEventListener("click", function () {
-            var expanded = btn.getAttribute("aria-expanded") === "true";
-            rest.hidden = expanded;
-            btn.textContent = expanded ? "+" + rest.textContent.split(",").filter(Boolean).length + " more" : "show fewer";
-            btn.setAttribute("aria-expanded", String(!expanded));
-          });
-        })();
-      </script>
-    )}
-    <div class="mt-3 flex flex-wrap items-center gap-3">
+      <h1 class="font-display text-3xl font-bold text-ink sm:text-4xl">{b.name}</h1>
       <TrustBadge
         licenseStatus={b.licenseStatus}
         licenseSource={b.licenseSource}
         licenseVerifiedAt={b.licenseVerifiedAt}
       />
-      {rating !== null && (
-        <span class="text-sm text-ink">
-          <span class="font-semibold">{rating}★</span>
-          <span class="text-muted"> across {sourcesLabel}</span>
+      {isClient ? (
+        <span class="rounded-chip bg-inset px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-faint" title="This business is a client of the agency that operates this directory. Disclosed placements receive no ranking benefit.">
+          Sponsored · client of the agency
         </span>
-      )}
+      ) : sponsored ? (
+        <span class="rounded-chip bg-inset px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-faint">Sponsored</span>
+      ) : null}
     </div>
-    <div class="mt-5 flex flex-wrap gap-3">
-      {b.phone && (
-        <a
-          href={`tel:${b.phone.replace(/[^+\d]/g, "")}`}
-          class="rounded-chip bg-accent px-6 py-3 text-base font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
-        >
-          Call {b.phone}
+    <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
+      {onSiteAvg !== null && (
+        <a href="#reviews" class="font-semibold text-ink hover:text-brand">
+          {onSiteAvg}★ <span class="font-normal text-muted">({reviews.length} on-site {reviews.length === 1 ? "review" : "reviews"})</span>
         </a>
       )}
-      {b.website && (
-        <a
-          href={b.website}
-          rel={sponsored ? "sponsored nofollow" : "nofollow"}
-          target="_blank"
-          class="rounded-chip border border-line-strong px-6 py-3 text-base font-semibold text-ink hover:bg-inset"
-        >
-          Visit website
-        </a>
+      {externalRating !== null && (
+        <span>{externalRating}★ · {externalCount} reviews on {sourcesLabel}</span>
       )}
+      <span>
+        {category?.name}
+        {town && ` · ${town.name}, ${state?.abbr}`}
+        {b.yearsInBusiness ? ` · ${b.yearsInBusiness} yrs in business` : ""}
+      </span>
     </div>
+    {serviceTownNames.length > 1 && (
+      <p class="mt-1 text-sm text-muted">
+        Serves {visibleServiceTowns.join(", ")}
+        {hiddenServiceTowns.length > 0 && (
+          <>
+            <span id="serves-rest" hidden>, {hiddenServiceTowns.join(", ")}</span>
+            <button type="button" id="serves-toggle" aria-expanded="false" aria-controls="serves-rest" class="ml-1 font-medium text-brand underline underline-offset-2">+{hiddenServiceTowns.length} more</button>
+          </>
+        )}
+      </p>
+    )}
   </header>
 
-  <section class="mt-10 grid gap-6 md:grid-cols-[1fr_320px]">
-    <div class="space-y-8">
-      <div class="max-w-prose">
-        <h2 class="font-display text-2xl font-semibold text-ink">About</h2>
-        <p class="mt-3 leading-relaxed text-muted">{b.description}</p>
+  <nav
+    class="sticky top-16 z-30 -mx-4 mt-6 overflow-x-auto border-b border-line bg-paper px-4 sm:-mx-6 sm:px-6"
+    style="scrollbar-width:none"
+    aria-label="Profile sections"
+    data-profile-tabs
+  >
+    <ul class="flex gap-1 whitespace-nowrap">
+      {tabs.map((t, i) => (
+        <li>
+          <a
+            href={`#${t.id}`}
+            data-tab={t.id}
+            class:list={[
+              "inline-block border-b-2 px-3 py-3 text-sm font-medium transition-colors",
+              i === 0 ? "border-brand text-brand" : "border-transparent text-muted hover:text-ink",
+            ]}
+          >
+            {t.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div class="min-w-0 space-y-12">
+      <section id="overview" class="scroll-mt-32" aria-labelledby="overview-h">
+        <h2 id="overview-h" class="font-display text-2xl font-semibold text-ink">Overview</h2>
+        {highlights.length > 0 && (
+          <ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {highlights.map((h) => (
+              <li class="flex items-center gap-2.5 rounded-card border border-line bg-surface px-3 py-2.5">
+                <PhIcon icon={h.icon} size={22} class="shrink-0 text-brand" />
+                <span class="text-sm font-medium text-ink">{h.label}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p class="mt-4 max-w-prose leading-relaxed text-muted">{b.description}</p>
         {b.whyWePicked && (
-          <p class="mt-3 rounded-card border border-line bg-surface p-4 text-sm leading-relaxed text-muted">
+          <p class="mt-3 max-w-prose rounded-card border border-line bg-surface p-4 text-sm leading-relaxed text-muted">
             <span class="font-semibold text-ink">Why we picked them:</span> {b.whyWePicked}
           </p>
         )}
-      </div>
+        {popular.length > 0 && (
+          <p class="mt-3 flex flex-wrap items-center gap-2 text-sm">
+            <span class="text-xs font-semibold uppercase tracking-wider text-faint">Popular</span>
+            {popular.map((c) => (
+              <span class="rounded-chip bg-brand-wash px-3 py-1 text-xs font-medium text-brand">{c.label}</span>
+            ))}
+            <span class="text-[11px] text-faint">— most mentioned in reviews</span>
+          </p>
+        )}
+      </section>
 
       {services.length > 0 && (
-        <div>
-          <h2 class="font-display text-xl font-semibold text-ink">Services</h2>
-          <ul class="mt-3 flex flex-wrap gap-2">
-            {services.map((s) => (
-              <li class="rounded-chip bg-inset px-3 py-1 text-sm text-muted">{s}</li>
-            ))}
-          </ul>
-        </div>
+        <section id="services" class="scroll-mt-32" aria-labelledby="services-h">
+          <h2 id="services-h" class="font-display text-2xl font-semibold text-ink">Services</h2>
+          {servicePrices.length > 0 ? (
+            <div class="mt-4 overflow-hidden rounded-card border border-line">
+              <table class="w-full text-sm">
+                <caption class="sr-only">Services and typical prices</caption>
+                <tbody>
+                  {services.map((s) => {
+                    const price = priceBy.get(s.toLowerCase());
+                    return (
+                      <tr class="border-b border-line bg-surface last:border-0">
+                        <td class="px-4 py-2.5 font-medium text-ink">{s}</td>
+                        <td class="px-4 py-2.5 text-right text-muted">
+                          {price?.priceLabel ?? ""}
+                          {price?.unit && <span class="text-faint"> / {price.unit}</span>}
+                          {price?.note && <span class="block text-[11px] text-faint">{price.note}</span>}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <p class="border-t border-line bg-inset px-4 py-2 text-[11px] text-faint">
+                Prices are owner-provided typical ranges, not quotes — final cost depends on the job.
+              </p>
+            </div>
+          ) : (
+            <ul class="mt-4 flex flex-wrap gap-2">
+              {services.map((s) => (
+                <li class="rounded-chip bg-inset px-3 py-1 text-sm text-muted">{s}</li>
+              ))}
+            </ul>
+          )}
+        </section>
       )}
 
-      <div>
-        <h2 class="font-display text-xl font-semibold text-ink">Reviews</h2>
-        {rating !== null ? (
-          <p class="mt-3 text-sm leading-relaxed text-muted">
-            {[
-              b.ratingGoogle && b.ratingGoogleCount
-                ? `${b.ratingGoogle}★ across ${b.ratingGoogleCount} Google reviews`
-                : null,
-              b.ratingYelp && b.ratingYelpCount
-                ? `${b.ratingYelp}★ across ${b.ratingYelpCount} Yelp reviews`
-                : null,
-              b.ratingFacebook && b.ratingFacebookCount
-                ? `${b.ratingFacebook}★ across ${b.ratingFacebookCount} Facebook reviews`
-                : null,
-            ].filter(Boolean).join(", ").replace(/, ([^,]*)$/, " and $1")}
-            — we read reviews across platforms for patterns and never edit, filter, or reorder
-            them.
+      {(projects.length > 0 || photos.length > 1) && (
+        <section id="photos-projects" class="scroll-mt-32" aria-labelledby="projects-h">
+          <h2 id="projects-h" class="font-display text-2xl font-semibold text-ink">Photos &amp; projects</h2>
+          {projects.length > 0 && (
+            <div class="mt-4 space-y-5">
+              {projects.map((p) => (
+                <article class="overflow-hidden rounded-card border border-line bg-surface">
+                  {p.beforePhoto && p.afterPhoto ? (
+                    <div class="grid grid-cols-2 gap-0.5">
+                      <figure class="relative">
+                        <img src={imageAt(p.beforePhoto, 500)} srcset={srcsetFor(p.beforePhoto)} sizes="(min-width:1024px) 33vw, 50vw" alt={`${p.title} — before`} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />
+                        <figcaption class="absolute left-2 top-2 rounded-chip bg-brand-deep/80 px-2 py-0.5 text-[11px] font-semibold text-white">Before</figcaption>
+                      </figure>
+                      <figure class="relative">
+                        <img src={imageAt(p.afterPhoto, 500)} srcset={srcsetFor(p.afterPhoto)} sizes="(min-width:1024px) 33vw, 50vw" alt={`${p.title} — after`} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />
+                        <figcaption class="absolute left-2 top-2 rounded-chip bg-[#177245] px-2 py-0.5 text-[11px] font-semibold text-white">After</figcaption>
+                      </figure>
+                    </div>
+                  ) : (p.photos ?? []).length > 0 ? (
+                    <div class="grid grid-cols-3 gap-0.5">
+                      {(p.photos ?? []).slice(0, 3).map((ph, i) => (
+                        <img src={imageAt(ph, 500)} alt={`${p.title} — photo ${i + 1}`} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />
+                      ))}
+                    </div>
+                  ) : null}
+                  <div class="p-4">
+                    <h3 class="font-display text-lg font-semibold text-ink">{p.title}</h3>
+                    <p class="mt-0.5 text-xs text-faint">
+                      {[p.town, p.date].filter(Boolean).join(" · ")}
+                    </p>
+                    {p.description && <p class="mt-2 text-sm leading-relaxed text-muted">{p.description}</p>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+          {projects.length === 0 && photos.length > 1 && (
+            <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {photos.slice(0, 9).map((p, i) => (
+                <img src={imageAt(p, 500)} srcset={srcsetFor(p)} sizes="(min-width:640px) 25vw, 50vw" alt={`${b.name} — photo ${i + 1}`} loading="lazy" decoding="async" class="aspect-[4/3] w-full cursor-zoom-in rounded-[10px] object-cover" data-mosaic-open={String(i)} />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      <section id="verification" class="scroll-mt-32" aria-labelledby="verification-h">
+        <h2 id="verification-h" class="font-display text-2xl font-semibold text-ink">Verification record</h2>
+        <div class="mt-4 rounded-card border border-line-strong bg-surface p-5">
+          <div class="ledger rounded-[10px] bg-inset px-3 py-1.5">
+            <div class="ledger-row">
+              <span class="ledger-key">Status</span>
+              <span class="ledger-val">{b.licenseStatus ?? "unknown"}</span>
+            </div>
+            {b.licenseNumber && (
+              <div class="ledger-row">
+                <span class="ledger-key">License</span>
+                <span class="ledger-val">{b.licenseNumber}</span>
+              </div>
+            )}
+            {b.licenseSource && (
+              <div class="ledger-row">
+                <span class="ledger-key">Source</span>
+                <span class="ledger-val">{b.licenseSource}</span>
+              </div>
+            )}
+            {verifiedDate && (
+              <div class="ledger-row">
+                <span class="ledger-key">Checked</span>
+                <span class="ledger-val">{verifiedDate}</span>
+              </div>
+            )}
+            {extraLicenses.map((l) => (
+              <div class="ledger-row">
+                <span class="ledger-key">{l.label ?? "License"}</span>
+                <span class="ledger-val">
+                  {l.number}
+                  {l.source ? ` · ${l.source}` : ""}
+                  {l.verifiedAt ? ` · checked ${new Date(l.verifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}` : ""}
+                </span>
+              </div>
+            ))}
+            {lastVerified && (
+              <div class="ledger-row">
+                <span class="ledger-key">Reviewed</span>
+                <span class="ledger-val">{lastVerified}</span>
+              </div>
+            )}
+          </div>
+          {b.licenseHolder && <p class="mt-3 text-xs leading-relaxed text-muted">{b.licenseHolder}</p>}
+          {b.state === "PA" && (
+            <p class="mt-3 text-xs leading-relaxed text-muted">
+              Pennsylvania note: HICPA registration with the PA Attorney General confirms identity
+              and insurance on file — it is a registration, not a competency license.
+            </p>
+          )}
+          {isClient && (
+            <p class="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-muted">
+              Disclosure: this business is a client of the agency that operates {SITE_NAME}.
+              Client listings are always labeled and receive no ranking benefit.
+            </p>
+          )}
+          <p class="mt-3 text-xs leading-relaxed text-faint">
+            Licenses can lapse after our check — every badge names its registry so you can repeat
+            the lookup. <a href="/how-we-verify" class="underline">How we verify</a>
           </p>
-        ) : (
-          <p class="mt-3 text-sm text-faint">Not enough review data yet.</p>
-        )}
-        <p class="mt-2 text-sm text-faint">
-          Verified-hire reviews collected through {SITE_NAME} are coming soon — invitations go to
-          every customer, never only the happy ones.
+        </div>
+      </section>
+
+      <section id="reviews" class="scroll-mt-32">
+        <ReviewsSection business={b} reviews={reviews} />
+      </section>
+
+      <section id="qa" class="scroll-mt-32">
+        <QASection businessSlug={b.slug ?? ""} businessName={b.name ?? "the owner"} questions={questions} />
+      </section>
+
+      <section id="hours-location" class="scroll-mt-32" aria-labelledby="hours-h">
+        <h2 id="hours-h" class="font-display text-2xl font-semibold text-ink">Hours &amp; location</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-card border border-line bg-surface p-5">
+            <div class="flex items-center justify-between">
+              <h3 class="font-display text-lg font-semibold text-ink">Hours</h3>
+              {hours.length > 0 && (
+                <span data-open-now data-hours={JSON.stringify(parsedHours)} class="hidden rounded-chip px-2 py-0.5 text-[11px] font-semibold"></span>
+              )}
+            </div>
+            {hours.length > 0 ? (
+              <dl class="mt-3 space-y-1 text-sm">
+                {hours.map(([day, value]) => (
+                  <div class="flex justify-between gap-3">
+                    <dt class="text-faint">{day}</dt>
+                    <dd class="text-muted">{String(value).toLowerCase() === "closed" ? "Closed" : value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : (
+              <p class="mt-3 text-sm text-faint">Hours not provided</p>
+            )}
+          </div>
+          <div class="rounded-card border border-line bg-surface p-5">
+            <h3 class="font-display text-lg font-semibold text-ink">Location &amp; service area</h3>
+            {b.address1 && (
+              <p class="mt-2 text-sm text-muted">{b.address1}{b.address2 ? `, ${b.address2}` : ""}, {b.city}, {b.state} {b.zip}</p>
+            )}
+            {profileMapPoints.length > 0 && (
+              <div class="mt-3">
+                <MiniMap client:visible points={profileMapPoints} className="h-48" />
+              </div>
+            )}
+            {serviceTownNames.length > 0 && (
+              <p class="mt-2 text-xs text-faint">Serves {serviceTownNames.length} {serviceTownNames.length === 1 ? "town" : "towns"} · accent dot = home base</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {team.length > 0 && (
+        <section id="team" class="scroll-mt-32" aria-labelledby="team-h">
+          <h2 id="team-h" class="font-display text-2xl font-semibold text-ink">Team</h2>
+          <ul class="mt-4 grid gap-4 sm:grid-cols-2">
+            {team.map((m) => (
+              <li class="flex gap-4 rounded-card border border-line bg-surface p-4">
+                {m.photo && (
+                  <img src={imageAt(m.photo, 250)} alt={`${m.name}${m.role ? `, ${m.role}` : ""}`} loading="lazy" decoding="async" class="h-16 w-16 shrink-0 rounded-full border border-line object-cover" />
+                )}
+                <div>
+                  <p class="font-semibold text-ink">{m.name}</p>
+                  {m.role && <p class="text-xs text-faint">{m.role}</p>}
+                  {m.bio && <p class="mt-1.5 text-sm leading-relaxed text-muted">{m.bio}</p>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {faq.length > 0 && (
+        <section id="faq" class="scroll-mt-32" aria-labelledby="faq-h">
+          <h2 id="faq-h" class="font-display text-2xl font-semibold text-ink">FAQ</h2>
+          <div class="mt-4 space-y-2">
+            {faq.map((f) => (
+              <details class="group rounded-card border border-line bg-surface px-4 py-3">
+                <summary class="cursor-pointer list-none text-sm font-semibold text-ink marker:content-none">
+                  <span class="mr-2 inline-block text-faint transition-transform group-open:rotate-90">›</span>{f.q}
+                </summary>
+                <p class="mt-2 pl-5 text-sm leading-relaxed text-muted">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {town && category && (townListOk || countyListOk) && (
+        <p class="text-sm text-muted">
+          More
+          {townListOk ? (
+            <a href={`/${town.pathKey}/${category.slug}`} class="font-medium text-brand underline underline-offset-2">
+              {category.name.toLowerCase()} in {town.name}
+            </a>
+          ) : (
+            <a href={`/${town.pathKey}`} class="font-medium text-brand underline underline-offset-2">
+              local businesses in {town.name}
+            </a>
+          )}
+          {county && countyListOk && (
+            <>
+              {" "}or across
+              <a href={`/${county.pathKey}/${category.slug}`} class="font-medium text-brand underline underline-offset-2">{county.name}</a>
+            </>
+          )}.
         </p>
-      </div>
+      )}
     </div>
 
     <aside class="space-y-4">
-      <div class="rounded-card border border-line-strong bg-surface p-5">
-        <QuoteRequestForm
-          client:load
-          businessSlug={b.slug}
-          businessName={b.name}
-          categorySlug={b.primaryCategorySlug}
-          townSlug={b.townSlug}
-          responseTimeHours={b.responseTimeHours}
-        />
-      </div>
-
-      <div class="rounded-card border border-line-strong bg-surface p-5">
-        <h2 class="font-display text-lg font-semibold text-ink">Verification record</h2>
-        <div class="ledger mt-3 rounded-[10px] bg-inset px-3 py-1.5">
-          <div class="ledger-row">
-            <span class="ledger-key">Status</span>
-            <span class="ledger-val">{b.licenseStatus ?? "unknown"}</span>
+      <div class="lg:sticky lg:top-32">
+        <div id="quote" class="scroll-mt-32 rounded-card border border-line-strong bg-surface p-5 shadow-sm">
+          <div class="flex flex-wrap gap-2">
+            {b.phone && (
+              <a href={`tel:${b.phone.replace(/[^+\d]/g, "")}`} class="flex-1 rounded-chip bg-accent px-4 py-2.5 text-center text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover">
+                Call {b.phone}
+              </a>
+            )}
+            {b.website && (
+              <a href={b.website} rel={sponsored ? "sponsored nofollow" : "nofollow"} target="_blank" class="rounded-chip border border-line-strong px-4 py-2.5 text-sm font-semibold text-ink hover:bg-inset">
+                Website
+              </a>
+            )}
           </div>
-          {b.licenseNumber && (
-            <div class="ledger-row">
-              <span class="ledger-key">License</span>
-              <span class="ledger-val">{b.licenseNumber}</span>
-            </div>
+          <div class="mt-2 flex gap-2">
+            <button type="button" data-save-biz aria-pressed="false" class="flex-1 rounded-chip border border-line px-3 py-2 text-sm font-medium text-muted transition-colors hover:border-brand hover:text-ink aria-pressed:border-brand aria-pressed:bg-brand-wash aria-pressed:text-brand">
+              ♡ Save
+            </button>
+            <button type="button" data-share-biz class="flex-1 rounded-chip border border-line px-3 py-2 text-sm font-medium text-muted transition-colors hover:border-brand hover:text-ink">
+              Share
+            </button>
+          </div>
+          {(b.responseTimeHours != null || (quoteCount ?? 0) > 0) && (
+            <p class="mt-3 text-xs leading-relaxed text-muted">
+              {b.responseTimeHours != null && `Typically responds in ~${b.responseTimeHours} ${b.responseTimeHours === 1 ? "hr" : "hrs"}.`}
+              {(quoteCount ?? 0) > 0 && ` ${quoteCount} ${quoteCount === 1 ? "person" : "people"} requested a quote this month.`}
+            </p>
           )}
-          {b.licenseSource && (
-            <div class="ledger-row">
-              <span class="ledger-key">Source</span>
-              <span class="ledger-val">{b.licenseSource}</span>
-            </div>
-          )}
-          {verifiedDate && (
-            <div class="ledger-row">
-              <span class="ledger-key">Checked</span>
-              <span class="ledger-val">{verifiedDate}</span>
-            </div>
-          )}
-          {extraLicenses.map((l) => (
-            <div class="ledger-row">
-              <span class="ledger-key">{l.label ?? "License"}</span>
-              <span class="ledger-val">
-                {l.number}
-                {l.source ? ` · ${l.source}` : ""}
-                {l.verifiedAt
-                  ? ` · checked ${new Date(l.verifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}`
-                  : ""}
-              </span>
-            </div>
-          ))}
-          {lastVerified && (
-            <div class="ledger-row">
-              <span class="ledger-key">Reviewed</span>
-              <span class="ledger-val">{lastVerified}</span>
-            </div>
-          )}
+          <div class="mt-4 border-t border-line pt-4">
+            <QuoteRequestForm
+              client:load
+              businessSlug={b.slug}
+              businessName={b.name}
+              categorySlug={b.primaryCategorySlug}
+              townSlug={b.townSlug}
+              responseTimeHours={b.responseTimeHours}
+            />
+          </div>
         </div>
-        {b.licenseHolder && (
-          <p class="mt-3 text-xs leading-relaxed text-muted">{b.licenseHolder}</p>
-        )}
-        {isClient && (
-          <p class="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-muted">
-            Disclosure: this business is a client of the agency that operates {SITE_NAME}.
-            Client listings are always labeled and receive no ranking benefit.
+
+        <div class="mt-4 rounded-card bg-brand-deep p-5 text-white">
+          <h2 class="font-display text-lg font-semibold">Is this your business?</h2>
+          <p class="mt-2 text-sm leading-relaxed text-white/80">
+            Claim your listing free to correct details and respond to reviews.
           </p>
-        )}
-        <p class="mt-3 text-xs leading-relaxed text-faint">
-          Licenses can lapse after our check — every badge names its registry so you can repeat
-          the lookup. <a href="/how-we-verify" class="underline">How we verify</a>
-        </p>
-      </div>
-
-      <div class="rounded-card border border-line bg-surface p-5">
-        <h2 class="font-display text-lg font-semibold text-ink">Hours</h2>
-        {hours.length > 0 ? (
-          <dl class="mt-3 space-y-1 text-sm">
-            {hours.map(([day, value]) => (
-              <div class="flex justify-between gap-3">
-                <dt class="text-faint">{day}</dt>
-                <dd class="text-muted">{String(value).toLowerCase() === "closed" ? "Closed" : value}</dd>
-              </div>
-            ))}
-          </dl>
-        ) : (
-          <p class="mt-3 text-sm text-faint">Hours not provided</p>
-        )}
-      </div>
-
-      {profileMapPoints.length > 0 && (
-        <div class="rounded-card border border-line bg-surface p-5">
-          <h2 class="font-display text-lg font-semibold text-ink">Service area</h2>
-          <div class="mt-3">
-            <MiniMap client:visible points={profileMapPoints} className="h-48" />
-          </div>
-          {serviceTownNames.length > 0 && (
-            <p class="mt-2 text-xs text-faint">Serves {serviceTownNames.length} {serviceTownNames.length === 1 ? "town" : "towns"} · accent dot = home base</p>
-          )}
+          <a href={claimFormUrl} target="_blank" rel="nofollow noopener" class="mt-3 inline-block rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover">
+            Claim this listing
+          </a>
+          <p class="mt-2 text-xs text-white/60">
+            Or email <a href={`mailto:${BUSINESS_CONTACT_EMAIL}`} class="underline">{BUSINESS_CONTACT_EMAIL}</a>
+          </p>
         </div>
-      )}
-
-      <div class="rounded-card border border-line bg-surface p-5">
-        <h2 class="font-display text-lg font-semibold text-ink">Details</h2>
-        <dl class="mt-3 space-y-2 text-sm">
-          {b.address1 && (
-            <div class="flex gap-2">
-              <dt class="shrink-0 text-faint">Address</dt>
-              <dd class="text-muted">{b.address1}{b.address2 ? `, ${b.address2}` : ""}, {b.city}, {b.state} {b.zip}</dd>
-            </div>
-          )}
-          {b.responseTimeHours != null && (
-            <div class="flex gap-2">
-              <dt class="shrink-0 text-faint">Responds</dt>
-              <dd class="text-muted">in about {b.responseTimeHours} {b.responseTimeHours === 1 ? "hour" : "hours"}</dd>
-            </div>
-          )}
-          {b.yearsInBusiness && (
-            <div class="flex gap-2">
-              <dt class="shrink-0 text-faint">In business</dt>
-              <dd class="text-muted">{b.yearsInBusiness} years{b.foundedYear ? ` (since ${b.foundedYear})` : ""}</dd>
-            </div>
-          )}
-        </dl>
-      </div>
-
-      <div class="rounded-card bg-brand-deep p-5 text-white">
-        <h2 class="font-display text-lg font-semibold">Is this your business?</h2>
-        <p class="mt-2 text-sm leading-relaxed text-white/80">
-          Claim your listing free to correct details and respond to reviews.
-        </p>
-        <a
-          href={claimFormUrl}
-          target="_blank"
-          rel="nofollow noopener"
-          class="mt-3 inline-block rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover"
-        >
-          Claim this listing
-        </a>
-        <p class="mt-2 text-xs text-white/60">
-          Or email <a href={`mailto:${BUSINESS_CONTACT_EMAIL}`} class="underline">{BUSINESS_CONTACT_EMAIL}</a>
-        </p>
       </div>
     </aside>
-  </section>
+  </div>
 
-  {town && category && (townListOk || countyListOk) && (
-    <p class="mt-10 text-sm text-muted">
-      More
-      {townListOk ? (
-        <a href={`/${town.pathKey}/${category.slug}`} class="font-medium text-brand underline underline-offset-2">
-          {category.name.toLowerCase()} in {town.name}
-        </a>
-      ) : (
-        <a href={`/${town.pathKey}`} class="font-medium text-brand underline underline-offset-2">
-          local businesses in {town.name}
-        </a>
-      )}
-      {county && countyListOk && (
-        <>
-          {" "}or across
-          <a href={`/${county.pathKey}/${category.slug}`} class="font-medium text-brand underline underline-offset-2">
-            {county.name}
-          </a>
-        </>
-      )}.
-    </p>
-  )}
+  <div class="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-line bg-surface/95 px-4 py-3 backdrop-blur md:hidden" data-mobile-bar>
+    {b.phone && (
+      <a href={`tel:${b.phone.replace(/[^+\d]/g, "")}`} class="flex-1 rounded-chip bg-accent px-4 py-2.5 text-center text-sm font-semibold text-accent-ink">
+        Call now
+      </a>
+    )}
+    <a href="#quote" class="flex-1 rounded-chip border border-line-strong px-4 py-2.5 text-center text-sm font-semibold text-ink">
+      Get a quote
+    </a>
+  </div>
+
+  <script is:inline data-astro-rerun>
+    (function () {
+      var root = document.querySelector("[data-profile]");
+      if (!root || root.dataset.wired) return;
+      root.dataset.wired = "1";
+      var slug = root.getAttribute("data-biz-slug") || "";
+
+      // Serves-towns expand
+      var toggle = document.getElementById("serves-toggle");
+      var rest = document.getElementById("serves-rest");
+      if (toggle && rest)
+        toggle.addEventListener("click", function () {
+          var expanded = toggle.getAttribute("aria-expanded") === "true";
+          rest.hidden = expanded;
+          toggle.textContent = expanded ? "+" + rest.textContent.split(",").filter(Boolean).length + " more" : "show fewer";
+          toggle.setAttribute("aria-expanded", String(!expanded));
+        });
+
+      // Tab scrollspy
+      var links = Array.prototype.slice.call(root.querySelectorAll("[data-tab]"));
+      var sections = links
+        .map(function (l) { return document.getElementById(l.getAttribute("data-tab")); })
+        .filter(Boolean);
+      function setActive(id) {
+        links.forEach(function (l) {
+          var on = l.getAttribute("data-tab") === id;
+          l.classList.toggle("border-brand", on);
+          l.classList.toggle("text-brand", on);
+          l.classList.toggle("border-transparent", !on);
+          l.classList.toggle("text-muted", !on);
+        });
+      }
+      if ("IntersectionObserver" in window && sections.length) {
+        var current = sections[0].id;
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) { if (e.isIntersecting) current = e.target.id; });
+            setActive(current);
+          },
+          { rootMargin: "-15% 0px -70% 0px" }
+        );
+        sections.forEach(function (s) { io.observe(s); });
+      }
+
+      // Save (localStorage) + Share
+      var saveBtn = root.querySelector("[data-save-biz]");
+      if (saveBtn) {
+        var KEY = "tv-saved";
+        var read = function () {
+          try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; }
+        };
+        var render = function () {
+          var saved = read().indexOf(slug) !== -1;
+          saveBtn.setAttribute("aria-pressed", String(saved));
+          saveBtn.textContent = saved ? "♥ Saved" : "♡ Save";
+        };
+        saveBtn.addEventListener("click", function () {
+          var cur = read();
+          var i = cur.indexOf(slug);
+          if (i === -1) cur.push(slug); else cur.splice(i, 1);
+          try { localStorage.setItem(KEY, JSON.stringify(cur)); } catch (e) {}
+          render();
+        });
+        render();
+      }
+      var shareBtn = root.querySelector("[data-share-biz]");
+      if (shareBtn)
+        shareBtn.addEventListener("click", function () {
+          var url = location.origin + location.pathname;
+          if (navigator.share) {
+            navigator.share({ title: document.title, url: url }).catch(function () {});
+          } else if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(function () {
+              shareBtn.textContent = "Link copied";
+              setTimeout(function () { shareBtn.textContent = "Share"; }, 2000);
+            });
+          }
+        });
+
+      // Open now (America/New_York)
+      var openEl = root.querySelector("[data-open-now]");
+      if (openEl) {
+        try {
+          var hoursMap = JSON.parse(openEl.getAttribute("data-hours"));
+          var now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+          var day = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][now.getDay()];
+          var span = (hoursMap[day] || "").toLowerCase();
+          var open = false;
+          var m = span.match(/^(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})$/);
+          if (m) {
+            var mins = now.getHours() * 60 + now.getMinutes();
+            open = mins >= Number(m[1]) * 60 + Number(m[2]) && mins < Number(m[3]) * 60 + Number(m[4]);
+          }
+          openEl.classList.remove("hidden");
+          openEl.classList.add(open ? "bg-[#177245]" : "bg-inset");
+          openEl.classList.add(open ? "text-white" : "text-muted");
+          openEl.textContent = open ? "Open now" : "Closed now";
+        } catch (e) { /* leave hidden */ }
+      }
+    })();
+  </script>
 </article>
