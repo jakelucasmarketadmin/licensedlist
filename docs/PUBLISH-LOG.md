@@ -110,3 +110,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   first, plain-text profile + removal URLs, no opt-in-implying subject); send capped at 5
   per batch, a day apart — BLOCKED on env: REVIEW_CRON_SECRET and GHL_NOTICE_WEBHOOK are
   both unset on the live site.
+
+**Smoke 2026-08-27 05:39 UTC:** PASS — all 19 routes 200
