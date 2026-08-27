@@ -57,3 +57,10 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
     290 pages 0 broken.
 
 **Smoke 2026-08-27 01:42 UTC:** PASS — all 19 routes 200
+  - D-fixes + Batch E + launch pass: address formatting, honest counts (11 vetted /
+    7 license-verified — no drift, 4 published are not-required categories), hero
+    search/describe tabs, curated hero pool (6 buildings-prominent), events/deals/awards
+    out of primary nav. Batch E: first-party metrics + /api/track, owner-stats
+    (benchmark/completeness/AI-visibility), posts + owner offers, weekly digest endpoint.
+    Launch: 36/36 checks (docs/LAUNCH-CHECKLIST.md), lastmod 289/289 real dates,
+    Lighthouse all 15 templates ≥85 perf / ≥95 a11y, crawl 290/0. END OF BUILD PHASE.
