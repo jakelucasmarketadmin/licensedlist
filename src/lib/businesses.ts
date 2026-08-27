@@ -139,7 +139,9 @@ export const isUnclaimed = (b: DirectoryBusiness) =>
 /** The public-safe provenance line: the leading "Compiled from …" sentence of
  * sourceNotes (the rest is operator notes and never renders). */
 export function publicSources(b: DirectoryBusiness): string | null {
-  const m = (b.sourceNotes ?? "").match(/^Compiled from [^.]*\./);
+  // First sentence of sourceNotes; a period only ends it before whitespace or
+  // end-of-string so domains like example.com survive intact.
+  const m = (b.sourceNotes ?? "").match(/^Compiled from .*?\.(?=\s|$)/);
   return m ? m[0] : null;
 }
 
