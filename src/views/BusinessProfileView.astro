@@ -71,6 +71,8 @@ const sponsored = isSponsoredPlacement(b);
 const isClient = b.isClient === true || b.isClient === "true";
 const claimFormUrl = jotformUpdateUrl(b.name, `${SITE_URL}/business/${b.slug}`);
 const unclaimed = isUnclaimed(b);
+// CMS TEXT fields return "" when unset — only a real positive number renders.
+const responseHours = Number(b.responseTimeHours) > 0 ? Number(b.responseTimeHours) : null;
 const sourcesLine = publicSources(b);
 const quoteCount = await quoteRequestsThisMonth(b.slug ?? "");
 const isPreviewReq = Astro.url.searchParams.get("preview") === "demo";
@@ -606,9 +608,9 @@ const tabs = [
               Share
             </button>
           </div>
-          {(b.responseTimeHours != null || (quoteCount ?? 0) > 0) && (
+          {(responseHours != null || (quoteCount ?? 0) > 0) && (
             <p class="mt-3 text-xs leading-relaxed text-muted">
-              {b.responseTimeHours != null && `Typically responds in ~${b.responseTimeHours} ${b.responseTimeHours === 1 ? "hr" : "hrs"}.`}
+              {responseHours != null && `Typically responds in ~${responseHours} ${responseHours === 1 ? "hr" : "hrs"}.`}
               {(quoteCount ?? 0) > 0 && ` ${quoteCount} ${quoteCount === 1 ? "person" : "people"} requested a quote this month.`}
             </p>
           )}
@@ -635,7 +637,7 @@ const tabs = [
                 businessName={b.name}
                 categorySlug={b.primaryCategorySlug}
                 townSlug={b.townSlug}
-                responseTimeHours={b.responseTimeHours}
+                responseTimeHours={responseHours}
               />
             </div>
           )}

@@ -267,8 +267,8 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
           <span class="ledger-key">Trust</span>
           <span class="ledger-val">
             {[
-              b.responseTimeHours != null
-                ? `replies in ~${b.responseTimeHours} ${b.responseTimeHours === 1 ? "hr" : "hrs"}`
+              Number(b.responseTimeHours) > 0
+                ? `replies in ~${Number(b.responseTimeHours)} ${Number(b.responseTimeHours) === 1 ? "hr" : "hrs"}`
                 : null,
               serviceTowns.length > 1 ? `serves ${serviceTowns.length} towns` : townName ? `serves ${townName}` : null,
             ].filter(Boolean).join(" · ") || "identity confirmed"}

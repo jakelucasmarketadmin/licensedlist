@@ -87,3 +87,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   Tranche 2 (~9/3): Bergen electricians + Montgomery spas. Tranche 3 (~9/10):
   Montgomery + Middlesex roofers. Sitemap fix: county×category pages now emitted
   (same >=3 rule as the route).
+
+**Smoke 2026-08-27 04:24 UTC:** PASS — all 19 routes 200
