@@ -59,9 +59,12 @@ function rulesParse(text: string): ParsedIntent {
       if (!p) continue;
       if (clean.includes(p)) score = Math.max(score, p.split(" ").length * 3);
       else {
-        const ptoks = p.split(/\s+/);
+        const ptoks = p.split(/\s+/).filter((t) => !STOPWORDS.has(t));
         const hit = ptoks.filter((t) => tokens.includes(t)).length;
-        if (hit === ptoks.length && ptoks.length > 0) score = Math.max(score, ptoks.length);
+        // Full phrase beats partial; ≥2-token overlap of a multiword synonym
+        // still counts ("water heater leaking" → "water heater repair").
+        if (ptoks.length > 0 && hit === ptoks.length) score = Math.max(score, ptoks.length * 2);
+        else if (hit >= 2) score = Math.max(score, hit);
       }
     }
     if (score > best) { best = score; categorySlug = c.slug; }
