@@ -64,3 +64,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
     (benchmark/completeness/AI-visibility), posts + owner offers, weekly digest endpoint.
     Launch: 36/36 checks (docs/LAUNCH-CHECKLIST.md), lastmod 289/289 real dates,
     Lighthouse all 15 templates ≥85 perf / ≥95 a11y, crawl 290/0. END OF BUILD PHASE.
+
+**Smoke 2026-08-27 01:52 UTC:** PASS — all 19 routes 200
