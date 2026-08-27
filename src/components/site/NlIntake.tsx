@@ -22,7 +22,7 @@ interface Result {
   fallbackPath: string;
 }
 
-export default function NlIntake({ preview = false }: { preview?: boolean }) {
+export default function NlIntake({ preview = false, compact = false }: { preview?: boolean; compact?: boolean }) {
   const [text, setText] = useState('');
   const [state, setState] = useState<'idle' | 'busy' | 'done' | 'error'>('idle');
   const [result, setResult] = useState<Result | null>(null);
@@ -50,10 +50,10 @@ export default function NlIntake({ preview = false }: { preview?: boolean }) {
   }
 
   return (
-    <div className="rounded-card border border-line bg-surface p-4">
+    <div className={compact ? "" : "rounded-card border border-line bg-surface p-4"}>
       <form onSubmit={submit}>
-        <label htmlFor="nl-intake" className="block text-sm font-semibold text-ink">
-          Or just describe the problem
+        <label htmlFor="nl-intake" className={compact ? "sr-only" : "block text-sm font-semibold text-ink"}>
+          {compact ? "Describe the problem" : "Or just describe the problem"}
         </label>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <textarea
