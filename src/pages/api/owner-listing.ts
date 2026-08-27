@@ -19,6 +19,12 @@ const EDITABLE_FIELDS = [
   "services",
   "phone",
   "website",
+  // Batch E: profile extras are owner-editable too. License fields, ratings,
+  // and tier stay directory-managed.
+  "highlights",
+  "projectsJson",
+  "teamJson",
+  "faqJson",
 ] as const;
 
 // Shared elevated tools — the query chain runs inside one elevated closure

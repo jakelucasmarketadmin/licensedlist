@@ -40,6 +40,7 @@ import { offersForBusiness, offerExpiryLabel, isDemoOffer } from "@/lib/offers";
 import { eventsForBusiness, eventDateLabel } from "@/lib/events";
 import { awardsForBusiness, awardLabel, isDemoAward } from "@/lib/awards";
 import { reviewSummaryFor } from "@/lib/summaries";
+import { postsForBusiness } from "@/lib/posts";
 import { imageAt, srcsetFor, lqipStyle } from "@/lib/images";
 
 interface Props {
@@ -68,11 +69,12 @@ const isClient = b.isClient === true || b.isClient === "true";
 const claimFormUrl = jotformUpdateUrl(b.name, `${SITE_URL}/business/${b.slug}`);
 const quoteCount = await quoteRequestsThisMonth(b.slug ?? "");
 const isPreviewReq = Astro.url.searchParams.get("preview") === "demo";
-const [bizOffers, bizEvents, bizAwards, reviewSummary] = await Promise.all([
+const [bizOffers, bizEvents, bizAwards, reviewSummary, bizPosts] = await Promise.all([
   offersForBusiness(b.slug ?? "", isPreviewReq),
   eventsForBusiness(b.slug ?? "", isPreviewReq),
   awardsForBusiness(b.slug ?? "", isPreviewReq),
   reviewSummaryFor(b.slug ?? "", reviews),
+  postsForBusiness(b.slug ?? ""),
 ]);
 
 const photos = photosOf(b);
@@ -254,6 +256,18 @@ const tabs = [
             ))}
             <span class="text-[11px] text-faint">— most mentioned in reviews</span>
           </p>
+        )}
+        {bizPosts.length > 0 && (
+          <div class="mt-4 space-y-2">
+            {bizPosts.map((p) => (
+              <div class="rounded-card border border-line bg-surface px-4 py-3">
+                <p class="text-xs font-semibold uppercase tracking-wider text-faint">
+                  What's new · {new Date(p._createdDate ?? Date.now()).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </p>
+                <p class="mt-1 text-sm leading-relaxed text-muted">{p.text}</p>
+              </div>
+            ))}
+          </div>
         )}
         {bizOffers.length > 0 && (
           <div class="mt-4 space-y-2">
@@ -607,6 +621,26 @@ const tabs = [
       root.dataset.wired = "1";
       var slug = root.getAttribute("data-biz-slug") || "";
 
+      // First-party metrics (Batch E) — day-bucketed counters, no PII.
+      function track(type) {
+        try {
+          fetch("/api/track", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: type, businessSlug: slug }),
+            keepalive: true,
+          }).catch(function () {});
+        } catch (e) {}
+      }
+      track("profile_view");
+      root.querySelectorAll('a[href^="tel:"]').forEach(function (a) {
+        a.addEventListener("click", function () { track("call_click"); });
+      });
+      root.querySelectorAll('a[target="_blank"][href^="http"]').forEach(function (a) {
+        if (/jotform/.test(a.href)) return;
+        a.addEventListener("click", function () { track("website_click"); });
+      });
+
       // Serves-towns expand
       var toggle = document.getElementById("serves-toggle");
       var rest = document.getElementById("serves-rest");
@@ -659,7 +693,7 @@ const tabs = [
         saveBtn.addEventListener("click", function () {
           var cur = read();
           var i = cur.indexOf(slug);
-          if (i === -1) cur.push(slug); else cur.splice(i, 1);
+          if (i === -1) { cur.push(slug); track("save"); } else cur.splice(i, 1);
           try { localStorage.setItem(KEY, JSON.stringify(cur)); } catch (e) {}
           render();
         });
@@ -668,6 +702,7 @@ const tabs = [
       var shareBtn = root.querySelector("[data-share-biz]");
       if (shareBtn)
         shareBtn.addEventListener("click", function () {
+          track("share");
           var url = location.origin + location.pathname;
           if (navigator.share) {
             navigator.share({ title: document.title, url: url }).catch(function () {});

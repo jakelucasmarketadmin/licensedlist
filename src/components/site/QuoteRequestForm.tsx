@@ -59,6 +59,17 @@ export default function QuoteRequestForm({
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm((f) => ({ ...f, [key]: e.target.value }));
 
+  // First-party metrics (Batch E) — counters only, no PII.
+  const track = (type: string) => {
+    if (!businessSlug) return;
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, businessSlug }),
+      keepalive: true,
+    }).catch(() => {});
+  };
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (form.company || !consent) return;
@@ -103,6 +114,7 @@ export default function QuoteRequestForm({
           },
         }),
       }).catch(() => {});
+      track('quote_submitted');
       setStatus('success');
     } catch (err) {
       console.error('quote request failed', err);
@@ -162,7 +174,7 @@ export default function QuoteRequestForm({
           <button
             type="button"
             disabled={!form.message.trim()}
-            onClick={() => setStep(2)}
+            onClick={() => { setStep(2); track('quote_started'); }}
             className="w-full rounded-chip bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover disabled:opacity-60"
           >
             Next: contact info

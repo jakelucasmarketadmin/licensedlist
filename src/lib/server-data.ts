@@ -26,6 +26,7 @@ export async function elevatedData() {
       let b: any = q(opts.dataCollectionId);
       const chain = {
         eq(k: string, v: unknown) { b = b.eq(k, v); return chain; },
+        ge(k: string, v: unknown) { b = b.ge(k, v); return chain; },
         limit(n: number) { b = b.limit(n); return chain; },
         find: (): Promise<any> => b.find(),
       };

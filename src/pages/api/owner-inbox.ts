@@ -170,6 +170,51 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ ok: true });
     }
 
+    if (action === "create-post") {
+      const text = clean(body.text, 500);
+      if (!text) return json({ ok: false, error: "empty post" }, 400);
+      const { auth } = await import("@wix/essentials");
+      const data: any = await import("@wix/data");
+      const created: any = await (auth.elevate(data.items.insert) as any)("posts", {
+        businessSlug: slug,
+        text,
+        expiresAt: new Date(Date.now() + 30 * 86400e3).toISOString(),
+      });
+      return json({ ok: true, id: created?._id ?? null });
+    }
+
+    if (action === "create-offer") {
+      const title = clean(body.title, 100);
+      const details = clean(body.details, 500);
+      const terms = clean(body.terms, 300);
+      const code = clean(body.code, 30);
+      const expiresAt = clean(body.expiresAt, 30);
+      if (!title) return json({ ok: false, error: "title required" }, 400);
+      // Tier rule (RUNBOOK §10): Free tier max 1 active offer — enforced here
+      // AND at moderation.
+      const bizItem: any = await query({ dataCollectionId: "businesses" }).eq("slug", slug).find();
+      const biz = bizItem?.items?.[0]?.data ?? bizItem?.items?.[0] ?? {};
+      const offersRes: any = await query({ dataCollectionId: "offers" }).eq("businessSlug", slug).find();
+      const activeCount = (offersRes?.items ?? [])
+        .map((it: any) => it.data ?? it)
+        .filter((o: any) => o.status !== "rejected" && (!o.expiresAt || new Date(o.expiresAt).getTime() > Date.now())).length;
+      if ((biz.tier ?? "free") === "free" && activeCount >= 1)
+        return json({ ok: false, error: "Free listings can run 1 active offer — upgrade to Verified for more." }, 403);
+      const { auth } = await import("@wix/essentials");
+      const data: any = await import("@wix/data");
+      await (auth.elevate(data.items.insert) as any)("offers", {
+        businessSlug: slug,
+        title,
+        details,
+        terms,
+        code,
+        ...(expiresAt ? { expiresAt } : {}),
+        status: "pending",
+        source: "owner-submission",
+      });
+      return json({ ok: true, note: "Offer submitted — it goes live after a quick review." });
+    }
+
     if (action === "draft-reply") {
       const review = await loadOwned("reviews", "businessSlug");
       if (!review) return json({ ok: false, error: "not found" }, 404);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MemberProvider, useMember } from '@/integrations';
 import OwnerInbox from '@/components/site/OwnerInbox';
+import OwnerStats from '@/components/site/OwnerStats';
 
 /**
  * Owner dashboard island. Sign in with Wix Members; the server resolves the
@@ -237,6 +238,8 @@ function Portal() {
           </button>
         </div>
       </form>
+
+      <OwnerStats tier={listing.tier} />
 
       <OwnerInbox />
     </div>
