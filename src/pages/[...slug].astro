@@ -32,6 +32,7 @@ import AwardsView from "@/views/AwardsView.astro";
 import SavedView from "@/views/SavedView.astro";
 import AccountView from "@/views/AccountView.astro";
 import AiInfoView from "@/views/AiInfoView.astro";
+import RemoveListingView from "@/views/RemoveListingView.astro";
 import WhyVerifiedView from "@/views/WhyVerifiedView.astro";
 import { SITE_NAME } from "@/lib/site";
 import { ROUTE_SEO } from "@/lib/routes";
@@ -95,6 +96,7 @@ const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/saved": SavedView,
   "/account": AccountView,
   "/ai-info": AiInfoView,
+  "/remove-listing": RemoveListingView,
   "/credits": CreditsView,
   "/for-businesses/why-verified": WhyVerifiedView,
 };
@@ -389,6 +391,11 @@ const claimProps =
 
 const previewProps = ["/events", "/deals", "/awards"].includes(pathname) ? { preview } : {};
 
+const removeProps =
+  pathname === "/remove-listing"
+    ? { biz: (Astro.url.searchParams.get("biz") ?? "").slice(0, 120) }
+    : {};
+
 const reviewProps =
   pathname === "/write-review"
     ? {
@@ -413,5 +420,5 @@ const RenderView = View ?? NotFoundView;
 ---
 
 <SiteLayout seo={seo ?? notFoundSeo} jsonLd={View ? jsonLd : []} preloadImage={preloadImage}>
-  <RenderView {...viewProps} {...searchProps} {...claimProps} {...reviewProps} {...previewProps} />
+  <RenderView {...viewProps} {...searchProps} {...claimProps} {...reviewProps} {...previewProps} {...removeProps} />
 </SiteLayout>

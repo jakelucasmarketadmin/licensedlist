@@ -68,6 +68,12 @@ export interface DirectoryBusiness {
   featuredUntil?: string | Date;
   lastVerifiedAt?: string | Date;
   sourceNotes?: string;
+  /** client | public-records | self-submitted | registry */
+  listingSource?: string;
+  /** When the listed-you notice email went out (unclaimed tier). */
+  notifiedAt?: string | Date;
+  /** Removal request honored — the importer must never re-add this record. */
+  optOutAt?: string | Date;
   /** Comma list from the HIGHLIGHT_DEFS vocabulary (lib/reviews.ts). */
   highlights?: string;
   /** JSON array [{title, town, date, description, photos: [], beforePhoto?, afterPhoto?}]. */
@@ -124,6 +130,24 @@ const list = (v?: string) => (v ? v.split(",").map((s) => s.trim()).filter(Boole
 const truthy = (v: unknown) => v === true || v === "true";
 
 export const isDemo = (b: DirectoryBusiness) => (b.sourceNotes ?? "").includes("DEMO");
+
+/** Unclaimed public-records tier: full profile + threshold credit, but
+ * labeled "Unclaimed", no quote form, and a standing claim/remove banner. */
+export const isUnclaimed = (b: DirectoryBusiness) =>
+  b.listingSource === "public-records" && !truthy(b.claimed);
+
+/** The public-safe provenance line: the leading "Compiled from …" sentence of
+ * sourceNotes (the rest is operator notes and never renders). */
+export function publicSources(b: DirectoryBusiness): string | null {
+  const m = (b.sourceNotes ?? "").match(/^Compiled from [^.]*\./);
+  return m ? m[0] : null;
+}
+
+/** "as reported by …" for third-party ratings on unclaimed listings. */
+export function ratingReportedVia(b: DirectoryBusiness): string {
+  const m = (b.sourceNotes ?? "").match(/Rating (?:via|from) ([^.(]+)/i);
+  return m ? m[1].trim() : "the business's public profiles";
+}
 export const isPublished = (b: DirectoryBusiness) => b.status === "published";
 /** Preview mode also renders clearly-labeled DEMO drafts (noindex pages only). */
 export const isPreviewable = (b: DirectoryBusiness) =>
@@ -199,6 +223,11 @@ export function organicCompare(a: DirectoryBusiness, b: DirectoryBusiness): numb
   if (reviews) return reviews;
   const rating = (blendedRating(b) ?? 0) - (blendedRating(a) ?? 0);
   if (rating) return rating;
+  // Documented factor (see /how-we-verify): at equal score, a CLAIMED listing
+  // outranks an unclaimed public-records listing — a claimed listing has a
+  // business standing behind its information.
+  const claimed = Number(!isUnclaimed(b)) - Number(!isUnclaimed(a));
+  if (claimed) return claimed;
   const fresh =
     new Date(b.lastVerifiedAt ?? 0).getTime() - new Date(a.lastVerifiedAt ?? 0).getTime();
   return fresh;

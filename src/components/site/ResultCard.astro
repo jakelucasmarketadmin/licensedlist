@@ -8,6 +8,8 @@ import {
   ratingSourcesLabel,
   isSponsoredPlacement,
   isDemo,
+  isUnclaimed,
+  ratingReportedVia,
   additionalLicenses,
 } from "@/lib/businesses";
 import { getCategory } from "@/lib/taxonomy";
@@ -203,6 +205,11 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
               Sample
             </span>
           )}
+          {isUnclaimed(b) && (
+            <span class="rounded-chip border border-line bg-inset px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-faint" title="Compiled from public records and the business's own website — not yet claimed by the business.">
+              Unclaimed
+            </span>
+          )}
         </div>
         <p class="mt-0.5 text-sm text-muted">
           {showCategory && categoryName && `${categoryName} · `}{b.city}, {b.state}
@@ -220,7 +227,7 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
     {rating !== null ? (
       <p class="mt-2 text-sm text-ink">
         <span class="font-semibold">{rating}★</span>
-        <span class="text-muted"> · {reviews} reviews across {sourcesLabel}</span>
+        <span class="text-muted"> · {reviews} reviews across {sourcesLabel}{isUnclaimed(b) && `, as reported by ${ratingReportedVia(b)}`}</span>
       </p>
     ) : (
       <p class="mt-2 text-sm text-faint">Not enough review data yet</p>

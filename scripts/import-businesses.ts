@@ -266,12 +266,19 @@ for (;;) {
   page = await page.next();
 }
 
-let creates = 0, updates = 0;
+let creates = 0, updates = 0, optedOut = 0;
 for (const { fields } of valid) {
   const slug = fields.slug as string;
   const current =
     existing.get(slug) ??
     (fields.licenseNumber ? existingByLicense.get(normLic(fields.licenseNumber)) : undefined);
+  // Opt-out is permanent: a removal-honored record (optOutAt) is never
+  // re-added or updated by any import (docs/RUNBOOK.md §14).
+  if (current?.optOutAt) {
+    console.log(`SKIP ${slug} — optOutAt ${current.optOutAt} (removal honored; never re-add)`);
+    optedOut++;
+    continue;
+  }
   if (dryRun) {
     console.log(`${current ? "UPDATE" : "CREATE"} ${slug} (status=${fields.status})`);
     current ? updates++ : creates++;
@@ -285,4 +292,4 @@ for (const { fields } of valid) {
     creates++;
   }
 }
-console.log(`${dryRun ? "[dry-run] " : ""}creates: ${creates} · updates: ${updates}`);
+console.log(`${dryRun ? "[dry-run] " : ""}creates: ${creates} · updates: ${updates} · opt-out skips: ${optedOut}`);

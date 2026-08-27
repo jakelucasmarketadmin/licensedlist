@@ -1,0 +1,102 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import { getBusinessBySlug } from "@/lib/businesses";
+import { SITE_NAME } from "@/lib/site";
+
+/**
+ * /remove-listing?biz={slug} (noindex) — the unclaimed-tier opt-out. Policy:
+ * removal on request from the business, no questions, within 2 business
+ * days, never re-added (optOutAt).
+ */
+interface Props {
+  biz?: string;
+}
+const { biz = "" } = Astro.props;
+const business = biz ? await getBusinessBySlug(biz, true) : undefined;
+---
+
+<article class="mx-auto max-w-xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo
+    trail={[
+      { name: "Home", path: "/" },
+      ...(business ? [{ name: business.name ?? "Business", path: `/business/${business.slug}` }] : []),
+      { name: "Remove listing", path: "/remove-listing" },
+    ]}
+  />
+
+  <h1 class="mt-4 font-display text-3xl font-bold text-ink">Remove {business?.name ?? "a listing"}</h1>
+  <p class="mt-3 max-w-prose leading-relaxed text-muted">
+    If this is your business and you don't want it listed, we'll remove it — no questions,
+    within 2 business days — and we won't re-add it. (Prefer to keep it and fix the details?
+    <a href="/claim" class="font-medium text-brand underline underline-offset-2">Claim it free</a> instead.)
+  </p>
+
+  <form data-remove-form class="mt-6 space-y-3 rounded-card border border-line bg-surface p-5">
+    <input type="hidden" name="businessSlug" value={business?.slug ?? ""} />
+    {!business && (
+      <p class="rounded-[10px] bg-warn-wash px-3 py-2 text-sm text-warn">
+        No listing selected — open "Remove this listing" from the business's page.
+      </p>
+    )}
+    <div>
+      <label for="rm-name" class="block text-sm font-medium text-ink">Your name *</label>
+      <input id="rm-name" name="name" required maxlength="100" autocomplete="name" class="mt-1 w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none" />
+    </div>
+    <div>
+      <label for="rm-role" class="block text-sm font-medium text-ink">Your role at the business *</label>
+      <input id="rm-role" name="role" required maxlength="80" placeholder="Owner, manager…" class="mt-1 w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none" />
+    </div>
+    <div>
+      <label for="rm-email" class="block text-sm font-medium text-ink">Email *</label>
+      <input id="rm-email" name="email" type="email" required maxlength="120" autocomplete="email" class="mt-1 w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none" />
+    </div>
+    <div>
+      <label for="rm-reason" class="block text-sm font-medium text-ink">Reason <span class="font-normal text-faint">(optional)</span></label>
+      <textarea id="rm-reason" name="reason" rows="3" maxlength="500" class="mt-1 w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"></textarea>
+    </div>
+    <div class="hidden" aria-hidden="true"><input name="company" tabindex="-1" autocomplete="off" /></div>
+    <button type="submit" class="rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover" disabled={!business}>
+      Request removal
+    </button>
+    <p data-rm-status role="status" class="hidden text-sm"></p>
+    <p class="text-[11px] leading-snug text-faint">
+      We use your details only to confirm the request; see the {SITE_NAME}
+      <a href="/privacy" class="underline">privacy policy</a>.
+    </p>
+  </form>
+
+  <script is:inline data-astro-rerun>
+    (function () {
+      var form = document.querySelector("[data-remove-form]");
+      if (!form || form.dataset.wired) return;
+      form.dataset.wired = "1";
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var status = form.querySelector("[data-rm-status]");
+        var data = Object.fromEntries(new FormData(form).entries());
+        if (data.company) return;
+        status.classList.remove("hidden", "text-danger", "text-ok");
+        status.classList.add("text-muted");
+        status.textContent = "Sending…";
+        fetch("/api/remove-listing", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (!res.ok) throw new Error(res.error);
+            form.reset();
+            status.classList.remove("text-muted");
+            status.classList.add("text-ok");
+            status.textContent = "Request received — the listing comes down within 2 business days and we'll confirm by email.";
+          })
+          .catch(function () {
+            status.classList.remove("text-muted");
+            status.classList.add("text-danger");
+            status.textContent = "Something went wrong — email us instead and we'll handle it.";
+          });
+      });
+    })();
+  </script>
+</article>

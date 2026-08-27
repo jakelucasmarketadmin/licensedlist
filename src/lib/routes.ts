@@ -187,6 +187,15 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     updated: "2026-08-27",
     crumb: "AI info",
   },
+  "/remove-listing": {
+    title: `Remove a Listing · ${SITE_NAME}`,
+    description:
+      "Ask us to remove an unclaimed listing of your business — honored within 2 business days, no questions, never re-added.",
+    path: "/remove-listing",
+    updated: "2026-08-27",
+    robots: "noindex, follow",
+    crumb: "Remove listing",
+  },
   "/write-review": {
     title: `Write a Review · ${SITE_NAME}`,
     description:

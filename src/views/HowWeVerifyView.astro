@@ -209,16 +209,26 @@ const BADGES = [
       <li class="rounded-card border border-line bg-surface p-5">
         <h3 class="text-base font-semibold text-ink">The organic list — a transparent score</h3>
         <p class="mt-2 text-sm leading-relaxed text-muted">
-          Everything below the featured block is ordered by a score built from four public
+          Everything below the featured block is ordered by a score built from public
           factors, in this priority: whether the license is verified, how many reviews the
-          business has, its rating across platforms, and how recently we re-checked the
-          listing. Payment, claimed status, and agency relationships have zero weight.
+          business has, its rating across platforms, then — only as a tiebreak at equal
+          score — whether the listing is claimed (a claimed listing has a business standing
+          behind its information, so it edges out an unclaimed public-records listing), and
+          finally how recently we re-checked. Payment and agency relationships have zero
+          weight.
         </p>
       </li>
     </ul>
     <p class="mt-4 text-sm leading-relaxed text-faint">
       Businesses that are clients of our agency are always disclosed as sponsored wherever they
       appear. They receive no ranking benefit.
+    </p>
+    <p class="mt-3 max-w-prose text-sm leading-relaxed text-faint">
+      Unclaimed listings: some listings are compiled from public records and the business's
+      own website and are labeled "Unclaimed" until the business claims them. We remove any
+      unclaimed listing on request from the business — no questions, within 2 business days
+      — and we do not re-add it. Every unclaimed profile carries a "Remove this listing"
+      link.
     </p>
     <p class="mt-3 max-w-prose text-sm leading-relaxed text-faint">
       Editorial independence, spelled out: clients of the agency that operates this directory

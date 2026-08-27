@@ -312,3 +312,25 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
    or the Verified tier meanwhile.
 3. featuredUntil is the clock: expiry frees the slot automatically; sweep monthly for
    expired featured tiers and notify the waitlist in order.
+
+## 14. Unclaimed listings (public-records tier)
+
+- **The tier:** status=published + claimed=false + listingSource=public-records.
+  Full profile, counts toward the 3-listing rule, "Unclaimed" chip everywhere,
+  compiled-from banner + "Where this came from" block (renders the leading
+  "Compiled from …" sentence of sourceNotes — keep that sentence public-safe;
+  everything after it is operator-only). No quote form (call button + claim
+  panel instead); third-party ratings say "as reported by …"; never
+  aggregateRating JSON-LD (that stays on-site-reviews-only).
+- **Removal policy (also on /how-we-verify):** any unclaimed listing comes
+  down on request from the business — no questions, within 2 business days —
+  and is never re-added. Ops: a claims row with method="removal" arrives (and
+  a GHL heads-up via GHL_CLAIM_WEBHOOK). Confirm the requester plausibly
+  represents the business, then set the business row: status=draft (or
+  delete), optOutAt=<today>. optOutAt is the permanent tombstone — both
+  import-businesses.ts and the registry ingest skip any slug/license with it.
+- **Notices:** scripts/notify-listed.ts → /api/notify-listed (cron-secret) →
+  GHL_NOTICE_WEBHOOK. ONE notice per business ever. HOLD until the copy in
+  docs/outreach/listing-notice.md is approved. New env: GHL_NOTICE_WEBHOOK.
+- **Ranking:** claimed beats unclaimed only as a tiebreak at equal score —
+  documented on /how-we-verify.
