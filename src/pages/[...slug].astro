@@ -29,6 +29,9 @@ import EventsView from "@/views/EventsView.astro";
 import DealsView from "@/views/DealsView.astro";
 import GuidesIndexView from "@/views/GuidesIndexView.astro";
 import AwardsView from "@/views/AwardsView.astro";
+import SavedView from "@/views/SavedView.astro";
+import AccountView from "@/views/AccountView.astro";
+import AiInfoView from "@/views/AiInfoView.astro";
 import WhyVerifiedView from "@/views/WhyVerifiedView.astro";
 import { SITE_NAME } from "@/lib/site";
 import { ROUTE_SEO } from "@/lib/routes";
@@ -89,6 +92,9 @@ const VIEWS: Record<string, (props: Record<string, unknown>) => unknown> = {
   "/deals": DealsView,
   "/guides": GuidesIndexView,
   "/awards": AwardsView,
+  "/saved": SavedView,
+  "/account": AccountView,
+  "/ai-info": AiInfoView,
   "/credits": CreditsView,
   "/for-businesses/why-verified": WhyVerifiedView,
 };

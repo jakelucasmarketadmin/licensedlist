@@ -143,6 +143,27 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     path: "/founding-members",
     crumb: "Founding members",
   },
+  "/saved": {
+    title: `Saved Businesses · ${SITE_NAME}`,
+    description: "Your saved local pros, with their new reviews and current deals.",
+    path: "/saved",
+    robots: "noindex, follow",
+    crumb: "Saved",
+  },
+  "/account": {
+    title: `My Projects · ${SITE_NAME}`,
+    description: "Your quote requests as projects — the pros you contacted and where each one stands.",
+    path: "/account",
+    robots: "noindex, follow",
+    crumb: "My projects",
+  },
+  "/ai-info": {
+    title: `${SITE_NAME} for AI Assistants`,
+    description:
+      "Structured, plain-language facts about TriVetted's license-verified directory — what the data means, how verification works, and how AI assistants can query and cite it.",
+    path: "/ai-info",
+    crumb: "AI info",
+  },
   "/write-review": {
     title: `Write a Review · ${SITE_NAME}`,
     description:

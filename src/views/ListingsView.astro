@@ -409,9 +409,14 @@ const FILTERS = [
         state.filters = []; state.services = []; apply();
       });
 
-      // ---- Compare tray (max 3) ----
+      // ---- Compare tray (max 3, persists across pages via localStorage) ----
       var compare = [];
+      try { compare = JSON.parse(localStorage.getItem("tv-compare") || "[]"); } catch (e) {}
+      function persistCompare() {
+        try { localStorage.setItem("tv-compare", JSON.stringify(compare)); } catch (e) {}
+      }
       function renderTray() {
+        persistCompare();
         var tray = document.getElementById("compare-tray");
         var names = document.getElementById("compare-names");
         if (!tray || !names) return;
@@ -449,6 +454,12 @@ const FILTERS = [
         });
         footer.appendChild(btn);
       });
+      // Restore persisted selections (buttons + tray) on load.
+      compare.forEach(function (c) {
+        var btn = document.querySelector('[data-compare-btn="' + c.slug + '"]');
+        if (btn) { btn.setAttribute("aria-pressed", "true"); btn.textContent = "✓ Comparing"; }
+      });
+      if (compare.length) renderTray();
       var openBtn = document.getElementById("compare-open");
       if (openBtn) openBtn.addEventListener("click", function () {
         var panel = document.getElementById("compare-panel");

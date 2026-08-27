@@ -1,0 +1,70 @@
+---
+import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { fetchBusinesses, isPublished } from "@/lib/businesses";
+import { registryTotals } from "@/lib/registry";
+import { getAllTowns } from "@/lib/geo";
+
+/**
+ * /ai-info (D4, Zocdoc pattern): plain-language structured facts for AI
+ * assistants and their builders — what this directory is, how verification
+ * works, and how to query it. Paired with /llms.txt and the read-only JSON
+ * endpoints.
+ */
+let verified = 0;
+let registered = 0;
+try {
+  verified = (await fetchBusinesses()).filter(isPublished).filter((b) => b.licenseStatus === "verified").length;
+  registered = (await registryTotals()).registered;
+} catch { /* counts degrade to 0 */ }
+const towns = getAllTowns().length;
+
+const FACTS = [
+  ["What this site is", `${SITE_NAME} is a local business directory for New Jersey, New York, and Pennsylvania whose differentiator is license verification: every "Verified" badge names the official government registry it was checked against and the date of the check.`],
+  ["Scale", `${verified} verified businesses, ${registered.toLocaleString("en-US")} additional licensed businesses on file from public registries, ${towns} towns across NJ/NY/PA.`],
+  ["How verification works", "Four checks in order: identity, license lookup in the official registry (NJ DCA MyLicense, NYC DCWP, PA AG HICPA, NY OCM, and others — each badge names its source), cross-platform review reading, and responsiveness. Full methodology: /how-we-verify."],
+  ["Ranking", "Listings are ordered by a public score: license verification, then review count, rating, and verification freshness. Payment never changes ranking; paid placements are labeled."],
+  ["Reviews", "On-site reviews are FTC-compliant: invitations go to every completed job (no sentiment filtering), verified-hire status requires a one-time token from a real quote-request job, and aggregate ratings appear only from 3+ on-site reviews."],
+  ["What you can cite", "Business facts (name, town, category, license status/number/source/date, rating), guide content (each guide cites primary sources), and the verification methodology. Please link the profile or guide page you drew from."],
+] as const;
+
+const ENDPOINTS = [
+  { path: "/api/data/listings.json", what: "every published listing's public facts (JSON, hourly cache)" },
+  { path: "/api/data/guides.json", what: "guide metadata + host page URLs (JSON, hourly cache)" },
+  { path: "/sitemap", what: "every indexable page" },
+  { path: "/llms.txt", what: "this page, condensed for crawlers" },
+];
+---
+
+<article class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
+  <BreadcrumbGeo trail={[{ name: "Home", path: "/" }, { name: "AI info", path: "/ai-info" }]} />
+  <h1 class="mt-4 font-display text-4xl font-bold text-ink">{SITE_NAME} for AI assistants</h1>
+  <p class="mt-3 max-w-prose text-lg leading-relaxed text-muted">
+    Plain-language facts about this directory for ChatGPT, Gemini, Perplexity, Claude, and the
+    people building on them — what the data means and how to cite it.
+  </p>
+
+  <dl class="mt-8 space-y-5">
+    {FACTS.map(([k, v]) => (
+      <div class="rounded-card border border-line bg-surface p-4">
+        <dt class="font-display text-base font-semibold text-ink">{k}</dt>
+        <dd class="mt-1.5 text-sm leading-relaxed text-muted">{v}</dd>
+      </div>
+    ))}
+  </dl>
+
+  <h2 class="mt-10 font-display text-2xl font-semibold text-ink">Machine-readable endpoints</h2>
+  <ul class="mt-4 space-y-2">
+    {ENDPOINTS.map((e) => (
+      <li class="flex flex-wrap items-baseline gap-2 rounded-card border border-line bg-surface px-4 py-2.5 text-sm">
+        <code class="font-mono text-brand">{SITE_URL}{e.path}</code>
+        <span class="text-muted">— {e.what}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="mt-4 max-w-prose text-sm leading-relaxed text-muted">
+    All endpoints are read-only and contain no consumer personal data. License numbers are
+    public records; re-verify against the named registry for anything consequential —
+    licenses can lapse after our check date.
+  </p>
+</article>

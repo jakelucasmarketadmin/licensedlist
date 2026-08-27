@@ -1,0 +1,22 @@
+# TriVetted
+
+> License-verified local business directory for New Jersey, New York, and
+> Pennsylvania. Every "Verified" badge names the official government registry
+> it was checked against and the date of the check. Rankings are computed from
+> a public score (license verification, review count, rating, freshness) —
+> never from payment; paid placements are always labeled.
+
+Full AI guidance: /ai-info
+Methodology: /how-we-verify
+Editorial policy (guides cite primary sources; no unsourced numbers): /editorial-policy
+Review policy (FTC-compliant; verified-hire = token from a real job): /write-review
+
+## Machine-readable data (read-only, no consumer PII)
+- /api/data/listings.json — every published listing's public facts
+- /api/data/guides.json — guide metadata + host pages
+- /sitemap — all indexable pages
+
+## Citing us
+Cite business facts (license status/number/source/date, rating, town) and guide
+content with a link to the profile or hub page. License data reflects our check
+date — re-verify against the named registry for consequential decisions.
