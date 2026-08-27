@@ -248,3 +248,26 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
 - Cleanup migration note (R-fix 1): registry names normalized 2026-08-26 (3,259 renamed,
   4 junk rows removed → data/registry-rejects.csv). The seeder now rejects/normalizes at
   import time, so future refreshes stay clean.
+
+## 12. Owner dashboard 2.0 & first-party analytics (Batch E)
+
+- **Metrics** (`metrics` collection): day-bucketed counters per (day,
+  businessSlug, event) — profile_view, call_click, website_click,
+  quote_started, quote_submitted, save, share. No IPs, no user ids. Captured
+  via /api/track from profiles and the quote form. The owner dashboard reads
+  30/90-day windows via /api/owner-stats; the anonymized benchmark averages up
+  to 3 same-category businesses in the same county and never names them.
+- **Owner posts** ("What's new"): created in /owner, auto-expire after 30 days
+  (`posts` collection). Owner-created offers land `pending` → moderate in the
+  dashboard (Free tier: 1 active offer, enforced at creation AND moderation).
+- **Owner-editable fields** now include highlights/projectsJson/teamJson/faqJson
+  (license fields, ratings, tier remain directory-managed).
+- **Weekly owner digest:** weekly cron ping →
+  `curl -X POST -H "x-cron-secret: $REVIEW_CRON_SECRET" https://<site>/api/owner-digest`
+  needs env `GHL_OWNER_DIGEST_WEBHOOK`; GHL matches by owner email and sends
+  the email (payload: week's counters + pending reviews + links).
+- **Upgrades:** /owner shows the Verified/Featured pitch for free-tier owners →
+  /pricing (Featured cap check lives there via /api/featured-slots). Charging
+  INSIDE /owner needs the Wix Payments + Pricing Plans apps installed
+  (docs/PRICING-PLANS.md) — owner-side setup, then the /pricing CTAs can deep-
+  link checkout.
