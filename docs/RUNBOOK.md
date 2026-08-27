@@ -224,3 +224,27 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   confirmation email, only confirmed contacts join the "TriVetted Weekly" list. Digest
   template: docs/outreach/newsletter-digest-template.md.
 - **New envs this batch:** GHL_NEWSLETTER_WEBHOOK.
+
+## 11. Batch D — accounts, NL intake, AI features
+
+- **AI env:** all AI features (NL parsing upgrade, review summaries, concierge drawer,
+  project summaries) key off `ANTHROPIC_API_KEY` in Wix env. Without it everything
+  degrades cleanly: NL intake uses the synonym/keyword parser, profiles show no summary
+  block, the concierge button doesn't render, projects show the raw request. Model:
+  claude-haiku-4-5 (fast/cheap; change in src/lib/ai.ts).
+- **NL intake logs** (`intentLogs`, admin-read): parsed intent ONLY — the raw text is
+  never stored; unmatched terms are PII-stripped tokens. Monthly: dashboard → intentLogs
+  → Export CSV → `data/exports/intentLogs.csv` → `npx tsx scripts/intent-synonyms-report.ts`
+  → review `data/intent-synonyms-report.csv` → add real synonyms to data/taxonomy CSVs →
+  `node scripts/generate-data-modules.mjs`.
+- **Concierge** (`conciergeLogs`): question (digit-runs stripped) + which sources answered.
+  Rate limit 5/min/IP in-process. Grounded in listings/guides/reviews only — no browsing.
+- **AI review summaries** cache in `aiSummaries` keyed by review-set hash — regenerate
+  automatically when reviews change; delete a row to force regeneration.
+- **Saved lists** (`savedLists`): member-owned; guests use device storage; local list
+  merges into "My saved pros" at first sign-in. **My projects** matches leads by the
+  member's login email — owners should tell customers to use the same email they'll
+  sign in with.
+- Cleanup migration note (R-fix 1): registry names normalized 2026-08-26 (3,259 renamed,
+  4 junk rows removed → data/registry-rejects.csv). The seeder now rejects/normalizes at
+  import time, so future refreshes stay clean.

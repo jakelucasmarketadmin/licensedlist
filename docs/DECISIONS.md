@@ -250,3 +250,18 @@ facts rule.
   data clears the bar; DEMO winner behind preview shows the design.
 - **Newsletter rides GHL with double opt-in**; subscribers collection stores pending
   status only.
+
+## R-fixes + Batch D (2026-08-26)
+
+- **acd4-wkax mislabel + cleanup**: registry re-sourced to w7w3-xahh (category-filtered);
+  name-hygiene pass (src/lib/registry-normalize.ts) shared by seeder and a one-off
+  migration (3,259 renames, 4 rejects). DCWP HIC licenses share a cycle end (verified:
+  13,383/13,385 active expire 2027-02-28) → table header says "License cycle ends".
+- **AI degrades, never breaks**: hasAi() gates every AI surface at render/response time;
+  the rules parser, classic search, and plain project text are the no-key paths.
+- **No raw NL-intake text is stored** — parsed fields + PII-stripped unmatched tokens
+  only; the synonyms report works from those tokens.
+- **Concierge is closed-book**: context built exclusively from our own collections and
+  generated data; citations restricted to paths present in the context.
+- **My projects = leads by member email** (no separate linkage table); documented that
+  the quote email must match the sign-in email.
