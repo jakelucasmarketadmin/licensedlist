@@ -1,0 +1,5 @@
+date,source,licenseNumber,rawName,reason
+2026-08-26,cleanup-migration,2106679-DCA,"322755017",all digits
+2026-08-26,cleanup-migration,2044828-DCA,"1999",all digits
+2026-08-26,cleanup-migration,0954966-DCA,".",under 3 characters after stripping punctuation
+2026-08-26,cleanup-migration,2037353-DCA,"274274524",all digits

@@ -16,6 +16,7 @@ import {
 } from "@/lib/businesses";
 import { countRegistered, listRegistered } from "@/lib/registry";
 import RegistryTable from "@/components/site/RegistryTable.astro";
+import NlIntake from "@/components/site/NlIntake.tsx";
 
 interface Props {
   scope: "town" | "county" | "state";
@@ -147,6 +148,10 @@ const FILTERS = [
       <a href="/how-we-verify" class="font-medium text-brand underline underline-offset-2">How we verify</a>
     </p>
   </header>
+
+  <div class="mt-6 max-w-3xl">
+    <NlIntake client:visible preview={Boolean(preview)} />
+  </div>
 
   <div class="mt-8 gap-8 lg:grid lg:grid-cols-[210px_minmax(0,1fr)]">
     <!-- Filter rail (left on desktop, chip row on mobile) -->

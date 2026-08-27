@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BaseCrudService } from '@/integrations';
 
 /**
@@ -38,6 +38,17 @@ export default function QuoteRequestForm({
     email: '',
     company: '', // honeypot
   });
+
+  // NL-intake handoff (D2): prefill the description typed on the match panel.
+  useEffect(() => {
+    try {
+      const intent = sessionStorage.getItem('tv-intent-message');
+      if (intent) {
+        setForm((f) => (f.message ? f : { ...f, message: intent }));
+        sessionStorage.removeItem('tv-intent-message');
+      }
+    } catch { /* private mode */ }
+  }, []);
 
   const consentText = businessName
     ? `I agree that ${businessName} may contact me about this request by phone, text, or email at the number and address I provided. Consent is not a condition of purchase.`

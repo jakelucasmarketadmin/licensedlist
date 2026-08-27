@@ -2,6 +2,8 @@
 import { ClientRouter } from "astro:transitions";
 import Header from "@/components/site/Header.astro";
 import Footer from "@/components/site/Footer.astro";
+import ConciergeDrawer from "@/components/site/ConciergeDrawer.tsx";
+import { hasAi } from "@/lib/ai";
 import { SITE_NAME } from "@/lib/site";
 import { resolveOrigin, type PageSeo } from "@/lib/seo";
 
@@ -85,5 +87,6 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_ID;
       <slot />
     </main>
     <Footer />
+    {hasAi() && <ConciergeDrawer client:idle transition:persist="concierge" />}
   </body>
 </html>

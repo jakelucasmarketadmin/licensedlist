@@ -39,6 +39,7 @@ import { quoteRequestsThisMonth } from "@/lib/leads";
 import { offersForBusiness, offerExpiryLabel, isDemoOffer } from "@/lib/offers";
 import { eventsForBusiness, eventDateLabel } from "@/lib/events";
 import { awardsForBusiness, awardLabel, isDemoAward } from "@/lib/awards";
+import { reviewSummaryFor } from "@/lib/summaries";
 import { imageAt, srcsetFor, lqipStyle } from "@/lib/images";
 
 interface Props {
@@ -67,10 +68,11 @@ const isClient = b.isClient === true || b.isClient === "true";
 const claimFormUrl = jotformUpdateUrl(b.name, `${SITE_URL}/business/${b.slug}`);
 const quoteCount = await quoteRequestsThisMonth(b.slug ?? "");
 const isPreviewReq = Astro.url.searchParams.get("preview") === "demo";
-const [bizOffers, bizEvents, bizAwards] = await Promise.all([
+const [bizOffers, bizEvents, bizAwards, reviewSummary] = await Promise.all([
   offersForBusiness(b.slug ?? "", isPreviewReq),
   eventsForBusiness(b.slug ?? "", isPreviewReq),
   awardsForBusiness(b.slug ?? "", isPreviewReq),
+  reviewSummaryFor(b.slug ?? "", reviews),
 ]);
 
 const photos = photosOf(b);
@@ -425,7 +427,7 @@ const tabs = [
       </section>
 
       <section id="reviews" class="scroll-mt-32">
-        <ReviewsSection business={b} reviews={reviews} />
+        <ReviewsSection business={b} reviews={reviews} summary={reviewSummary} />
       </section>
 
       <section id="qa" class="scroll-mt-32">
