@@ -81,7 +81,7 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "focalX": "",
     "focalY": "",
     "preferred": "",
-    "heroEligible": "true"
+    "heroEligible": ""
   },
   {
     "scope": "county",
@@ -705,7 +705,7 @@ export const TOWN_PHOTO_SEED: TownPhotoSeed[] = [
     "focalX": "",
     "focalY": "",
     "preferred": "",
-    "heroEligible": "true"
+    "heroEligible": ""
   },
   {
     "scope": "county",

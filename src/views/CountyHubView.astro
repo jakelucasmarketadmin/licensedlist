@@ -267,7 +267,15 @@ const mapPoints = [
     </div>
   )}
 
-  <div class="mt-12 max-w-md">
+  <p class="mt-12 text-sm text-muted">
+    Around {county.name}:
+    <a href="/events" class="font-medium text-brand underline underline-offset-2">events</a> ·
+    <a href="/deals" class="font-medium text-brand underline underline-offset-2">deals</a> ·
+    <a href="/guides" class="font-medium text-brand underline underline-offset-2">guides</a> ·
+    <a href="/awards" class="font-medium text-brand underline underline-offset-2">awards</a>
+  </p>
+
+  <div class="mt-6 max-w-md">
     <NewsletterSignup source={`county-${state.slug}-${county.slug}`} />
   </div>
 

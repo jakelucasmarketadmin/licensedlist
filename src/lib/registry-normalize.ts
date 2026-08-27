@@ -59,3 +59,27 @@ export function normalizeName(rawName: unknown): string {
   s = s.replace(/\bLlc\.*$/i, "LLC").replace(/\bLlp\.*$/i, "LLP");
   return s.trim();
 }
+
+/** Directionals and grid tokens kept uppercase in street addresses. */
+const ADDRESS_CAPS = new Set(["N", "S", "E", "W", "NE", "NW", "SE", "SW", "US", "NY", "NJ", "PA"]);
+
+/**
+ * Display formatting for ALL-CAPS registry street addresses (D-fix 1):
+ * "2005 W 8TH ST" → "2005 W 8th St". Ordinals stay lowercase after the digit;
+ * directionals stay uppercase. Render-time only — stored rows are untouched.
+ */
+export function formatAddress(raw: unknown): string {
+  const s = String(raw ?? "").replace(/\s+/g, " ").trim();
+  if (!s) return "";
+  if (/[a-z]/.test(s)) return s; // already mixed-case — leave it alone
+  return s
+    .split(" ")
+    .map((word) => {
+      const core = word.replace(/[^A-Za-z0-9]/g, "");
+      if (ADDRESS_CAPS.has(core)) return word;
+      if (/^\d+(ST|ND|RD|TH)$/i.test(core)) return word.toLowerCase().replace(/^(\d+)/, "$1"); // 8TH → 8th
+      if (/^\d/.test(word)) return word; // house numbers, unit numbers
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ");
+}

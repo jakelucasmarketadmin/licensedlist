@@ -2,6 +2,7 @@
 import type { RegisteredBusiness } from "@/lib/registry";
 import { jotformClaimRegistryUrl, JOTFORM_FORM_URL } from "@/lib/jotform";
 import { getCategory } from "@/lib/taxonomy";
+import { formatAddress } from "@/lib/registry-normalize";
 import { SITE_NAME } from "@/lib/site";
 
 /**
@@ -70,7 +71,7 @@ const sharedCycle =
             <td class="px-3 py-2">
               <span class="block font-medium text-ink">{r.name}</span>
               <span class="block text-xs text-faint">
-                {[r.address1, r.city, r.zip].filter(Boolean).join(", ")}
+                {[formatAddress(r.address1), r.city, [r.stateSlug?.toUpperCase(), r.zip].filter(Boolean).join(" ")].filter(Boolean).join(", ")}
               </span>
             </td>
             <td class="hidden px-3 py-2 text-muted sm:table-cell">{categoryName(r)}</td>

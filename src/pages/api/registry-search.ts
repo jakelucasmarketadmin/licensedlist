@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { json, clean } from "@/lib/server-data";
 import { searchRegistered } from "@/lib/registry";
 import { getCategory } from "@/lib/taxonomy";
+import { formatAddress } from "@/lib/registry-normalize";
 
 /**
  * "Search all {N}" for the registry table (R-fix 2). Read-only, public,
@@ -23,8 +24,8 @@ export const GET: APIRoute = async ({ url }) => {
       rows: rows.map((r) => ({
         name: r.name,
         city: r.city,
-        address1: r.address1 ?? "",
-        zip: r.zip ?? "",
+        address1: formatAddress(r.address1),
+        zip: [r.stateSlug?.toUpperCase(), r.zip].filter(Boolean).join(" "),
         licenseNumber: r.licenseNumber,
         licenseExpiresAt: r.licenseExpiresAt ?? "",
         category: getCategory(r.primaryCategorySlug ?? "")?.name ?? "",

@@ -20,6 +20,9 @@ let published: Awaited<ReturnType<typeof fetchBusinesses>> = [];
 try {
   published = (await fetchBusinesses()).filter(isPublished);
 } catch { /* counts fall back to zero-safe copy */ }
+// 11 published; 7 license-verified, 4 in not-required categories — so the
+// headline counts every vetted listing and license-verified stays precise.
+const publishedCount = published.length;
 const verifiedCount = published.filter((b) => b.licenseStatus === "verified").length;
 const townCount = getAllTowns().length;
 const registryCount = new Set(
@@ -93,15 +96,16 @@ const STEPS = [
           Verified licenses. Real reviews. Fast responses.
         </p>
         <div class="glass mt-8 max-w-3xl rounded-card border border-white/20 p-3">
-          <HeroSearch />
-        </div>
-        <div class="mt-3 max-w-3xl">
-          <NlIntake client:visible preview={homePreview} />
+          <div class="flex gap-1 px-1 pb-2" role="tablist" aria-label="Search mode" data-hero-tabs data-active="bg-surface text-ink" data-inactive="text-white/80">
+            <button type="button" role="tab" aria-selected="true" data-hero-tab="search" class="rounded-chip px-3 py-1.5 text-xs font-semibold bg-surface text-ink">Search</button>
+            <button type="button" role="tab" aria-selected="false" data-hero-tab="describe" class="rounded-chip px-3 py-1.5 text-xs font-semibold text-white/80">Describe the problem</button>
+          </div>
+          <div data-hero-pane="search"><HeroSearch /></div>
+          <div data-hero-pane="describe" hidden><NlIntake client:visible preview={homePreview} /></div>
         </div>
         <p class="mt-4 font-mono text-xs text-white/80">
-          {verifiedCount} verified {verifiedCount === 1 ? "business" : "businesses"}
+          {publishedCount} vetted {publishedCount === 1 ? "business" : "businesses"} · {verifiedCount} license-verified
           {registeredTotal > 0 && ` · ${registeredTotal.toLocaleString("en-US")} licensed businesses on file`} · {townCount} towns
-          {registryCount > 0 && ` · licenses checked against ${registryCount} ${registryCount === 1 ? "registry" : "registries"}`}
         </p>
         <p class="absolute bottom-2 right-4 text-[11px] text-white/60">
           {heroPhoto.caption} · <a href="/credits" class="underline">credit</a>
@@ -117,15 +121,45 @@ const STEPS = [
         Find trusted local pros in New Jersey, New&nbsp;York &amp; Pennsylvania
       </h1>
       <p class="mt-4 max-w-prose text-lg text-muted">Verified licenses. Real reviews. Fast responses.</p>
-      <div class="mt-8 max-w-3xl"><HeroSearch /></div>
-      <div class="mt-3 max-w-3xl"><NlIntake client:visible preview={homePreview} /></div>
+      <div class="mt-8 max-w-3xl rounded-card border border-line bg-surface p-3">
+        <div class="flex gap-1 px-1 pb-2" role="tablist" aria-label="Search mode" data-hero-tabs data-active="bg-brand text-white" data-inactive="text-muted">
+          <button type="button" role="tab" aria-selected="true" data-hero-tab="search" class="rounded-chip px-3 py-1.5 text-xs font-semibold bg-brand text-white">Search</button>
+          <button type="button" role="tab" aria-selected="false" data-hero-tab="describe" class="rounded-chip px-3 py-1.5 text-xs font-semibold text-muted">Describe the problem</button>
+        </div>
+        <div data-hero-pane="search"><HeroSearch /></div>
+        <div data-hero-pane="describe" hidden><NlIntake client:visible preview={homePreview} /></div>
+      </div>
       <p class="mt-4 font-mono text-xs text-muted">
-        {verifiedCount} verified businesses
+        {publishedCount} vetted businesses · {verifiedCount} license-verified
         {registeredTotal > 0 && ` · ${registeredTotal.toLocaleString("en-US")} licensed businesses on file`} · {townCount} towns
       </p>
     </div>
   )}
 </section>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    var tabs = document.querySelector("[data-hero-tabs]");
+    if (!tabs || tabs.dataset.wired) return;
+    tabs.dataset.wired = "1";
+    var active = (tabs.getAttribute("data-active") || "").split(" ").filter(Boolean);
+    var inactive = (tabs.getAttribute("data-inactive") || "").split(" ").filter(Boolean);
+    tabs.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-hero-tab]");
+      if (!btn) return;
+      var mode = btn.getAttribute("data-hero-tab");
+      tabs.querySelectorAll("[data-hero-tab]").forEach(function (b) {
+        var on = b === btn;
+        b.setAttribute("aria-selected", String(on));
+        (on ? inactive : active).forEach(function (c) { b.classList.remove(c); });
+        (on ? active : inactive).forEach(function (c) { b.classList.add(c); });
+      });
+      document.querySelectorAll("[data-hero-pane]").forEach(function (pane) {
+        pane.hidden = pane.getAttribute("data-hero-pane") !== mode;
+      });
+    });
+  })();
+</script>
 
 <!-- Bento explore -->
 <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="explore-heading">
