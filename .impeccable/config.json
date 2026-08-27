@@ -14,6 +14,21 @@
         "value": "fraunces",
         "createdAt": "2026-08-25T15:21:36.598Z",
         "reason": "Brief-pinned display face for TriVetted (user-approved design system)"
+      },
+      {
+        "rule": "overused-font",
+        "value": "google fonts: fraunces",
+        "createdAt": "2026-08-27T00:52:59.434Z",
+        "reason": "Same brief-pinned Fraunces face — the googleapis <link> variant of the finding carries this literal value"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          "src/layouts/SiteLayout.astro"
+        ],
+        "createdAt": "2026-08-27T00:54:08.236Z",
+        "reason": "Fonts load only here; Fraunces+Inter are brief-pinned. The Google-Fonts-link finding variant has no extractable value, so the value-specific ignores can't match it (plugin gap)."
       }
     ]
   }
