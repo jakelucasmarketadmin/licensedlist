@@ -19,6 +19,7 @@ import {
   isSponsoredPlacement,
   isDemo,
   isUnclaimed,
+  licenseStatusLabel,
   publicSources,
   ratingReportedVia,
   listForTownCategory,
@@ -407,7 +408,7 @@ const tabs = [
           <div class="ledger rounded-[10px] bg-inset px-3 py-1.5">
             <div class="ledger-row">
               <span class="ledger-key">Status</span>
-              <span class="ledger-val">{b.licenseStatus ?? "unknown"}</span>
+              <span class="ledger-val">{licenseStatusLabel(b.licenseStatus)}</span>
             </div>
             {b.licenseNumber && (
               <div class="ledger-row">

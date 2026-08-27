@@ -1,45 +1,53 @@
-# Listing notice email — DRAFT, do not send until approved
+# Listing notice email — APPROVED 2026-08-27 (Lucas), send in batches of 5
 
 Rail: GHL_NOTICE_WEBHOOK workflow, payload fields {email, businessName,
-profileUrl, claimUrl, removeUrl}. One send per business, ever (notifiedAt).
-Trigger: scripts/notify-listed.ts (HOLD until Lucas approves this copy).
+profileUrl, claimUrl, removeUrl}. One send per business, ever (`notifiedAt`).
+Trigger: `scripts/notify-listed.ts --limit 5` — batches of 5, a day apart, so a
+wrong-address or bounce problem surfaces before it reaches everyone.
+
+Approved-copy constraints (do not silently drift from these):
+
+1. Lead with the fact, not the pitch. Line 1 = you are listed. Line 2 = it is
+   free and always will be. Line 3 = how to claim or remove.
+2. No subject line that implies they signed up for anything.
+3. The profile URL and the removal URL appear as plain text in the body — not
+   behind a button only. Many of these are read on a phone with images off.
 
 ---
 
-**Subject:** {{businessName}} is listed on TriVetted — claim it free, or have it removed
+**Subject:** Your business appears on TriVetted — here's the listing
 
 Hi —
 
-Your business, **{{businessName}}**, appears on TriVetted, a local directory
-for New Jersey, New York, and Pennsylvania that verifies contractor and
-professional licenses against the official state registries.
+**{{businessName}}** is listed on TriVetted, a directory of licensed local
+businesses in New Jersey, New York, and Pennsylvania. Your listing is here:
 
-Your listing is here: {{profileUrl}}
+{{profileUrl}}
 
-It was compiled from public records and your own website, and it's marked
-"Unclaimed" — we're not affiliated with you, and we don't take quote requests
-for you unless you opt in.
+It's free, and it always will be. We compiled it from public records and your
+own website, so it's marked "Unclaimed" — we're not affiliated with you, and
+we don't accept quote requests on your behalf.
 
-Two options, both free:
+Two things you can do, both free:
 
-1. **Claim it** ({{claimUrl}}) — takes about 3 minutes. You get to correct
-   anything, add photos and services, receive quote requests from homeowners,
-   and respond to reviews. Claiming is free, forever.
+**Claim it** — about 3 minutes. You can correct anything, add photos and
+services, receive quote requests, and reply to reviews:
+{{claimUrl}}
 
-2. **Remove it** ({{removeUrl}}) — no questions asked. We take the listing
-   down within 2 business days and never re-add it.
+**Remove it** — no questions asked, down within 2 business days, never
+re-added:
+{{removeUrl}}
 
-If we don't hear from you, the listing simply stays as it is — public
-information, clearly labeled as unclaimed.
+If we don't hear from you, the listing stays as it is: public information,
+clearly labeled unclaimed.
 
-Why we exist: every "Verified" badge on TriVetted names the official registry
-it was checked against and the date we checked. Rankings are never for sale.
-You can read exactly how it works at {{profileUrl}}/../../how-we-verify.
+One note on what the badges mean. Every "License verified" mark on TriVetted
+names the official registry it was checked against and the date we checked it.
+Placement is never for sale.
 
 — The TriVetted team
 admin@tier201.com
 
-*You're receiving this one-time notice because your business appears in
-public licensing/business records for our coverage area. There is no mailing
-list to unsubscribe from — this is the only email unless you claim your
-listing.*
+*This is a one-time notice, sent because your business appears in public
+records for our coverage area. There's no mailing list to unsubscribe from —
+you won't get another email unless you claim your listing or write back.*

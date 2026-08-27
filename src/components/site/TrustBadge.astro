@@ -45,6 +45,13 @@ const config = verificationDue
           cls: "bg-inset text-muted",
           title: "No state or county license applies to this category",
         }
+      : licenseStatus === "credential-only"
+      ? {
+          label: "Credential on file",
+          cls: "bg-inset text-muted",
+          title:
+            "No licence for these premises is on file with the registry. What we verified is a named individual's personal credential — see the verification record on the profile.",
+        }
       : licenseStatus === "suspended"
         ? {
             label: "License suspended",

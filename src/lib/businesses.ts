@@ -47,7 +47,7 @@ export interface DirectoryBusiness {
   /** comma list or JSON array of image URLs */
   /** JSON array of photo URLs; JSON-typed CMS reads may return the array itself. */
   photosJson?: string | string[];
-  /** verified | unverified | not-required | suspended */
+  /** verified | unverified | not-required | credential-only | suspended */
   licenseStatus?: string;
   licenseNumber?: string;
   licenseSource?: string;
@@ -192,6 +192,23 @@ export interface AdditionalLicense {
   number: string;
   source?: string;
   verifiedAt?: string;
+}
+
+/**
+ * Human label for a licenseStatus value. "credential-only" means the premises
+ * has no licence of its own on file and what we verified is a named
+ * individual's personal credential — recorded, but never badged as a business
+ * licence (docs/VERIFICATION.md).
+ */
+export function licenseStatusLabel(status?: string): string {
+  switch (status) {
+    case "verified": return "verified";
+    case "not-required": return "not required for this category";
+    case "credential-only": return "credential on file (no facility licence)";
+    case "suspended": return "suspended";
+    case "unverified": return "not verified";
+    default: return status ?? "unknown";
+  }
 }
 
 /** Parse the additional-licenses field; malformed JSON yields []. */

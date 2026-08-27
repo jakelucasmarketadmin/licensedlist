@@ -259,7 +259,9 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
               ` · ${b.licenseSource}${verifiedDate ? ` · checked ${verifiedDate}` : ""}`
             : b.licenseStatus === "not-required"
               ? "Not required for this category"
-              : "Not verified — ask before you hire"}
+              : b.licenseStatus === "credential-only"
+                ? "Owner's personal credential on file — no facility licence"
+                : "Not verified — ask before you hire"}
         </span>
       </div>
       {!horizontal && (
