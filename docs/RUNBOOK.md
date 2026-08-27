@@ -334,3 +334,17 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   docs/outreach/listing-notice.md is approved. New env: GHL_NOTICE_WEBHOOK.
 - **Ranking:** claimed beats unclaimed only as a tiebreak at equal score —
   documented on /how-we-verify.
+- **Batch-1 release schedule (2026-08-27):** 13 imported, all licenses
+  registry-verified same day. Tranche 1 (live 8/27): Bergen plumbers
+  (hodges-and-sons-plumbing, breitenbach-plumbing) + Bergen roofers
+  (homestead-roofing, great-american-roofing) + daylight-design
+  (client row, HIC verified 8/27, flipped draft→published to complete the
+  roofers threshold). Tranche 2 (~9/3): Bergen electricians
+  (grounded-electric, academy-electrical) + Montgomery PA spas
+  (sanctuary-spa-ambler, inbalance-wellness-spa, pure-spa-ambler).
+  Tranche 3 (~9/10): Montgomery PA roofers (nealman-construction,
+  cc-family-roofing) + Middlesex roofers (asch-roofing, biondo-contracting).
+  Draft rows are already imported + photo-mirrored — releasing a tranche is
+  just flipping status draft→published on those slugs (CMS editor, or
+  re-add the temp admin endpoint's status step from git history), then
+  smoke + crawl + PUBLISH-LOG.

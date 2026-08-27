@@ -1,6 +1,6 @@
 import { SITE_URL } from "./site";
 import { sitemapPaths } from "./routes";
-import { getAllTowns, getStates, getCountiesByState } from "./geo";
+import { getAllTowns, getStates, getCountiesByState, getTownsByCounty } from "./geo";
 import { GEO_DATA_UPDATED } from "@/data/geo.generated";
 import { getCategories } from "./taxonomy";
 import { getGuide } from "./guides";
@@ -88,6 +88,36 @@ export async function buildSitemapXml(): Promise<string> {
       }
     }
     for (const [key, { count, lastmod }] of townCat) {
+      if (count >= 3) {
+        const [pathKey, cat] = key.split("|");
+        entries.push({ path: `/${pathKey}/${cat}`, lastmod });
+      }
+    }
+
+    // County×category list pages use the same >=3 rule as the route itself
+    // (member = home county OR serves a town in the county).
+    const countyCat = new Map<string, { count: number; lastmod?: string }>();
+    for (const state of getStates()) {
+      for (const county of getCountiesByState(state.slug)) {
+        const townSlugs = new Set(getTownsByCounty(state.slug, county.slug).map((t) => t.slug));
+        for (const b of businesses) {
+          if (b.stateSlug !== state.slug) continue;
+          const inCounty =
+            b.countySlug === county.slug ||
+            [...townSlugs].some((t) => servesTown(b, t));
+          if (!inCounty) continue;
+          const updated = toDateOnly((b as any)._updatedDate);
+          for (const cat of categoriesOf(b)) {
+            const key = `${county.pathKey}|${cat}`;
+            const entry = countyCat.get(key) ?? { count: 0 };
+            entry.count += 1;
+            entry.lastmod = newest(entry.lastmod, updated);
+            countyCat.set(key, entry);
+          }
+        }
+      }
+    }
+    for (const [key, { count, lastmod }] of countyCat) {
       if (count >= 3) {
         const [pathKey, cat] = key.split("|");
         entries.push({ path: `/${pathKey}/${cat}`, lastmod });

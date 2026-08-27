@@ -66,3 +66,24 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
     Lighthouse all 15 templates ≥85 perf / ≥95 a11y, crawl 290/0. END OF BUILD PHASE.
 
 **Smoke 2026-08-27 01:52 UTC:** PASS — all 19 routes 200
+
+**Unclaimed batch 1, tranche 1 — 2026-08-27:** 13 public-records businesses imported
+  (all 13 licenses verified against their registries same day — NJ MyLicense person +
+  business search, PA AG HICPA, PA PALS; zero failures, needs-verification.csv empty).
+  Corrections found during verification: great-american 13VH04492500 (site) is the
+  Active one, BBB's 13VH06616100 is an expired dba of another entity; grounded-electric
+  "16590" resolved to Active business permit 34EB01659000; C&C's garbled NJ number
+  resolved to 13VH04508000; sanctuary-spa has no facility license — owner Joanna
+  ("Asia") I. Sigda's individual esthetician license CQ117677 (Active, exp 1/31/2027)
+  recorded instead. Published now (tranche 1): hodges-and-sons-plumbing,
+  breitenbach-plumbing, homestead-roofing, great-american-roofing + daylight-design
+  (client draft, HIC 13VH01553100 verified 8/27 → published to complete the Bergen
+  roofers threshold). Remaining 9 imported as draft, photos mirrored (36 files → own
+  wixstatic namespace 1f5d89).
+  New indexable URLs: 54 — town×category pages 46 (Bergen plumbers 17, Bergen
+  hvac-contractors 17 [Hodges+Breitenbach carry Active 19HC HVACR licenses, joining
+  Hofmeister], Bergen roofers 12), county pages 3, profiles 5. 4 over the nominal
+  50/week — flagged, driven by the unplanned hvac-contractors threshold crossing.
+  Tranche 2 (~9/3): Bergen electricians + Montgomery spas. Tranche 3 (~9/10):
+  Montgomery + Middlesex roofers. Sitemap fix: county×category pages now emitted
+  (same >=3 rule as the route).
