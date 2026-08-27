@@ -1,6 +1,7 @@
 import { SITE_URL } from "./site";
 import { sitemapPaths } from "./routes";
 import { getAllTowns, getStates, getCountiesByState } from "./geo";
+import { GEO_DATA_UPDATED } from "@/data/geo.generated";
 import { getCategories } from "./taxonomy";
 import { getGuide } from "./guides";
 import {
@@ -39,18 +40,19 @@ const newest = (...dates: (string | undefined)[]): string | undefined =>
   dates.filter((d): d is string => Boolean(d)).sort().pop();
 
 export async function buildSitemapXml(): Promise<string> {
-  const entries: SitemapEntry[] = sitemapPaths().map((path) => ({ path }));
+  const entries: SitemapEntry[] = sitemapPaths().map((e) => ({ path: e.path, lastmod: e.lastmod }));
 
   // Geo hubs: lastmod from the guide rendered on the page, when one exists.
   const guideDate = (scope: string, scopeKey: string, prefix: string) =>
     toDateOnly(getGuide(scope, scopeKey, prefix)?.updatedAt);
   for (const state of getStates()) {
-    entries.push({ path: `/${state.slug}`, lastmod: guideDate("state", state.slug, "licensing-") });
+    entries.push({ path: `/${state.slug}`, lastmod: newest(guideDate("state", state.slug, "licensing-"), GEO_DATA_UPDATED) });
     for (const county of getCountiesByState(state.slug)) {
-      entries.push({ path: `/${county.pathKey}`, lastmod: guideDate("county", county.pathKey, "cost-context-") });
+      entries.push({ path: `/${county.pathKey}`, lastmod: newest(guideDate("county", county.pathKey, "cost-context-"), GEO_DATA_UPDATED) });
     }
   }
-  for (const town of getAllTowns()) entries.push({ path: `/${town.pathKey}` });
+  // Town hubs: the geo/photo seed's newest CSV mtime is the real change date.
+  for (const town of getAllTowns()) entries.push({ path: `/${town.pathKey}`, lastmod: GEO_DATA_UPDATED });
 
   for (const category of getCategories()) {
     entries.push({
@@ -58,6 +60,7 @@ export async function buildSitemapXml(): Promise<string> {
       lastmod: newest(
         guideDate("category", category.slug, "hiring-"),
         guideDate("category", category.slug, "cost-context-"),
+        GEO_DATA_UPDATED,
       ),
     });
   }

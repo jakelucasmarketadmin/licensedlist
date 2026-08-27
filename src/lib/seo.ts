@@ -9,6 +9,9 @@ export interface PageSeo {
   path: string;
   robots?: string;
   ogType?: string;
+  /** Real copy-change date (YYYY-MM-DD) — sitemap lastmod; bump when a static
+   * page's content meaningfully changes. */
+  updated?: string;
   /** Short label used for the breadcrumb trail (defaults derived from title). */
   crumb?: string;
 }

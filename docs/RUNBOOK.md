@@ -271,3 +271,44 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   INSIDE /owner needs the Wix Payments + Pricing Plans apps installed
   (docs/PRICING-PLANS.md) — owner-side setup, then the /pricing CTAs can deep-
   link checkout.
+
+## 13. Day-one operations (launch)
+
+**A claim arrives (Jotform → claims collection / GHL):**
+1. Match the claimant against the record: business name + license number against the
+   registry row (or the published listing). Phone/email domain should plausibly belong to
+   the business. When in doubt, call the number on the license record — not the one on
+   the form.
+2. Registry row → dashboard: set status registered → published, claimed = true, fill
+   townSlug/serviceTownSlugs/description (importer merge by license number handles CSV
+   flows). Published listing → link the member via the claims record (memberId +
+   status=approved) so /owner unlocks.
+3. If they're within the first 200 approved in their county: foundingMember = true,
+   foundingCounty = "{stateSlug}|{countySlug}", tier = verified (free for life — no
+   billing). /founding-members counters update on the next render.
+4. Reply from admin@tier201.com with the profile link + /owner walkthrough.
+
+**A review is reported (Report link → admin@tier201.com, or ownerFlag in the dashboard):**
+1. Re-check identity + job linkage ONLY (docs/REVIEWS.md — sentiment is never a factor):
+   verified-hire reviews trace to their lead via leadId; public reviews get an email
+   verification request to the reviewer.
+2. Resolve within 3 business days: leave published (most cases), or set
+   moderationStatus = rejected only for policy violations (fake, wrong business,
+   defamation/PII). Note the outcome on the row (ownerFlag field) — awards require
+   zero UNRESOLVED flags, not zero flags.
+3. Never edit review text. Never remove on owner request alone.
+
+**A license lapses (verify-licenses.ts --stale sweep, or a tip):**
+1. Re-run the registry lookup named on the listing. Confirmed lapsed → set
+   licenseStatus = unverified (badge ambers automatically); message the owner with the
+   registry printout and a 30-day window.
+2. Renewed → update licenseVerifiedAt; still lapsed after 30 days in a license-required
+   category → status = suspended (page 404s, sitemap drops it on next render).
+3. Registry (unclaimed) rows: monthly re-import flips missing licenses to status = lapsed.
+
+**A Featured slot fills (3 per category per county):**
+1. /api/featured-slots is the source of truth — /pricing checks it before checkout.
+2. 4th request → waitlist (the pricing flow collects it); offer the nearest open county
+   or the Verified tier meanwhile.
+3. featuredUntil is the clock: expiry frees the slot automatically; sweep monthly for
+   expired featured tiers and notify the waitlist in order.

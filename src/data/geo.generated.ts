@@ -5,6 +5,10 @@ export interface StateSeed { name: string; slug: string; abbr: string; intro: st
 export interface CountySeed { name: string; slug: string; stateSlug: string; pathKey: string; population?: number; intro: string; permitNotes: string; lat?: number; lng?: number; isLaunch: boolean }
 export interface TownSeed { name: string; slug: string; countySlug: string; stateSlug: string; pathKey: string; population?: number; intro: string; localFacts: string[]; zips: string[]; lat?: number; lng?: number; nearbySlugs: string[]; isLaunch: boolean }
 
+/** Newest mtime across the source CSVs — a REAL content-change date for the
+ * hub pages this data renders (sitemap lastmod; never the build time). */
+export const GEO_DATA_UPDATED = "2026-08-27";
+
 export const STATE_SEED: StateSeed[] = [
   {
     "name": "New Jersey",

@@ -55,3 +55,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
     (both ANTHROPIC_API_KEY-gated, clean degradation verified live), /ai-info (1 new
     indexable URL) + llms.txt + /api/data/{listings,guides}.json. Smoke 19/19, crawl
     290 pages 0 broken.
+
+**Smoke 2026-08-27 01:42 UTC:** PASS — all 19 routes 200
