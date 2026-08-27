@@ -79,6 +79,8 @@ const categories = new Map(CATEGORY_SEED.map((c) => [c.slug, c]));
 const list = (v: string) => v.split(",").map((s) => s.trim()).filter(Boolean);
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const TIERS = new Set(["free", "verified", "featured", "sponsor"]);
+// Explicit licenseStatus overrides allowed in the CSV (blank = derive it).
+const LICENSE_STATUSES = new Set(["verified", "unverified", "not-required", "credential-only", "suspended"]);
 
 // ---------- validate ----------
 interface ValidRow {
@@ -122,6 +124,10 @@ for (const [i, r] of raw.entries()) {
   if (r.licenseVerifiedAt && Number.isNaN(Date.parse(r.licenseVerifiedAt)))
     problems.push(`licenseVerifiedAt "${r.licenseVerifiedAt}" is not a date`);
   if (r.tier && !TIERS.has(r.tier)) problems.push(`tier "${r.tier}" not in free|verified|featured|sponsor`);
+  if (r.licenseStatus && !LICENSE_STATUSES.has(r.licenseStatus.trim()))
+    problems.push(`licenseStatus "${r.licenseStatus}" not in ${[...LICENSE_STATUSES].join("|")}`);
+  if (r.licenseStatus?.trim() === "credential-only" && !r.licenseHolder?.trim())
+    problems.push("credential-only requires licenseHolder to name whose credential it is");
   if (r.hoursJson) {
     try { JSON.parse(r.hoursJson); } catch { problems.push("hoursJson is not valid JSON"); }
   }
@@ -133,16 +139,25 @@ for (const [i, r] of raw.entries()) {
   seenSlugs.add(r.slug);
 
   const primaryCat = categories.get(r.primaryCategorySlug)!;
+  // Optional explicit override for cases the rules below can't infer — today
+  // only "credential-only": the premises has no licence of its own and what we
+  // verified is a named individual's credential (docs/VERIFICATION.md). Without
+  // it a re-import would demote such a listing to draft every time.
+  const statusOverride = (r.licenseStatus ?? "").trim();
   const licenseVerified = Boolean(r.licenseNumber && r.licenseSource && r.licenseVerifiedAt);
   // A license claim that hasn't passed registry verification (source set, no
   // verified date) never publishes, even in a not-required category.
   const unverifiedClaim = Boolean(r.licenseSource && !r.licenseVerifiedAt);
-  const licenseStatus = licenseVerified
-    ? "verified"
-    : primaryCat.licenseRequired || unverifiedClaim
-      ? "unverified"
-      : "not-required";
-  const published = licenseStatus === "verified" || (!primaryCat.licenseRequired && !unverifiedClaim);
+  const licenseStatus = statusOverride
+    ? statusOverride
+    : licenseVerified
+      ? "verified"
+      : primaryCat.licenseRequired || unverifiedClaim
+        ? "unverified"
+        : "not-required";
+  const published = statusOverride
+    ? statusOverride !== "unverified" && statusOverride !== "suspended"
+    : licenseStatus === "verified" || (!primaryCat.licenseRequired && !unverifiedClaim);
   if (!published)
     needsVerification.push({
       slug: r.slug,

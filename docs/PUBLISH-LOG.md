@@ -91,3 +91,22 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
 **Smoke 2026-08-27 04:24 UTC:** PASS — all 19 routes 200
 
 **Smoke 2026-08-27 04:30 UTC:** PASS — all 19 routes 200
+
+**Sanctuary reframing + notice approval — 2026-08-27:** Sanctuary Spa moved off the
+  verified badge. PA PALS holds no facility licence at 105 Mattison Ave (checked all
+  boards by street statewide, and every cosmetology facility in Ambler), so the business
+  is now `licenseStatus = credential-only` — neutral "Credential on file" badge — with the
+  owner's individual esthetician licence (Joanna I. Sigda, CQ117677, active to 2027-01-31)
+  recorded as a credential in the Verification block, stating plainly that no facility
+  licence is on file. New rule in docs/VERIFICATION.md: an individual practitioner
+  credential is displayed as a credential, never as a business licence, and never earns the
+  badge. InBalance (CZ123155) and Pure Spa (CZ116612) are Esthetician **Salon** licences —
+  facility licences matching the listed addresses — and keep the badge. Every batch-1
+  `licenseHolder` rewritten as prose (the ILM/Pascale convention), incl. daylight-design:
+  "Registered with NJ DCA as Homeworks by Joseph Ottomanelli." Importer gained an optional
+  `licenseStatus` override column so re-imports can't demote credential-only rows.
+  Tranche-1 overage (54 vs 50) accepted per Lucas; tranche 2 measured at 21 new URLs, well
+  under the 40 ceiling set to compensate. Notice email copy approved with edits (fact
+  first, plain-text profile + removal URLs, no opt-in-implying subject); send capped at 5
+  per batch, a day apart — BLOCKED on env: REVIEW_CRON_SECRET and GHL_NOTICE_WEBHOOK are
+  both unset on the live site.

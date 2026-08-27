@@ -348,3 +348,20 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   just flipping status draft→published on those slugs (CMS editor, or
   re-add the temp admin endpoint's status step from git history), then
   smoke + crawl + PUBLISH-LOG.
+- **Individual credentials (2026-08-27):** `licenseStatus = credential-only`
+  renders the neutral "Credential on file" badge and never the green shield.
+  Licence number/source/verified-at stay blank (the business has no registry
+  record of its own); the whole story goes in `licenseHolder`, which renders as
+  prose in the Verification block and must state explicitly that no facility
+  licence is on file. The importer accepts an optional `licenseStatus` CSV
+  column as an override so a re-import can't demote such a listing to draft.
+  Rules and worked examples: docs/VERIFICATION.md.
+- **Tranche release, step by step:** flipping `status` draft→published in the
+  CMS is all a release takes — CMS data is live within the 5-minute lib cache,
+  no republish needed. Either edit the rows in the Wix dashboard (Businesses →
+  set status), or re-add the temp admin endpoint's `status` step from git
+  (commit 5b077ad, `src/pages/api/admin-unclaimed.ts`), run it against the
+  preview origin, and delete it again. Then: `npx tsx scripts/smoke.ts --log`,
+  the link crawl, and a PUBLISH-LOG entry naming the pages that went live.
+  Projected sizes (measured 2026-08-27): tranche 2 = **21** new URLs,
+  tranche 3 = **50**.
