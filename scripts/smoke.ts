@@ -32,6 +32,9 @@ const ROUTES = [
   "/guides",
   "/awards",
   "/founding-members",
+  "/saved",
+  "/account",
+  "/ai-info",
   "/write-review?biz=hofmeister-plumbing",
   "/sitemap",
 ];
