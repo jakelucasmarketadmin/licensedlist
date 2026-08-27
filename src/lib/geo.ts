@@ -30,6 +30,10 @@ export function getCounty(stateSlug: string, countySlug: string): CountySeed | u
   return COUNTY_SEED.find((c) => c.stateSlug === stateSlug && c.slug === countySlug);
 }
 
+export function getAllCounties(): CountySeed[] {
+  return [...COUNTY_SEED].sort((a, b) => a.name.localeCompare(b.name));
+}
+
 export function getTownsByCounty(stateSlug: string, countySlug: string): TownSeed[] {
   return TOWN_SEED.filter((t) => t.stateSlug === stateSlug && t.countySlug === countySlug).sort(
     (a, b) => (b.population ?? 0) - (a.population ?? 0),

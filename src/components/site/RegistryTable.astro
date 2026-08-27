@@ -1,46 +1,79 @@
 ---
 import type { RegisteredBusiness } from "@/lib/registry";
-import { jotformClaimRegistryUrl } from "@/lib/jotform";
+import { jotformClaimRegistryUrl, JOTFORM_FORM_URL } from "@/lib/jotform";
+import { getCategory } from "@/lib/taxonomy";
 import { SITE_NAME } from "@/lib/site";
 
 /**
- * "Also licensed in {place}" — compact registry table (C0). Server-rendered,
- * data-nosnippet, 25 rows/page via #fragment pagination (no new URLs), capped
- * at 100 rendered rows. Used on geo×category list pages and county hubs.
+ * "Also licensed in {place}" — registry table v2 (R-fix 2/3). Server-rendered,
+ * data-nosnippet, 25 rows/page fragment pagination, capped at 100 rendered
+ * rows; a search box filters the rendered rows instantly and "Search all N"
+ * queries the full scope via /api/registry-search (state kept in #fragment —
+ * no new URLs). NYC DCWP HIC licenses share a cycle end date, hence the
+ * "License cycle ends" header (verified 2026-08-26: 13,383 of 13,385 active
+ * licenses share 2027-02-28).
  */
 interface Props {
   heading: string;
   rows: RegisteredBusiness[];
   totalCount: number;
-  /** unique per page instance (multiple tables per page get their own pager) */
   tableId?: string;
+  /** scope for the server-side "Search all" (omit to hide that button) */
+  searchScope?: { stateSlug: string; countySlug: string; categorySlug?: string };
 }
-const { heading, rows, totalCount, tableId = "registry" } = Astro.props;
+const { heading, rows, totalCount, tableId = "registry", searchScope } = Astro.props;
 const pages = Math.ceil(rows.length / 25);
+const categoryName = (r: RegisteredBusiness) =>
+  getCategory(r.primaryCategorySlug ?? "")?.name?.replace(/s$/, "") ?? "Licensed business";
+const sharedCycle =
+  rows.length > 3 && rows.every((r) => r.licenseExpiresAt === rows[0].licenseExpiresAt) && rows[0].licenseExpiresAt;
 ---
 
-<section class="mt-10" aria-labelledby={`${tableId}-heading`} data-nosnippet>
+<section class="mt-10" aria-labelledby={`${tableId}-heading`} data-nosnippet data-registry-root={tableId} data-search-scope={searchScope ? JSON.stringify(searchScope) : ""} data-claim-base={JOTFORM_FORM_URL}>
   <h2 id={`${tableId}-heading`} class="font-display text-xl font-semibold text-ink">{heading}</h2>
   <p class="mt-1 max-w-prose text-sm text-muted">
     Businesses on the official license roster that haven't claimed their {SITE_NAME} listing
     yet. They aren't ranked or reviewed — the license record is shown as filed.
   </p>
-  <div class="mt-4 overflow-hidden rounded-card border border-line">
+
+  <div class="mt-4 flex flex-wrap items-center gap-2">
+    <label class="sr-only" for={`${tableId}-search`}>Search licensed businesses</label>
+    <input
+      id={`${tableId}-search`}
+      type="search"
+      placeholder={`Filter these ${rows.length} rows…`}
+      class="w-full max-w-xs rounded-[10px] border border-line bg-surface px-3 py-2 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none"
+      data-registry-filter
+    />
+    {searchScope && totalCount > rows.length && (
+      <button type="button" data-registry-search-all class="rounded-chip border border-line-strong px-4 py-2 text-sm font-semibold text-ink hover:bg-inset">
+        Search all {totalCount.toLocaleString("en-US")}
+      </button>
+    )}
+    <span data-registry-search-status class="text-xs text-faint" role="status"></span>
+  </div>
+
+  <div class="mt-3 overflow-hidden rounded-card border border-line">
     <table class="w-full text-sm">
       <thead>
         <tr class="border-b border-line bg-inset text-left text-xs uppercase tracking-wider text-faint">
           <th class="px-3 py-2 font-semibold">Business</th>
-          <th class="hidden px-3 py-2 font-semibold sm:table-cell">Town</th>
+          <th class="hidden px-3 py-2 font-semibold sm:table-cell">Category</th>
           <th class="hidden px-3 py-2 font-semibold md:table-cell">License</th>
-          <th class="hidden px-3 py-2 font-semibold md:table-cell">Expires</th>
+          <th class="hidden px-3 py-2 font-semibold md:table-cell">{sharedCycle ? "License cycle ends" : "Expires"}</th>
           <th class="px-3 py-2"><span class="sr-only">Claim</span></th>
         </tr>
       </thead>
       <tbody data-registry-body={tableId}>
         {rows.map((r, i) => (
-          <tr class:list={["border-b border-line bg-surface last:border-0", i >= 25 && "hidden"]} data-page={Math.floor(i / 25)}>
-            <td class="px-3 py-2 font-medium text-ink">{r.name}</td>
-            <td class="hidden px-3 py-2 text-muted sm:table-cell">{r.city}</td>
+          <tr class:list={["border-b border-line bg-surface last:border-0", i >= 25 && "hidden"]} data-page={Math.floor(i / 25)} data-name={(r.name ?? "").toLowerCase()}>
+            <td class="px-3 py-2">
+              <span class="block font-medium text-ink">{r.name}</span>
+              <span class="block text-xs text-faint">
+                {[r.address1, r.city, r.zip].filter(Boolean).join(", ")}
+              </span>
+            </td>
+            <td class="hidden px-3 py-2 text-muted sm:table-cell">{categoryName(r)}</td>
             <td class="hidden px-3 py-2 font-mono text-xs text-muted md:table-cell">{r.licenseNumber}</td>
             <td class="hidden px-3 py-2 text-xs text-muted md:table-cell">{r.licenseExpiresAt || "—"}</td>
             <td class="px-3 py-2 text-right">
@@ -81,26 +114,105 @@ const pages = Math.ceil(rows.length / 25);
       )}
     </div>
   </div>
+  {sharedCycle && (
+    <p class="mt-2 text-[11px] leading-snug text-faint">
+      NYC home improvement contractor licenses run on a shared two-year cycle — all active
+      licenses expire on the same date and renew together.
+    </p>
+  )}
+
   <script is:inline data-astro-rerun define:vars={{ tableId }}>
     (function () {
-      var pager = document.querySelector('[data-registry-pager="' + tableId + '"]');
-      if (!pager || pager.dataset.wired) return;
-      pager.dataset.wired = "1";
-      var body = document.querySelector('[data-registry-body="' + tableId + '"]');
-      pager.addEventListener("click", function (e) {
-        var link = e.target.closest("[data-registry-page]");
-        if (!link || !body) return;
-        var page = link.getAttribute("data-registry-page");
+      var root = document.querySelector('[data-registry-root="' + tableId + '"]');
+      if (!root || root.dataset.wired) return;
+      root.dataset.wired = "1";
+      var body = root.querySelector('[data-registry-body="' + tableId + '"]');
+      var pager = root.querySelector('[data-registry-pager="' + tableId + '"]');
+      var filter = root.querySelector("[data-registry-filter]");
+      var searchAll = root.querySelector("[data-registry-search-all]");
+      var status = root.querySelector("[data-registry-search-status]");
+      var serverRows = null; // non-null once a "search all" swap happened
+
+      function showPage(page) {
         body.querySelectorAll("[data-page]").forEach(function (row) {
           row.classList.toggle("hidden", row.getAttribute("data-page") !== page);
         });
-        pager.querySelectorAll("[data-registry-page]").forEach(function (l) {
-          var on = l === link;
-          l.classList.toggle("bg-brand", on);
-          l.classList.toggle("text-white", on);
-          l.classList.toggle("text-muted", !on);
+        if (pager)
+          pager.querySelectorAll("[data-registry-page]").forEach(function (l) {
+            var on = l.getAttribute("data-registry-page") === page;
+            l.classList.toggle("bg-brand", on);
+            l.classList.toggle("text-white", on);
+            l.classList.toggle("text-muted", !on);
+          });
+      }
+      if (pager)
+        pager.addEventListener("click", function (e) {
+          var link = e.target.closest("[data-registry-page]");
+          if (link) { serverRows = null; showPage(link.getAttribute("data-registry-page")); }
         });
-      });
+
+      // Instant filter over the server-rendered rows.
+      if (filter)
+        filter.addEventListener("input", function () {
+          var term = filter.value.trim().toLowerCase();
+          if (serverRows) return; // server results already shown
+          if (!term) { showPage("0"); if (status) status.textContent = ""; return; }
+          var hits = 0;
+          body.querySelectorAll("[data-page]").forEach(function (row) {
+            var hit = row.getAttribute("data-name").indexOf(term) !== -1;
+            row.classList.toggle("hidden", !hit);
+            if (hit) hits++;
+          });
+          if (status) status.textContent = hits + " of the shown rows match";
+        });
+
+      // Server-side "search all N" — result state carried in the #fragment.
+      function runServerSearch(term) {
+        var scope = {};
+        try { scope = JSON.parse(root.getAttribute("data-search-scope") || "{}"); } catch (e) {}
+        if (!scope.stateSlug) return;
+        if (status) status.textContent = "Searching all records…";
+        var params = new URLSearchParams({ state: scope.stateSlug, county: scope.countySlug || "", q: term });
+        if (scope.categorySlug) params.set("category", scope.categorySlug);
+        fetch("/api/registry-search?" + params)
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (!res.ok) throw new Error(res.error);
+            serverRows = res.rows;
+            location.hash = tableId + "-q=" + encodeURIComponent(term);
+            var claimBase = root.getAttribute("data-claim-base");
+            body.innerHTML = res.rows.map(function (r) {
+              var claim = claimBase + "?" + new URLSearchParams({ q2_radio0: "Update an existing listing", q3_textbox1: r.name || "", licenseNumber: r.licenseNumber || "" });
+              return '<tr class="border-b border-line bg-surface last:border-0" data-page="0">' +
+                '<td class="px-3 py-2"><span class="block font-medium text-ink"></span><span class="block text-xs text-faint"></span></td>' +
+                '<td class="hidden px-3 py-2 text-muted sm:table-cell"></td>' +
+                '<td class="hidden px-3 py-2 font-mono text-xs text-muted md:table-cell"></td>' +
+                '<td class="hidden px-3 py-2 text-xs text-muted md:table-cell"></td>' +
+                '<td class="px-3 py-2 text-right"><a target="_blank" rel="nofollow noopener" class="rounded-chip border border-line-strong px-3 py-1 text-xs font-semibold text-ink hover:bg-inset" href="' + claim + '">Claim this listing</a></td></tr>';
+            }).join("");
+            // Fill text via textContent (never trust strings into HTML).
+            var trs = body.querySelectorAll("tr");
+            res.rows.forEach(function (r, i) {
+              var tds = trs[i].querySelectorAll("td");
+              tds[0].querySelector("span").textContent = r.name || "";
+              tds[0].querySelectorAll("span")[1].textContent = [r.address1, r.city, r.zip].filter(Boolean).join(", ");
+              tds[1].textContent = (r.category || "Licensed business").replace(/s$/, "");
+              tds[2].textContent = r.licenseNumber || "";
+              tds[3].textContent = r.licenseExpiresAt || "—";
+            });
+            if (status) status.textContent = res.rows.length + (res.rows.length === 50 ? "+ matches (first 50 shown)" : " matches across all records");
+          })
+          .catch(function () { if (status) status.textContent = "Search failed — try again."; });
+      }
+      if (searchAll)
+        searchAll.addEventListener("click", function () {
+          var term = (filter && filter.value.trim()) || "";
+          if (term.length < 2) { if (status) status.textContent = "Type at least 2 characters first."; return; }
+          runServerSearch(term);
+        });
+      // Restore from #fragment state.
+      var m = location.hash.match(new RegExp(tableId + "-q=([^&]+)"));
+      if (m && filter) { filter.value = decodeURIComponent(m[1]); runServerSearch(filter.value); }
     })();
   </script>
 </section>

@@ -28,6 +28,7 @@ export interface RegisteredBusiness {
   townSlug?: string;
   city?: string;
   zip?: string;
+  address1?: string;
   phone?: string;
   primaryCategorySlug?: string;
   licenseNumber?: string;
@@ -39,7 +40,8 @@ export interface RegisteredBusiness {
 
 const FIELDS = [
   "name", "slug", "status", "stateSlug", "countySlug", "townSlug", "city", "zip",
-  "primaryCategorySlug", "licenseNumber", "licenseSource", "licenseExpiresAt",
+  "address1", "phone", "primaryCategorySlug", "licenseNumber", "licenseSource",
+  "licenseExpiresAt",
 ] as const;
 
 async function elevatedQuery(): Promise<((collection: string) => any) | null> {
@@ -208,3 +210,48 @@ export async function foundingCounts(): Promise<Map<string, number>> {
 }
 
 export const FOUNDING_CAP_PER_COUNTY = 200;
+
+/**
+ * Server-side name search across a county/category registry scope (backs the
+ * table's "Search all N" — client filter only sees the rendered 100). Wix
+ * query `contains` is case-insensitive-ish on text; we post-filter to be sure.
+ */
+export async function searchRegistered(
+  scope: RegistryScope,
+  term: string,
+  limit = 50,
+): Promise<RegisteredBusiness[]> {
+  const q = await elevatedQuery();
+  const needle = term.trim().toLowerCase();
+  if (!needle) return [];
+  if (q) {
+    try {
+      const res = await applyScope(q("businesses"), scope)
+        .contains("name", term.trim())
+        .ascending("name")
+        .limit(limit)
+        .find();
+      return (res?.items ?? [])
+        .map((it: any) => {
+          const src = it.data ?? it;
+          const row: any = { _id: it._id ?? it.id };
+          for (const f of FIELDS) row[f] = src[f];
+          return row as RegisteredBusiness;
+        })
+        .filter((r: RegisteredBusiness) => (r.name ?? "").toLowerCase().includes(needle));
+    } catch {
+      return [];
+    }
+  }
+  const all = await fallbackAll();
+  return all
+    .filter(
+      (r) =>
+        r.stateSlug === scope.stateSlug &&
+        (!scope.countySlug || r.countySlug === scope.countySlug) &&
+        (!scope.categorySlug || r.primaryCategorySlug === scope.categorySlug) &&
+        (r.name ?? "").toLowerCase().includes(needle),
+    )
+    .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
+    .slice(0, limit);
+}

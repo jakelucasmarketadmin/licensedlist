@@ -21,9 +21,10 @@
  * --push POSTs 200-row batches to the temporary /api/admin-registry endpoint
  * (elevated bulk insert with dedupe by licenseNumber then name+zip).
  */
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, appendFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { rejectReason, normalizeName } from "../src/lib/registry-normalize";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
@@ -189,7 +190,24 @@ async function fetchRows(): Promise<RegistryRow[]> {
   throw new Error(`unknown source ${source} (nyc-hic | ny-re-offices)`);
 }
 
-const rows = await fetchRows();
+const fetched = await fetchRows();
+// Name hygiene (R-fix 1): reject junk names, normalize the rest, log rejects.
+const rejectsPath = join(root, "data/registry-rejects.csv");
+if (!existsSync(rejectsPath))
+  writeFileSync(rejectsPath, "date,source,licenseNumber,rawName,reason\n");
+let rejected = 0;
+const rows = fetched.filter((r) => {
+  const reason = rejectReason(r.name);
+  if (reason) {
+    appendFileSync(rejectsPath, `${today},${source},${r.licenseNumber},"${String(r.name).replace(/"/g, '""')}",${reason}\n`);
+    rejected++;
+    return false;
+  }
+  r.name = normalizeName(r.name);
+  return true;
+});
+if (rejected) console.log(`rejected ${rejected} junk name(s) → data/registry-rejects.csv`);
+
 // In-batch dedupe by license number, then normalized name+zip.
 const seen = new Set<string>();
 const deduped = rows.filter((r) => {
