@@ -45,3 +45,13 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
     Richmond RE offices 499; the acd4-wkax mislabel was purged same-day). Crawl 288 pages
     0 broken. New collections: events, offers, awards, subscribers (+DEMO rows behind
     preview).
+
+**Smoke 2026-08-27 00:47 UTC:** PASS — all 19 routes 200
+  - R-fixes + Batch D publish: registry cleanup (4 junk rows removed, 3,259 names
+    normalized → data/registry-rejects.csv), table v2 (category/address/search + shared
+    license-cycle note, verified 13,383/13,385 share 2027-02-28), founding counters
+    rewritten + pending counties. Batch D: NL intake (+intentLogs, no raw text), saved
+    lists + my projects (noindex /saved /account), AI review summaries + concierge
+    (both ANTHROPIC_API_KEY-gated, clean degradation verified live), /ai-info (1 new
+    indexable URL) + llms.txt + /api/data/{listings,guides}.json. Smoke 19/19, crawl
+    290 pages 0 broken.
