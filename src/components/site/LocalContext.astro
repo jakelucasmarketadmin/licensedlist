@@ -1,0 +1,60 @@
+---
+/**
+ * Local context section (Gate A6) — the thing directories lose on.
+ *
+ * Composed from Census ACS housing data and NOAA climate normals rather than
+ * hand-written prose, so it scales to every town and every number is sourced.
+ * See data/money/town-housing.csv (fetched by scripts/fetch-town-housing.ts).
+ */
+import type { TownHousing } from "@/lib/moneypage";
+interface Props {
+  housing: TownHousing;
+  placeName: string;
+  categoryName: string;
+  /** Category-specific consequence of old housing stock, if we have one. */
+  stockNote?: string;
+  climate?: { snowInches: number; precipInches: number; station: string; period: string };
+}
+const { housing, placeName, categoryName, stockNote, climate } = Astro.props;
+const units = housing.totalUnits.toLocaleString("en-US");
+const era =
+  housing.medianYearBuilt && housing.medianYearBuilt < 1960
+    ? "before 1960"
+    : housing.medianYearBuilt && housing.medianYearBuilt < 1980
+      ? "in the postwar decades"
+      : "relatively recently";
+---
+
+<section class="mt-10 max-w-prose" aria-labelledby="context-heading" data-local-context>
+  <h2 id="context-heading" class="font-display text-2xl font-semibold text-ink">
+    What {placeName} housing means for {categoryName.toLowerCase()}
+  </h2>
+  <div class="mt-3 space-y-3 leading-relaxed text-muted">
+    <p>
+      {placeName} has <strong class="text-ink">{units} housing units</strong>, and the median one
+      was built in <strong class="text-ink">{housing.medianYearBuilt}</strong> — {era}.
+      {housing.pctPre1940 !== null && (
+        <> <strong class="text-ink">{housing.pctPre1940}%</strong> of the stock predates 1940</>
+      )}
+      {housing.pctPre1960 !== null && <> and {housing.pctPre1960}% predates 1960</>}
+      {housing.pctOwnerOccupied !== null && (
+        <>, with {housing.pctOwnerOccupied}% of occupied homes owner-occupied</>
+      )} (US Census Bureau, {housing.release}).
+    </p>
+    {stockNote && <p>{stockNote}</p>}
+    {climate && (
+      <p>
+        Weather sets the seasonal pattern: the {climate.period} NOAA normal at {climate.station} is
+        <strong class="text-ink"> {climate.snowInches} inches of snow</strong> and
+        {" "}{climate.precipInches} inches of precipitation a year. Freeze-thaw cycles concentrate
+        emergency calls between December and March, which is also when after-hours rates apply
+        most often.
+      </p>
+    )}
+    <p class="text-xs text-faint">
+      Housing figures: US Census Bureau American Community Survey, {housing.release}, for
+      {" "}{housing.geoName}.
+      {climate && <> Climate: NOAA NCEI 1991–2020 Climate Normals, {climate.station}.</>}
+    </p>
+  </div>
+</section>

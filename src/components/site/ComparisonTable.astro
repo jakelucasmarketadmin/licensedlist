@@ -1,0 +1,152 @@
+---
+/**
+ * Side-by-side comparison table (Gate A3). Only 15% of ranking pages have one.
+ * Real <table> markup on purpose: AI parsers and screen readers both read
+ * tables far better than a grid of divs.
+ */
+import {
+  type DirectoryBusiness,
+  blendedRating,
+  totalReviewCount,
+  ratingSourcesLabel,
+  additionalLicenses,
+  isUnclaimed,
+} from "@/lib/businesses";
+import { getTownBySlug } from "@/lib/geo";
+
+interface Props { businesses: DirectoryBusiness[]; placeName: string; categoryName: string }
+const { businesses, placeName, categoryName } = Astro.props;
+
+const yes = (v: unknown) => v === true || v === "true";
+const rows = businesses.map((b) => {
+  const services = (b.services ?? "").toLowerCase();
+  const towns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  const extra = additionalLicenses(b);
+  const licence =
+    b.licenseStatus === "verified"
+      ? [b.licenseNumber, ...extra.map((l) => l.number)].filter(Boolean).join(" + ")
+      : b.licenseStatus === "credential-only"
+        ? "Credential only"
+        : b.licenseStatus === "not-required"
+          ? "Not required"
+          : "Not verified";
+  return {
+    slug: b.slug ?? "",
+    name: b.name ?? "",
+    rating: blendedRating(b),
+    sources: ratingSourcesLabel(b),
+    reviews: totalReviewCount(b),
+    licence,
+    verified: b.licenseStatus === "verified",
+    years: b.yearsInBusiness ? Number(b.yearsInBusiness) : null,
+    specialty: (b.services ?? "").split(",")[0]?.trim() ?? "",
+    servesCount: towns.length,
+    homeTown: b.townSlug ? getTownBySlug(b.townSlug, b.stateSlug)?.name ?? "" : "",
+    emergency: /emergency|24\/7|24-hour/.test(services),
+    freeEstimate: /free estimate|free quote|free inspection/.test(services),
+    unclaimed: isUnclaimed(b),
+  };
+});
+---
+
+{rows.length > 1 && (
+  <section class="mt-10" aria-labelledby="compare-heading" data-comparison-table>
+    <h2 id="compare-heading" class="font-display text-2xl font-semibold text-ink">
+      {categoryName} in {placeName}, side by side
+    </h2>
+    <p class="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+      Every column is a fact we hold on the record, not a score we assigned. Sort any column;
+      licence numbers link through to the full verification record.
+    </p>
+
+    <div class="mt-4 overflow-x-auto rounded-card border border-line">
+      <table class="w-full min-w-[860px] border-collapse text-sm" data-sortable-table>
+        <caption class="sr-only">
+          Comparison of {rows.length} {categoryName.toLowerCase()} serving {placeName}
+        </caption>
+        <thead>
+          <tr class="bg-inset text-left">
+            {[
+              ["Business", "text"], ["Rating", "num"], ["Reviews", "num"], ["Licence #", "text"],
+              ["Years", "num"], ["Specialty", "text"], ["Serves", "num"],
+              ["Emergency", "text"], ["Free estimate", "text"], ["", "none"],
+            ].map(([label, kind], i) => (
+              <th
+                scope="col"
+                class:list={["px-3 py-3 font-semibold text-ink", kind !== "none" && "cursor-pointer select-none"]}
+                data-sort-col={kind === "none" ? undefined : String(i)}
+                data-sort-kind={kind === "none" ? undefined : kind}
+                aria-sort="none"
+              >
+                {label}{kind !== "none" && <span class="ml-1 text-faint" aria-hidden="true">↕</span>}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr class="border-t border-line">
+              <th scope="row" class="px-3 py-3 text-left font-medium text-ink">
+                <a href={`/business/${r.slug}`} class="hover:text-brand">{r.name}</a>
+                {r.unclaimed && (
+                  <span class="ml-2 rounded-chip bg-inset px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted">
+                    Unclaimed
+                  </span>
+                )}
+              </th>
+              <td class="px-3 py-3 text-ink" data-sort-value={r.rating ?? -1}>
+                {r.rating ? <>{r.rating}★ <span class="text-xs text-faint">{r.sources}</span></> : "—"}
+              </td>
+              <td class="px-3 py-3 text-muted" data-sort-value={r.reviews}>{r.reviews || "—"}</td>
+              <td class="px-3 py-3 font-mono text-xs text-muted">
+                {r.verified ? <a href={`/business/${r.slug}#verification`} class="underline underline-offset-2 hover:text-ink">{r.licence}</a> : r.licence}
+              </td>
+              <td class="px-3 py-3 text-muted" data-sort-value={r.years ?? -1}>{r.years ?? "—"}</td>
+              <td class="px-3 py-3 text-muted">{r.specialty || "—"}</td>
+              <td class="px-3 py-3 text-muted" data-sort-value={r.servesCount}>
+                {r.servesCount ? `${r.servesCount} towns` : r.homeTown || "—"}
+              </td>
+              <td class="px-3 py-3 text-muted">{r.emergency ? "Yes" : "—"}</td>
+              <td class="px-3 py-3 text-muted">{r.freeEstimate ? "Yes" : "—"}</td>
+              <td class="px-3 py-3 text-right">
+                <a href={`/business/${r.slug}`} class="rounded-chip border border-line-strong px-3 py-1 text-xs font-semibold text-ink hover:bg-inset">
+                  Profile
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <script is:inline>
+      (function () {
+        var table = document.querySelector("[data-sortable-table]");
+        if (!table) return;
+        var tbody = table.querySelector("tbody");
+        table.querySelectorAll("[data-sort-col]").forEach(function (th) {
+          th.addEventListener("click", function () {
+            var idx = Number(th.getAttribute("data-sort-col"));
+            var numeric = th.getAttribute("data-sort-kind") === "num";
+            var asc = th.getAttribute("aria-sort") !== "ascending";
+            table.querySelectorAll("[data-sort-col]").forEach(function (o) { o.setAttribute("aria-sort", "none"); });
+            th.setAttribute("aria-sort", asc ? "ascending" : "descending");
+            var rows = Array.prototype.slice.call(tbody.querySelectorAll("tr"));
+            rows.sort(function (a, b) {
+              var ca = a.children[idx], cb = b.children[idx];
+              if (numeric) {
+                var va = Number(ca.getAttribute("data-sort-value") || 0);
+                var vb = Number(cb.getAttribute("data-sort-value") || 0);
+                return asc ? va - vb : vb - va;
+              }
+              var ta = (ca.textContent || "").trim().toLowerCase();
+              var tb = (cb.textContent || "").trim().toLowerCase();
+              return asc ? ta.localeCompare(tb) : tb.localeCompare(ta);
+            });
+            rows.forEach(function (r) { tbody.appendChild(r); });
+          });
+        });
+      })();
+    </script>
+  </section>
+)}

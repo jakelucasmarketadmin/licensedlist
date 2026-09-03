@@ -1,0 +1,90 @@
+---
+/**
+ * Local cost section (Gate A1). Sits directly under the methodology line and
+ * above the listings: 44% of LLM citations come from the first 30% of a page,
+ * and every competitor buries cost data below the fold.
+ *
+ * Every figure is transcribed from `sources` — see data/money/cost-guides.csv.
+ * Where no defensible figure exists we write the cost drivers instead.
+ */
+import type { CostGuide } from "@/lib/moneypage";
+interface Props { guide: CostGuide; placeName: string; categoryName: string }
+const { guide, placeName, categoryName } = Astro.props;
+
+// **bold** → <strong>; the modifier copy is authored, not user input.
+const renderModifier = (text: string) =>
+  text.replace(/\*\*(.+?)\*\*/g, '<strong class="text-ink">$1</strong>');
+const updated = new Date(guide.updatedAt).toLocaleDateString("en-US", {
+  month: "long", day: "numeric", year: "numeric",
+});
+---
+
+<section class="mt-10" aria-labelledby="cost-heading" data-cost-guide>
+  <h2 id="cost-heading" class="font-display text-2xl font-semibold text-ink">
+    What {categoryName.toLowerCase()} cost in {placeName}
+  </h2>
+
+  <p class="mt-3 max-w-prose text-lg leading-relaxed text-muted">{guide.headline}</p>
+
+  <div class="mt-5 overflow-x-auto rounded-card border border-line">
+    <table class="w-full min-w-[560px] border-collapse text-sm">
+      <caption class="sr-only">
+        Typical {categoryName.toLowerCase()} costs in {placeName}, with the source for each figure
+      </caption>
+      <thead>
+        <tr class="bg-inset text-left">
+          <th scope="col" class="px-4 py-3 font-semibold text-ink">Job type</th>
+          <th scope="col" class="px-4 py-3 font-semibold text-ink">Typical {placeName} cost</th>
+          <th scope="col" class="px-4 py-3 font-semibold text-ink">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {guide.rows.map((row) => (
+          <tr class="border-t border-line align-top">
+            <th scope="row" class="px-4 py-3 text-left font-medium text-ink">{row.jobType}</th>
+            <td class="whitespace-nowrap px-4 py-3 font-mono text-ink">{row.typicalCost}</td>
+            <td class="px-4 py-3 leading-relaxed text-muted">
+              {row.notes}
+              {row.source && (
+                <span class="mt-1 block text-xs text-faint">Source: {row.source}</span>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {guide.modifiers.length > 0 && (
+    <div class="mt-6 max-w-prose">
+      <h3 class="font-display text-lg font-semibold text-ink">
+        What moves the price in {placeName}
+      </h3>
+      <ul class="mt-3 space-y-3">
+        {guide.modifiers.map((m) => (
+          <li class="leading-relaxed text-muted" set:html={renderModifier(m)} />
+        ))}
+      </ul>
+    </div>
+  )}
+
+  <div class="mt-5 max-w-prose rounded-card border border-line bg-surface p-4">
+    <p class="text-xs font-semibold uppercase tracking-wider text-faint">Where these figures come from</p>
+    <ul class="mt-2 space-y-1 text-xs leading-relaxed text-muted">
+      {guide.sources.map((s) => (
+        <li>
+          <a href={s.url} rel="nofollow noopener" target="_blank" class="underline underline-offset-2 hover:text-ink">
+            {s.label}
+          </a>
+          {s.published && <span> · {s.published}</span>}
+          {s.retrievedAt && <span> · retrieved {s.retrievedAt}</span>}
+        </li>
+      ))}
+    </ul>
+    <p class="mt-3 text-xs leading-relaxed text-faint">
+      Ranges are what homeowners report paying, not quotes. Municipal permit fees are exact
+      figures taken from the borough's own fee ordinance. Reviewed by the {guide.author} ·
+      updated {updated}.
+    </p>
+  </div>
+</section>

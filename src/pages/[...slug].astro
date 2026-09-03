@@ -53,6 +53,8 @@ import {
   webSiteJsonLd,
   breadcrumbJsonLd,
   itemListJsonLd,
+  collectionPageJsonLd,
+  faqPageJsonLd,
   localBusinessJsonLd,
   resolveOrigin,
   type PageSeo,
@@ -68,6 +70,21 @@ const segments = pathname.replace(/^\/+/, "").split("/").filter(Boolean);
 
 const preview = Astro.url.searchParams.get("preview") === "demo";
 const filter = Astro.url.searchParams.get("filter") ?? undefined;
+/**
+ * lastmod / dateModified discipline: the newest real change among the records
+ * on the page, never "today". Google treats a modified date as binary — it
+ * either trusts the signal or ignores it — so a stamp that moves without a
+ * content change poisons it.
+ */
+function newestChange(items: { _updatedDate?: unknown; licenseVerifiedAt?: unknown }[]): string {
+  const times = items
+    .flatMap((b) => [(b as any)._updatedDate, (b as any).licenseVerifiedAt])
+    .map((v) => (v ? new Date(v as any).getTime() : NaN))
+    .filter((t) => Number.isFinite(t));
+  const newest = times.length ? Math.max(...times) : Date.now();
+  return new Date(newest).toISOString().slice(0, 10);
+}
+
 const origin = resolveOrigin();
 const truncate = (text: string, max = 155) =>
   text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
@@ -308,8 +325,17 @@ if (!View && segments.length >= 2 && segments.length <= 4) {
           path: pathname,
           robots: preview || filter ? "noindex, follow" : undefined,
         };
+        // dateModified mirrors the byline the page actually renders.
+        const listModified = newestChange(listings.organic);
         jsonLd = [
           breadcrumbJsonLd(origin, trail),
+          collectionPageJsonLd(origin, {
+            path: pathname,
+            name: `${listings.organic.length} Best ${category.name} in ${placeName}`,
+            description: `Licence-verified ${category.name.toLowerCase()} serving ${placeName}, with local cost ranges, permit requirements and the registry record behind every badge.`,
+            dateModified: listModified,
+            author: SITE_NAME,
+          }),
           itemListJsonLd(
             origin,
             listings.organic

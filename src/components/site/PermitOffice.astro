@@ -1,0 +1,116 @@
+---
+/**
+ * Municipal permit + licensing section (Gate A2). Zero of the 20 directory
+ * pages ranking for our target queries name a local permit office; the
+ * contractor sites that outrank them all do.
+ *
+ * Every field is verified against the municipality's own site — see
+ * data/money/permit-offices.csv and the verifiedAt date.
+ */
+import type { PermitOffice } from "@/lib/moneypage";
+interface Props {
+  office: PermitOffice;
+  townName: string;
+  stateName: string;
+  stateAbbr: string;
+  categoryName: string;
+  licenseSource?: string;
+  lookupUrl?: string;
+}
+const { office, townName, stateName, stateAbbr, categoryName, licenseSource, lookupUrl } = Astro.props;
+const verified = new Date(office.verifiedAt).toLocaleDateString("en-US", {
+  month: "long", day: "numeric", year: "numeric",
+});
+---
+
+<section class="mt-10" aria-labelledby="permit-heading" data-permit-office>
+  <h2 id="permit-heading" class="font-display text-2xl font-semibold text-ink">
+    Permits, licences and inspections in {townName}
+  </h2>
+
+  <div class="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div class="max-w-prose space-y-3 leading-relaxed text-muted">
+      {office.categoryNote && <p>{office.categoryNote}</p>}
+      <p>
+        Permits are issued locally, not by the state: the work is inspected by
+        <strong class="text-ink">{office.officeName}</strong>, and the fee is set by the
+        borough's own ordinance rather than a {stateName} schedule. A contractor who tells you
+        a permit-triggering job needs no permit is telling you something you can check in one
+        phone call.
+      </p>
+      {office.inspectionHours && (
+        <p>
+          <strong class="text-ink">Inspection windows matter as much as price.</strong>{" "}
+          {office.inspectionHours} Work finished outside those windows waits for the next one
+          before it can be signed off — worth knowing before you agree a completion date.
+        </p>
+      )}
+      {licenseSource && (
+        <p>
+          Licensing is separate and statewide. In {stateAbbr}, {categoryName.toLowerCase()} are
+          checked against <strong class="text-ink">{licenseSource}</strong>.
+          {lookupUrl && (
+            <>
+              {" "}You can repeat any verification on this page yourself at{" "}
+              <a href={lookupUrl} rel="nofollow noopener" target="_blank" class="text-brand underline underline-offset-2">
+                the official lookup
+              </a>.
+            </>
+          )}{" "}
+          Ask any contractor for their licence number, their certificate of insurance naming
+          you as certificate holder, and confirmation that they — not you — are pulling the
+          permit.
+        </p>
+      )}
+      {office.officials && <p class="text-sm text-faint">{office.officials}</p>}
+    </div>
+
+    <aside class="rounded-card border border-line-strong bg-surface p-5">
+      <p class="text-xs font-semibold uppercase tracking-wider text-faint">Where to call</p>
+      <p class="mt-2 font-display text-base font-semibold text-ink">{office.officeName}</p>
+      <address class="mt-1 not-italic text-sm leading-relaxed text-muted">{office.address}</address>
+      <p class="mt-2 text-sm">
+        <a href={`tel:${office.phone.replace(/[^0-9]/g, "")}`} class="font-medium text-brand underline underline-offset-2">
+          {office.phone}
+        </a>
+      </p>
+      <p class="mt-1 text-sm text-muted">{office.hours}</p>
+      <p class="mt-2 text-sm">
+        <a href={office.url} rel="nofollow noopener" target="_blank" class="text-brand underline underline-offset-2">
+          Department website
+        </a>
+      </p>
+
+      {office.fees.length > 0 && (
+        <>
+          <p class="mt-5 text-xs font-semibold uppercase tracking-wider text-faint">
+            {townName} permit fees
+          </p>
+          <table class="mt-2 w-full border-collapse text-sm">
+            <caption class="sr-only">Municipal permit fees for {townName}</caption>
+            <tbody>
+              {office.fees.map((f) => (
+                <tr class="border-b border-line last:border-0">
+                  <th scope="row" class="py-1.5 pr-3 text-left font-normal text-muted">{f.item}</th>
+                  <td class="py-1.5 text-right font-mono text-ink">{f.fee}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {office.feeCitation && (
+            <p class="mt-2 text-xs leading-relaxed text-faint">
+              {office.feeUrl ? (
+                <a href={office.feeUrl} rel="nofollow noopener" target="_blank" class="underline underline-offset-2">
+                  {office.feeCitation}
+                </a>
+              ) : office.feeCitation}
+            </p>
+          )}
+        </>
+      )}
+      <p class="mt-3 border-t border-line pt-3 text-xs text-faint">
+        Verified against the municipality's own site on {verified}.
+      </p>
+    </aside>
+  </div>
+</section>

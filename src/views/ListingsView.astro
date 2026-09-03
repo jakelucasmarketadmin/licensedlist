@@ -3,11 +3,11 @@ import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import ResultCard from "@/components/site/ResultCard.astro";
 import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
 import ListMap from "@/components/site/ListMap.tsx";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
 import type { CategorySeed } from "@/lib/taxonomy";
 import type { StateSeed, CountySeed, TownSeed } from "@/lib/geo";
-import { getNearbyTowns } from "@/lib/geo";
-import { getCategoriesByGroup } from "@/lib/taxonomy";
+import { getNearbyTowns, getTownsByCounty } from "@/lib/geo";
+import { getCategoriesByGroup, getCategories } from "@/lib/taxonomy";
 import {
   type ListingSet,
   type DirectoryBusiness,
@@ -17,6 +17,11 @@ import {
 import { countRegistered, listRegistered } from "@/lib/registry";
 import RegistryTable from "@/components/site/RegistryTable.astro";
 import NlIntake from "@/components/site/NlIntake.tsx";
+import CostGuide from "@/components/site/CostGuide.astro";
+import PermitOffice from "@/components/site/PermitOffice.astro";
+import ComparisonTable from "@/components/site/ComparisonTable.astro";
+import LocalContext from "@/components/site/LocalContext.astro";
+import { costGuideFor, permitOfficeFor, townHousingFor, countyHousingFor } from "@/lib/moneypage";
 
 interface Props {
   scope: "town" | "county" | "state";
@@ -37,6 +42,9 @@ const placeName =
   scope === "town" ? `${town!.name}, ${state.abbr}` : scope === "county" ? county!.name : state.name;
 
 const updatedLabel = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
+const fullUpdatedLabel = new Date().toLocaleDateString("en-US", {
+  month: "long", day: "numeric", year: "numeric",
+});
 
 const featured = listings.featured;
 // Each business renders once: the Featured block up top, and the organic list
@@ -47,6 +55,42 @@ const totalCount = listings.organic.length;
 const verifiedCount = listings.organic.filter((b) => b.licenseStatus === "verified").length;
 
 const licenseSource = category.licenseSourcesByState[state.abbr];
+
+// ---- Money-page sections (Gate A). Each renders only when we hold real,
+// sourced data for this page; nothing is stubbed or invented. ----
+const costGuide = costGuideFor(
+  category.slug, state.slug, county?.slug, town?.slug, town?.name, county?.name,
+);
+const permitOffice = town ? permitOfficeFor(town.slug, state.slug, category.slug) : null;
+const countyTownSlugs = county ? getTownsByCounty(state.slug, county.slug).map((t) => t.slug) : [];
+const housing = town
+  ? townHousingFor(town.slug, state.slug)
+  : county
+    ? countyHousingFor(state.slug, countyTownSlugs)
+    : null;
+
+// NOAA 1991-2020 normals, by the station that governs each county we cover.
+const CLIMATE: Record<string, { snowInches: number; precipInches: number; station: string; period: string }> = {
+  "nj|bergen-county": { snowInches: 31.5, precipInches: 46.6, station: "Newark Liberty Intl Airport (USW00014734)", period: "1991–2020" },
+};
+const climate = county ? CLIMATE[`${state.slug}|${county.slug}`] : undefined;
+
+// Category-specific consequence of an old housing stock. Only written where
+// the trade link is real; otherwise the paragraph is simply omitted.
+const STOCK_NOTES: Record<string, string> = {
+  plumbers: "Housing of that age is why so much plumbing work here is replacement rather than repair: cast-iron drain stacks and galvanised supply lines reach the end of their service life, and a leak in a 70-year-old line is usually a re-pipe conversation rather than a patch. It is also why permit-triggering work — water heaters, re-piping, new fixtures — comes up more often than in newer suburbs.",
+  roofers: "Roofs on housing of that age have almost all been replaced at least once, so the job is usually a tear-off over an existing deck, and the deck condition is the variable that moves the quote. Ice-damming at the eaves is the recurring winter failure in this stock.",
+  "hvac-contractors": "In housing of that age, ductwork and boiler systems were often designed for a different fuel and a different envelope, so replacement work frequently involves resizing rather than a like-for-like swap.",
+  electricians: "Housing of that age often still carries undersized service panels and, in the oldest quarter, cloth-insulated or knob-and-tube wiring — which is why panel upgrades and rewiring make up so much of the local job mix.",
+};
+const stockNote = STOCK_NOTES[category.slug];
+
+// The registry lookup a reader can repeat themselves.
+const LOOKUP_URLS: Record<string, string> = {
+  nj: "https://newjersey.mylicense.com/verification/Search.aspx",
+  ny: "https://www.op.nysed.gov/verification-search",
+  pa: "https://www.pals.pa.gov/#!/page/search",
+};
 
 // Job-type chips: the most common service terms across this page's listings.
 const serviceCounts = new Map<string, number>();
@@ -67,6 +111,9 @@ const registryScope =
     ? { stateSlug: state.slug, countySlug: county.slug, categorySlug: category.slug }
     : null;
 const registeredCount = registryScope ? await countRegistered(registryScope) : 0;
+// "Evaluated" counts everyone we screened for this page: the businesses we
+// listed plus the licensed roster we checked and did not list.
+const evaluatedCount = listings.organic.length + registeredCount;
 const registeredRows = registeredCount > 0 ? await listRegistered(registryScope!, 100) : [];
 
 const mapMarkers = [...featured, ...organic]
@@ -79,27 +126,45 @@ const mapMarkers = [...featured, ...organic]
     lng: Number(b.lng),
   }));
 
-const relatedCategories = getCategoriesByGroup(category.groupSlug)
-  .filter((c) => c.slug !== category.slug)
-  .slice(0, 6);
+// A5: link blocks are a ranking factor in this set (Angi runs ~83 internal
+// links across three labelled sections). Related categories come from this
+// category's own group first, then the rest of the taxonomy, capped at 25.
+const relatedCategories = [
+  ...getCategoriesByGroup(category.groupSlug).filter((c) => c.slug !== category.slug),
+  ...getCategories().filter(
+    (c) => c.groupSlug !== category.groupSlug && c.slug !== category.slug,
+  ),
+].slice(0, 25);
 
 // Only link nearby towns whose own page meets the publishing rule — a link to
 // a sub-threshold page would be a link to a 404.
 const qualifies = (set: ListingSet) =>
   set.organic.length >= 3 || (Boolean(preview) && set.organic.length > 0);
-const nearbyTowns =
+// Towns whose own page for this category qualifies get a direct link; the
+// rest link to the town hub, which always exists. Never a link to a 404.
+const nearbyCandidates =
   scope === "town"
-    ? (
-        await Promise.all(
-          getNearbyTowns(town!).map(async (n) => ({
-            town: n,
-            ok: qualifies(await listForTownCategory(n.stateSlug, n.slug, category.slug, preview)),
-          })),
-        )
-      )
-        .filter((entry) => entry.ok)
-        .map((entry) => entry.town)
-    : [];
+    ? [
+        ...getNearbyTowns(town!),
+        ...getTownsByCounty(state.slug, town!.countySlug).filter(
+          (t) => t.slug !== town!.slug && !getNearbyTowns(town!).some((n) => n.slug === t.slug),
+        ),
+      ].slice(0, 30)
+    : county
+      ? getTownsByCounty(state.slug, county.slug).slice(0, 30)
+      : [];
+const nearbyTowns = await Promise.all(
+  nearbyCandidates.map(async (n) => ({
+    town: n,
+    hasPage: qualifies(await listForTownCategory(n.stateSlug, n.slug, category.slug, preview)),
+  })),
+);
+
+const emergencyProviders = [...featured, ...organic]
+  .filter((b) => /emergency|24\/7|24-hour/i.test(b.services ?? ""))
+  .map((b) => b.name ?? "")
+  .filter(Boolean)
+  .slice(0, 6);
 
 const faq = [
   {
@@ -115,6 +180,54 @@ const faq = [
   {
     q: `How does ${SITE_NAME} verify these listings?`,
     a: "Four checks, in order: we confirm the business is real, look its license up in the official registry where one is required, read its reviews across platforms, and confirm it's active and responsive. The full methodology is public.",
+  },
+  // Town-scoped questions, answered from data on this page. These are the
+  // questions no national directory can answer for this town.
+  ...(permitOffice && town
+    ? [
+        {
+          q: `Do I need a permit for this work in ${town.name}?`,
+          a: `${permitOffice.categoryNote ?? "Permit-triggering work is defined by the state code and enforced locally."} Permits are issued and inspected by ${permitOffice.officeName} at ${permitOffice.address} — ${permitOffice.phone}, ${permitOffice.hours}. The contractor should pull it, not you.`,
+        },
+        ...(permitOffice.fees.length
+          ? [{
+              q: `How much is a ${category.name.toLowerCase().replace(/s$/, "")} permit in ${town.name}?`,
+              a: `${town.name} sets its own fees by ordinance: ${permitOffice.fees.slice(0, 4).map((f) => `${f.item.toLowerCase()} ${f.fee}`).join(", ")}. ${permitOffice.feeCitation ? `Those are the exact figures from ${permitOffice.feeCitation}, not estimates.` : ""} Expect the permit as a line on the quote.`,
+            }]
+          : []),
+        ...(permitOffice.inspectionHours
+          ? [{
+              q: `How long does an inspection take to schedule in ${town.name}?`,
+              a: `${permitOffice.inspectionHours} That window, not the contractor, usually sets when a job can be signed off — so a Friday completion can wait until the next inspection day.`,
+            }]
+          : []),
+      ]
+    : []),
+  ...(costGuide
+    ? [
+        {
+          q: `How much does emergency ${category.name.toLowerCase()} work cost in ${placeName} after hours?`,
+          a: `Emergency call-outs run well above standard rates — evenings, weekends and holidays each carry their own premium. The cost table above gives the current ranges with the source for each figure, and the rule of thumb is 1.5–3× the standard hourly rate.`,
+        },
+      ]
+    : []),
+  ...(emergencyProviders.length
+    ? [{
+        q: `Which ${placeName} ${category.name.toLowerCase()} offer 24/7 or emergency service?`,
+        a: `${emergencyProviders.join(", ")} list emergency or 24/7 availability in the services they publish. We show what each business states; confirm current availability when you call.`,
+      }]
+    : []),
+  {
+    q: `What should I ask a ${category.name.toLowerCase().replace(/s$/, "")} before hiring in ${placeName}?`,
+    a: `Ask for the licence number and look it up yourself — every badge on this page names the registry so you can repeat the check. Ask for a certificate of insurance naming you as certificate holder, confirmation that the contractor is pulling any required permit, and a written scope that separates labour, materials and permit fees.`,
+  },
+  {
+    q: `Are these ${category.name.toLowerCase()} paying to appear here?`,
+    a: `No. Paid placement exists, is capped at three slots, and is always labelled "Featured" — it never changes the organic order below it. Everything else is ranked by licence verification, review volume, rating and how recently we re-checked the record.`,
+  },
+  {
+    q: `How current is this page?`,
+    a: `Listings carry the date each licence was last checked against its registry, and a verified badge older than a year downgrades automatically until it is re-checked. Cost figures carry their own source and date. This page was last reviewed on ${fullUpdatedLabel}.`,
   },
 ];
 
@@ -143,15 +256,31 @@ const FILTERS = [
       <span class="text-muted">(Updated {updatedLabel})</span>
     </h1>
     <p class="mt-3 text-muted">
-      {totalCount} listed · {verifiedCount} license-verified · ranked by a public score —
-      never by payment.
+      {evaluatedCount} evaluated · {verifiedCount} licence-verified · {totalCount} listed ·
+      ranked by a public score — never by payment.
       <a href="/how-we-verify" class="font-medium text-brand underline underline-offset-2">How we verify</a>
+    </p>
+    <p class="mt-2 text-sm text-faint">
+      Reviewed by the {SITE_NAME} editorial team · Updated {fullUpdatedLabel} · Questions:
+      <a href={`mailto:${BUSINESS_CONTACT_EMAIL}`} class="underline underline-offset-2">{BUSINESS_CONTACT_EMAIL}</a>
     </p>
   </header>
 
   <div class="mt-6 max-w-3xl">
     <NlIntake client:visible preview={Boolean(preview)} />
   </div>
+
+  {costGuide && (
+    <CostGuide guide={costGuide} placeName={placeName} categoryName={category.name} />
+  )}
+
+  {(featured.length + organic.length) > 1 && (
+    <ComparisonTable
+      businesses={[...featured, ...organic]}
+      placeName={placeName}
+      categoryName={category.name}
+    />
+  )}
 
   <div class="mt-8 gap-8 lg:grid lg:grid-cols-[210px_minmax(0,1fr)]">
     <!-- Filter rail (left on desktop, chip row on mobile) -->
@@ -513,6 +642,28 @@ const FILTERS = [
     </div>
   </section>
 
+  {permitOffice && town && (
+    <PermitOffice
+      office={permitOffice}
+      townName={town.name}
+      stateName={state.name}
+      stateAbbr={state.abbr}
+      categoryName={category.name}
+      licenseSource={licenseSource}
+      lookupUrl={LOOKUP_URLS[state.slug]}
+    />
+  )}
+
+  {housing && (
+    <LocalContext
+      housing={housing}
+      placeName={placeName}
+      categoryName={category.name}
+      stockNote={stockNote}
+      climate={climate}
+    />
+  )}
+
   <section class="mt-10 max-w-prose" aria-labelledby="listfaq-heading">
     <h2 id="listfaq-heading" class="font-display text-2xl font-semibold text-ink">
       Common questions
@@ -532,16 +683,18 @@ const FILTERS = [
       {nearbyTowns.length > 0 && (
         <div>
           <h2 class="font-display text-xl font-semibold text-ink">
-            {category.name} in nearby towns
+            Find {category.name.toLowerCase()} in other towns near {scope === "town" ? town!.name : placeName}
           </h2>
           <ul class="mt-3 flex flex-wrap gap-2">
             {nearbyTowns.map((n) => (
               <li>
                 <a
-                  href={`/${n.pathKey}/${category.slug}${preview ? "?preview=demo" : ""}`}
+                  href={n.hasPage
+                    ? `/${n.town.pathKey}/${category.slug}${preview ? "?preview=demo" : ""}`
+                    : `/${n.town.pathKey}`}
                   class="inline-flex min-h-[40px] items-center rounded-chip border border-line bg-surface px-4 py-2 text-sm font-medium text-muted hover:border-brand hover:text-ink"
                 >
-                  {n.name}
+                  {n.town.name}
                 </a>
               </li>
             ))}
@@ -550,7 +703,9 @@ const FILTERS = [
       )}
       {relatedCategories.length > 0 && (
         <div>
-          <h2 class="font-display text-xl font-semibold text-ink">Related services</h2>
+          <h2 class="font-display text-xl font-semibold text-ink">
+            Related services in {scope === "town" ? town!.name : placeName}
+          </h2>
           <ul class="mt-3 flex flex-wrap gap-2">
             {relatedCategories.map((c) => (
               <li>

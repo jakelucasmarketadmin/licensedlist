@@ -163,3 +163,42 @@ export function localBusinessJsonLd(
   }
   return node;
 }
+
+/**
+ * Collection page + dateModified for money pages. The visible byline renders
+ * the same date — Google's trust in a modified date is binary, so this is
+ * stamped from real content change, never from "today".
+ */
+export function collectionPageJsonLd(
+  origin: string,
+  opts: { path: string; name: string; description: string; dateModified: string; author: string },
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${origin}${opts.path}`,
+    url: `${origin}${opts.path}`,
+    name: opts.name,
+    description: opts.description,
+    dateModified: opts.dateModified,
+    author: { "@type": "Organization", name: opts.author },
+    publisher: { "@type": "Organization", name: opts.author, url: origin },
+  };
+}
+
+/**
+ * FAQPage. Google removed the FAQ rich result on 7 May 2026, so this earns no
+ * SERP real estate — it is kept because Bing and AI crawlers still parse it,
+ * and it costs nothing.
+ */
+export function faqPageJsonLd(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}

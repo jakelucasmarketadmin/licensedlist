@@ -1,0 +1,36 @@
+townSlug,stateSlug,geoid,geoName,totalUnits,medianYearBuilt,pctPre1940,pctPre1960,pctOwnerOccupied,release,fetchedAt
+hackensack,nj,06000US3400328680,Hackensack city,21361,1969,15.4,35,36.6,ACS 2024 5-year,2026-09-03
+teaneck,nj,06000US3400372360,Teaneck township,14060,1950,33.3,76,77.5,ACS 2024 5-year,2026-09-03
+fort-lee,nj,06000US3400324420,Fort Lee borough,19679,1971,4.9,28.9,55.4,ACS 2024 5-year,2026-09-03
+fair-lawn,nj,06000US3400322470,Fair Lawn borough,12500,1953,18.5,73.1,78.1,ACS 2024 5-year,2026-09-03
+garfield,nj,06000US3400325770,Garfield city,11846,1954,29.9,62.8,44.7,ACS 2024 5-year,2026-09-03
+westwood,nj,06000US3400380270,Westwood borough,4192,1958,27.6,52.1,62.9,ACS 2024 5-year,2026-09-03
+river-vale,nj,06000US3400363690,River Vale township,3547,1971,4.2,31.5,90,ACS 2024 5-year,2026-09-03
+park-ridge,nj,06000US3400356130,Park Ridge borough,3416,1966,21.7,44.2,81,ACS 2024 5-year,2026-09-03
+emerson,nj,06000US3400321450,Emerson borough,2636,1960,6.9,50.7,91.8,ACS 2024 5-year,2026-09-03
+hillsdale,nj,06000US3400331920,Hillsdale borough,3602,1959,22.1,52.2,92.8,ACS 2024 5-year,2026-09-03
+montvale,nj,06000US3400347610,Montvale borough,3290,1968,12.1,28.6,80,ACS 2024 5-year,2026-09-03
+oradell,nj,06000US3400354990,Oradell borough,2761,1956,22.2,63.6,90.7,ACS 2024 5-year,2026-09-03
+paramus,nj,06000US3400355950,Paramus borough,8813,1963,5.5,45.4,82.6,ACS 2024 5-year,2026-09-03
+ridgewood,nj,06000US3400363000,Ridgewood village,9191,1950,37.9,74.4,82.5,ACS 2024 5-year,2026-09-03
+closter,nj,06000US3400313810,Closter borough,2834,1959,22.8,51.4,81.5,ACS 2024 5-year,2026-09-03
+old-tappan,nj,06000US3400354870,Old Tappan borough,2044,1986,2.9,15.2,94.1,ACS 2024 5-year,2026-09-03
+woodcliff-lake,nj,06000US3400382300,Woodcliff Lake borough,2235,1967,8.2,36.6,86.3,ACS 2024 5-year,2026-09-03
+haworth,nj,06000US3400330540,Haworth borough,1165,1954,30.9,64.1,94.7,ACS 2024 5-year,2026-09-03
+harrington-park,nj,06000US3400330150,Harrington Park borough,1818,1962,23.4,46.8,92.3,ACS 2024 5-year,2026-09-03
+northvale,nj,06000US3400353430,Northvale borough,1725,1968,13.2,30.9,76.3,ACS 2024 5-year,2026-09-03
+norwood,nj,06000US3400353610,Norwood borough,2001,1986,9.3,23.6,79.2,ACS 2024 5-year,2026-09-03
+englewood,nj,06000US3400321480,Englewood city,11898,1959,24.2,51,54.5,ACS 2024 5-year,2026-09-03
+glen-rock,nj,06000US3400326640,Glen Rock borough,3696,1952,33.7,74.9,90.2,ACS 2024 5-year,2026-09-03
+ho-ho-kus,nj,06000US3400332310,Ho-Ho-Kus borough,1500,1957,21.4,55.4,92.5,ACS 2024 5-year,2026-09-03
+saddle-river,nj,06000US3400365400,Saddle River borough,1499,1983,3.5,17.8,84.1,ACS 2024 5-year,2026-09-03
+upper-saddle-river,nj,06000US3400375140,Upper Saddle River borough,2817,1971,8.3,25.6,91.1,ACS 2024 5-year,2026-09-03
+franklin-lakes,nj,06000US3400324990,Franklin Lakes borough,3878,1982,2.1,11.8,88.9,ACS 2024 5-year,2026-09-03
+wyckoff,nj,06000US3400383050,Wyckoff township,6247,1965,12.8,36.7,92.7,ACS 2024 5-year,2026-09-03
+allendale,nj,06000US3400300700,Allendale borough,2690,1965,17.1,41.4,81.4,ACS 2024 5-year,2026-09-03
+ramsey,nj,06000US3400361680,Ramsey borough,5455,1968,11.4,34.9,79.2,ACS 2024 5-year,2026-09-03
+dumont,nj,06000US3400318400,Dumont borough,6768,1952,23.5,70.9,72.7,ACS 2024 5-year,2026-09-03
+new-milford,nj,06000US3400351660,New Milford borough,6376,1954,14.6,68.3,61.4,ACS 2024 5-year,2026-09-03
+bergenfield,nj,06000US3400305170,Bergenfield borough,9479,1954,19,68.3,70.6,ACS 2024 5-year,2026-09-03
+cresskill,nj,06000US3400315820,Cresskill borough,3235,1964,11.9,43.8,78.1,ACS 2024 5-year,2026-09-03
+rutherford,nj,06000US3400365280,Rutherford borough,7129,1945,42.8,77.2,64.3,ACS 2024 5-year,2026-09-03
