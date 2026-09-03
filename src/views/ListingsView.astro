@@ -226,6 +226,14 @@ const faq = [
     a: `No. Paid placement exists, is capped at three slots, and is always labelled "Featured" — it never changes the organic order below it. Everything else is ranked by licence verification, review volume, rating and how recently we re-checked the record.`,
   },
   {
+    q: `What does "${verifiedCount} licence-verified" actually mean here?`,
+    a: `It means we found each of those ${verifiedCount} businesses in the official registry named on its listing, and the record was in good standing on the date shown. It is not a quality rating and not an endorsement: registration confirms a business met the state's requirements at the time we looked, which is why review history and responsiveness carry weight in the order below it.`,
+  },
+  {
+    q: `Why do some listings say "Unclaimed"?`,
+    a: `Because we compiled them from public records and the business's own website, and nobody at the business has reviewed or approved the page yet. Unclaimed listings get the same verification as any other — the licence check is identical — but the business hasn't confirmed its own details, so we say so, we don't accept quote requests on their behalf, and we remove any unclaimed listing on request within two business days.`,
+  },
+  {
     q: `How current is this page?`,
     a: `Listings carry the date each licence was last checked against its registry, and a verified badge older than a year downgrades automatically until it is re-checked. Cost figures carry their own source and date. This page was last reviewed on ${fullUpdatedLabel}.`,
   },
@@ -652,6 +660,50 @@ const FILTERS = [
       licenseSource={licenseSource}
       lookupUrl={LOOKUP_URLS[state.slug]}
     />
+  )}
+
+  {scope === "county" && county && (
+    <section class="mt-10 max-w-prose" aria-labelledby="countypermit-heading" data-permit-office>
+      <h2 id="countypermit-heading" class="font-display text-2xl font-semibold text-ink">
+        Licensing and permits across {county.name}
+      </h2>
+      <div class="mt-3 space-y-3 leading-relaxed text-muted">
+        {licenseSource && (
+          <p>
+            Licensing is statewide. In {state.name}, {category.name.toLowerCase()} are checked
+            against <strong class="text-ink">{licenseSource}</strong>, and every verified badge
+            on this page names that registry plus the date we checked it.
+            {LOOKUP_URLS[state.slug] && (
+              <>
+                {" "}You can repeat any check yourself at{" "}
+                <a href={LOOKUP_URLS[state.slug]} rel="nofollow noopener" target="_blank" class="text-brand underline underline-offset-2">
+                  the official lookup
+                </a>.
+              </>
+            )}
+          </p>
+        )}
+        <p>
+          <strong class="text-ink">Permits are not countywide — they are municipal.</strong>{" "}
+          {county.name} has {countyTownSlugs.length} municipalities in our coverage, and each
+          adopts its own construction fee ordinance under the same state code. The same
+          water-heater replacement therefore carries a different permit fee depending on which
+          side of a borough line the house sits on, and the inspection schedule is set by that
+          borough's construction office rather than the county.
+        </p>
+        <p>
+          Appeals do sit at county level: a construction-code determination made by a municipal
+          official in {county.name} is appealed to the county Construction Board of Appeals
+          rather than to a local board, which is why individual boroughs here do not maintain
+          one of their own.
+        </p>
+        <p>
+          Pick your town below to get the named construction office, its phone number, its
+          inspection windows and its exact permit fees — the figures come from each borough's
+          own fee ordinance, not from an estimate.
+        </p>
+      </div>
+    </section>
   )}
 
   {housing && (
