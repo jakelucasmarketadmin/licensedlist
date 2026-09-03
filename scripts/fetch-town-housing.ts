@@ -22,7 +22,7 @@ const arg = (n: string) => { const i = args.indexOf(`--${n}`); return i >= 0 ? a
 const onlyState = arg("state");
 const onlyCounty = arg("county");
 
-const HDR = ["townSlug","stateSlug","geoid","geoName","totalUnits","medianYearBuilt","pctPre1940","pctPre1960","pctOwnerOccupied","release","fetchedAt"];
+const HDR = ["townSlug","stateSlug","geoid","geoName","totalUnits","medianYearBuilt","pctPre1940","pctPre1960","pctOwnerOccupied","erasJson","release","fetchedAt"];
 const esc = (v: unknown) => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
 
 const existing = new Map<string, Record<string, string>>();
@@ -86,12 +86,25 @@ async function housingFor(geoid: string) {
   const pre1960 = pre1940 + Number(b34.B25034010 || 0) + Number(b34.B25034009 || 0);
   const occ = Number(d.B25003?.estimate?.B25003001 || 0);
   const owner = Number(d.B25003?.estimate?.B25003002 || 0);
+  // Full B25034 distribution, oldest first — rendered as a sourced table.
+  const ERAS: [string, string][] = [
+    ["B25034011", "1939 or earlier"], ["B25034010", "1940–1949"], ["B25034009", "1950–1959"],
+    ["B25034008", "1960–1969"], ["B25034007", "1970–1979"], ["B25034006", "1980–1989"],
+    ["B25034005", "1990–1999"], ["B25034004", "2000–2009"], ["B25034003", "2010–2019"],
+    ["B25034002", "2020 or later"],
+  ];
+  const eras = ERAS.map(([k, label]) => ({
+    label,
+    units: Number(b34[k] || 0),
+    pct: +((Number(b34[k] || 0) / total) * 100).toFixed(1),
+  }));
   return {
     totalUnits: total,
     medianYearBuilt: Number(d.B25035?.estimate?.B25035001 || 0) || "",
     pctPre1940: +(pre1940 / total * 100).toFixed(1),
     pctPre1960: +(pre1960 / total * 100).toFixed(1),
     pctOwnerOccupied: occ ? +(owner / occ * 100).toFixed(1) : "",
+    erasJson: JSON.stringify(eras),
     release: body?.release?.name ?? "",
   };
 }

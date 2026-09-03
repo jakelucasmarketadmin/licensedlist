@@ -125,6 +125,7 @@ export interface TownHousing {
   pctPre1940: number | null;
   pctPre1960: number | null;
   pctOwnerOccupied: number | null;
+  eras: { label: string; units: number; pct: number }[];
   release: string;
 }
 
@@ -142,6 +143,7 @@ export function townHousingFor(townSlug: string, stateSlug: string): TownHousing
     pctPre1940: num(hit.pctPre1940),
     pctPre1960: num(hit.pctPre1960),
     pctOwnerOccupied: num(hit.pctOwnerOccupied),
+    eras: json<{ label: string; units: number; pct: number }[]>((hit as any).erasJson, []),
     release: hit.release,
   };
 }
@@ -155,6 +157,12 @@ export function countyHousingFor(stateSlug: string, townSlugs: string[]): TownHo
   const years = rows.map((r) => Number(r.medianYearBuilt)).filter(Boolean).sort((a, b) => a - b);
   const weighted = (key: "pctPre1940" | "pctPre1960" | "pctOwnerOccupied") =>
     +(rows.reduce((s, r) => s + (Number((r as any)[key]) || 0) * Number(r.totalUnits || 0), 0) / units).toFixed(1);
+  const eraTotals = new Map<string, number>();
+  for (const r of rows) {
+    for (const e of json<{ label: string; units: number }[]>((r as any).erasJson, [])) {
+      eraTotals.set(e.label, (eraTotals.get(e.label) ?? 0) + e.units);
+    }
+  }
   return {
     townSlug: "",
     stateSlug,
@@ -164,6 +172,9 @@ export function countyHousingFor(stateSlug: string, townSlugs: string[]): TownHo
     pctPre1940: weighted("pctPre1940"),
     pctPre1960: weighted("pctPre1960"),
     pctOwnerOccupied: weighted("pctOwnerOccupied"),
+    eras: [...eraTotals.entries()].map(([label, u]) => ({
+      label, units: u, pct: +((u / units) * 100).toFixed(1),
+    })),
     release: rows[0].release,
   };
 }

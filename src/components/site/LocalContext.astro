@@ -42,6 +42,30 @@ const era =
       )} (US Census Bureau, {housing.release}).
     </p>
     {stockNote && <p>{stockNote}</p>}
+
+    {housing.eras.length > 0 && (
+      <div class="overflow-x-auto rounded-card border border-line">
+        <table class="w-full min-w-[420px] border-collapse text-sm">
+          <caption class="sr-only">When {placeName} housing was built</caption>
+          <thead>
+            <tr class="bg-inset text-left">
+              <th scope="col" class="px-4 py-2 font-semibold text-ink">Built</th>
+              <th scope="col" class="px-4 py-2 font-semibold text-ink">Homes</th>
+              <th scope="col" class="px-4 py-2 font-semibold text-ink">Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            {housing.eras.filter((e) => e.units > 0).map((e) => (
+              <tr class="border-t border-line">
+                <th scope="row" class="px-4 py-2 text-left font-normal text-muted">{e.label}</th>
+                <td class="px-4 py-2 font-mono text-ink">{e.units.toLocaleString("en-US")}</td>
+                <td class="px-4 py-2 font-mono text-muted">{e.pct}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
     {climate && (
       <p>
         Weather sets the seasonal pattern: the {climate.period} NOAA normal at {climate.station} is

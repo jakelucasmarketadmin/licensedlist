@@ -9,6 +9,7 @@ export interface TownHousingSeed {
   pctPre1940: string;
   pctPre1960: string;
   pctOwnerOccupied: string;
+  erasJson: string;
   release: string;
   fetchedAt: string;
 }
@@ -24,6 +25,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "15.4",
     "pctPre1960": "35",
     "pctOwnerOccupied": "36.6",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":3296,\"pct\":15.4},{\"label\":\"1940–1949\",\"units\":1594,\"pct\":7.5},{\"label\":\"1950–1959\",\"units\":2595,\"pct\":12.1},{\"label\":\"1960–1969\",\"units\":3554,\"pct\":16.6},{\"label\":\"1970–1979\",\"units\":3790,\"pct\":17.7},{\"label\":\"1980–1989\",\"units\":2542,\"pct\":11.9},{\"label\":\"1990–1999\",\"units\":1098,\"pct\":5.1},{\"label\":\"2000–2009\",\"units\":879,\"pct\":4.1},{\"label\":\"2010–2019\",\"units\":1053,\"pct\":4.9},{\"label\":\"2020 or later\",\"units\":960,\"pct\":4.5}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -37,6 +39,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "33.3",
     "pctPre1960": "76",
     "pctOwnerOccupied": "77.5",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":4679,\"pct\":33.3},{\"label\":\"1940–1949\",\"units\":2467,\"pct\":17.5},{\"label\":\"1950–1959\",\"units\":3544,\"pct\":25.2},{\"label\":\"1960–1969\",\"units\":1071,\"pct\":7.6},{\"label\":\"1970–1979\",\"units\":513,\"pct\":3.6},{\"label\":\"1980–1989\",\"units\":551,\"pct\":3.9},{\"label\":\"1990–1999\",\"units\":411,\"pct\":2.9},{\"label\":\"2000–2009\",\"units\":287,\"pct\":2},{\"label\":\"2010–2019\",\"units\":433,\"pct\":3.1},{\"label\":\"2020 or later\",\"units\":104,\"pct\":0.7}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -50,6 +53,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "4.9",
     "pctPre1960": "28.9",
     "pctOwnerOccupied": "55.4",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":968,\"pct\":4.9},{\"label\":\"1940–1949\",\"units\":1318,\"pct\":6.7},{\"label\":\"1950–1959\",\"units\":3396,\"pct\":17.3},{\"label\":\"1960–1969\",\"units\":3944,\"pct\":20},{\"label\":\"1970–1979\",\"units\":3212,\"pct\":16.3},{\"label\":\"1980–1989\",\"units\":2657,\"pct\":13.5},{\"label\":\"1990–1999\",\"units\":1279,\"pct\":6.5},{\"label\":\"2000–2009\",\"units\":886,\"pct\":4.5},{\"label\":\"2010–2019\",\"units\":1675,\"pct\":8.5},{\"label\":\"2020 or later\",\"units\":344,\"pct\":1.7}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -63,6 +67,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "18.5",
     "pctPre1960": "73.1",
     "pctOwnerOccupied": "78.1",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":2310,\"pct\":18.5},{\"label\":\"1940–1949\",\"units\":2725,\"pct\":21.8},{\"label\":\"1950–1959\",\"units\":4101,\"pct\":32.8},{\"label\":\"1960–1969\",\"units\":1228,\"pct\":9.8},{\"label\":\"1970–1979\",\"units\":667,\"pct\":5.3},{\"label\":\"1980–1989\",\"units\":394,\"pct\":3.2},{\"label\":\"1990–1999\",\"units\":235,\"pct\":1.9},{\"label\":\"2000–2009\",\"units\":311,\"pct\":2.5},{\"label\":\"2010–2019\",\"units\":309,\"pct\":2.5},{\"label\":\"2020 or later\",\"units\":220,\"pct\":1.8}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -76,6 +81,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "29.9",
     "pctPre1960": "62.8",
     "pctOwnerOccupied": "44.7",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":3544,\"pct\":29.9},{\"label\":\"1940–1949\",\"units\":1455,\"pct\":12.3},{\"label\":\"1950–1959\",\"units\":2440,\"pct\":20.6},{\"label\":\"1960–1969\",\"units\":1322,\"pct\":11.2},{\"label\":\"1970–1979\",\"units\":873,\"pct\":7.4},{\"label\":\"1980–1989\",\"units\":564,\"pct\":4.8},{\"label\":\"1990–1999\",\"units\":583,\"pct\":4.9},{\"label\":\"2000–2009\",\"units\":544,\"pct\":4.6},{\"label\":\"2010–2019\",\"units\":521,\"pct\":4.4},{\"label\":\"2020 or later\",\"units\":0,\"pct\":0}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -89,6 +95,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "27.6",
     "pctPre1960": "52.1",
     "pctOwnerOccupied": "62.9",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":1159,\"pct\":27.6},{\"label\":\"1940–1949\",\"units\":536,\"pct\":12.8},{\"label\":\"1950–1959\",\"units\":490,\"pct\":11.7},{\"label\":\"1960–1969\",\"units\":700,\"pct\":16.7},{\"label\":\"1970–1979\",\"units\":497,\"pct\":11.9},{\"label\":\"1980–1989\",\"units\":359,\"pct\":8.6},{\"label\":\"1990–1999\",\"units\":131,\"pct\":3.1},{\"label\":\"2000–2009\",\"units\":98,\"pct\":2.3},{\"label\":\"2010–2019\",\"units\":189,\"pct\":4.5},{\"label\":\"2020 or later\",\"units\":33,\"pct\":0.8}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -102,6 +109,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "4.2",
     "pctPre1960": "31.5",
     "pctOwnerOccupied": "90",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":149,\"pct\":4.2},{\"label\":\"1940–1949\",\"units\":17,\"pct\":0.5},{\"label\":\"1950–1959\",\"units\":950,\"pct\":26.8},{\"label\":\"1960–1969\",\"units\":611,\"pct\":17.2},{\"label\":\"1970–1979\",\"units\":680,\"pct\":19.2},{\"label\":\"1980–1989\",\"units\":426,\"pct\":12},{\"label\":\"1990–1999\",\"units\":145,\"pct\":4.1},{\"label\":\"2000–2009\",\"units\":294,\"pct\":8.3},{\"label\":\"2010–2019\",\"units\":157,\"pct\":4.4},{\"label\":\"2020 or later\",\"units\":118,\"pct\":3.3}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -115,6 +123,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "21.7",
     "pctPre1960": "44.2",
     "pctOwnerOccupied": "81",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":741,\"pct\":21.7},{\"label\":\"1940–1949\",\"units\":57,\"pct\":1.7},{\"label\":\"1950–1959\",\"units\":712,\"pct\":20.8},{\"label\":\"1960–1969\",\"units\":354,\"pct\":10.4},{\"label\":\"1970–1979\",\"units\":443,\"pct\":13},{\"label\":\"1980–1989\",\"units\":354,\"pct\":10.4},{\"label\":\"1990–1999\",\"units\":256,\"pct\":7.5},{\"label\":\"2000–2009\",\"units\":311,\"pct\":9.1},{\"label\":\"2010–2019\",\"units\":89,\"pct\":2.6},{\"label\":\"2020 or later\",\"units\":99,\"pct\":2.9}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -128,6 +137,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "6.9",
     "pctPre1960": "50.7",
     "pctOwnerOccupied": "91.8",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":182,\"pct\":6.9},{\"label\":\"1940–1949\",\"units\":119,\"pct\":4.5},{\"label\":\"1950–1959\",\"units\":1035,\"pct\":39.3},{\"label\":\"1960–1969\",\"units\":588,\"pct\":22.3},{\"label\":\"1970–1979\",\"units\":247,\"pct\":9.4},{\"label\":\"1980–1989\",\"units\":113,\"pct\":4.3},{\"label\":\"1990–1999\",\"units\":159,\"pct\":6},{\"label\":\"2000–2009\",\"units\":52,\"pct\":2},{\"label\":\"2010–2019\",\"units\":141,\"pct\":5.3},{\"label\":\"2020 or later\",\"units\":0,\"pct\":0}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -141,6 +151,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "22.1",
     "pctPre1960": "52.2",
     "pctOwnerOccupied": "92.8",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":796,\"pct\":22.1},{\"label\":\"1940–1949\",\"units\":120,\"pct\":3.3},{\"label\":\"1950–1959\",\"units\":966,\"pct\":26.8},{\"label\":\"1960–1969\",\"units\":925,\"pct\":25.7},{\"label\":\"1970–1979\",\"units\":217,\"pct\":6},{\"label\":\"1980–1989\",\"units\":266,\"pct\":7.4},{\"label\":\"1990–1999\",\"units\":111,\"pct\":3.1},{\"label\":\"2000–2009\",\"units\":137,\"pct\":3.8},{\"label\":\"2010–2019\",\"units\":29,\"pct\":0.8},{\"label\":\"2020 or later\",\"units\":35,\"pct\":1}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -154,6 +165,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "12.1",
     "pctPre1960": "28.6",
     "pctOwnerOccupied": "80",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":399,\"pct\":12.1},{\"label\":\"1940–1949\",\"units\":70,\"pct\":2.1},{\"label\":\"1950–1959\",\"units\":472,\"pct\":14.3},{\"label\":\"1960–1969\",\"units\":845,\"pct\":25.7},{\"label\":\"1970–1979\",\"units\":382,\"pct\":11.6},{\"label\":\"1980–1989\",\"units\":197,\"pct\":6},{\"label\":\"1990–1999\",\"units\":133,\"pct\":4},{\"label\":\"2000–2009\",\"units\":397,\"pct\":12.1},{\"label\":\"2010–2019\",\"units\":193,\"pct\":5.9},{\"label\":\"2020 or later\",\"units\":202,\"pct\":6.1}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -167,6 +179,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "22.2",
     "pctPre1960": "63.6",
     "pctOwnerOccupied": "90.7",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":613,\"pct\":22.2},{\"label\":\"1940–1949\",\"units\":247,\"pct\":8.9},{\"label\":\"1950–1959\",\"units\":895,\"pct\":32.4},{\"label\":\"1960–1969\",\"units\":529,\"pct\":19.2},{\"label\":\"1970–1979\",\"units\":211,\"pct\":7.6},{\"label\":\"1980–1989\",\"units\":75,\"pct\":2.7},{\"label\":\"1990–1999\",\"units\":5,\"pct\":0.2},{\"label\":\"2000–2009\",\"units\":45,\"pct\":1.6},{\"label\":\"2010–2019\",\"units\":129,\"pct\":4.7},{\"label\":\"2020 or later\",\"units\":12,\"pct\":0.4}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -180,6 +193,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "5.5",
     "pctPre1960": "45.4",
     "pctOwnerOccupied": "82.6",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":488,\"pct\":5.5},{\"label\":\"1940–1949\",\"units\":447,\"pct\":5.1},{\"label\":\"1950–1959\",\"units\":3063,\"pct\":34.8},{\"label\":\"1960–1969\",\"units\":1348,\"pct\":15.3},{\"label\":\"1970–1979\",\"units\":978,\"pct\":11.1},{\"label\":\"1980–1989\",\"units\":519,\"pct\":5.9},{\"label\":\"1990–1999\",\"units\":584,\"pct\":6.6},{\"label\":\"2000–2009\",\"units\":698,\"pct\":7.9},{\"label\":\"2010–2019\",\"units\":535,\"pct\":6.1},{\"label\":\"2020 or later\",\"units\":153,\"pct\":1.7}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -193,6 +207,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "37.9",
     "pctPre1960": "74.4",
     "pctOwnerOccupied": "82.5",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":3481,\"pct\":37.9},{\"label\":\"1940–1949\",\"units\":1160,\"pct\":12.6},{\"label\":\"1950–1959\",\"units\":2197,\"pct\":23.9},{\"label\":\"1960–1969\",\"units\":989,\"pct\":10.8},{\"label\":\"1970–1979\",\"units\":372,\"pct\":4},{\"label\":\"1980–1989\",\"units\":353,\"pct\":3.8},{\"label\":\"1990–1999\",\"units\":126,\"pct\":1.4},{\"label\":\"2000–2009\",\"units\":80,\"pct\":0.9},{\"label\":\"2010–2019\",\"units\":227,\"pct\":2.5},{\"label\":\"2020 or later\",\"units\":206,\"pct\":2.2}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -206,6 +221,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "22.8",
     "pctPre1960": "51.4",
     "pctOwnerOccupied": "81.5",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":645,\"pct\":22.8},{\"label\":\"1940–1949\",\"units\":213,\"pct\":7.5},{\"label\":\"1950–1959\",\"units\":599,\"pct\":21.1},{\"label\":\"1960–1969\",\"units\":395,\"pct\":13.9},{\"label\":\"1970–1979\",\"units\":238,\"pct\":8.4},{\"label\":\"1980–1989\",\"units\":228,\"pct\":8},{\"label\":\"1990–1999\",\"units\":193,\"pct\":6.8},{\"label\":\"2000–2009\",\"units\":92,\"pct\":3.2},{\"label\":\"2010–2019\",\"units\":192,\"pct\":6.8},{\"label\":\"2020 or later\",\"units\":39,\"pct\":1.4}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -219,6 +235,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "2.9",
     "pctPre1960": "15.2",
     "pctOwnerOccupied": "94.1",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":59,\"pct\":2.9},{\"label\":\"1940–1949\",\"units\":25,\"pct\":1.2},{\"label\":\"1950–1959\",\"units\":227,\"pct\":11.1},{\"label\":\"1960–1969\",\"units\":394,\"pct\":19.3},{\"label\":\"1970–1979\",\"units\":215,\"pct\":10.5},{\"label\":\"1980–1989\",\"units\":180,\"pct\":8.8},{\"label\":\"1990–1999\",\"units\":459,\"pct\":22.5},{\"label\":\"2000–2009\",\"units\":275,\"pct\":13.5},{\"label\":\"2010–2019\",\"units\":147,\"pct\":7.2},{\"label\":\"2020 or later\",\"units\":63,\"pct\":3.1}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -232,6 +249,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "8.2",
     "pctPre1960": "36.6",
     "pctOwnerOccupied": "86.3",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":183,\"pct\":8.2},{\"label\":\"1940–1949\",\"units\":150,\"pct\":6.7},{\"label\":\"1950–1959\",\"units\":486,\"pct\":21.7},{\"label\":\"1960–1969\",\"units\":449,\"pct\":20.1},{\"label\":\"1970–1979\",\"units\":213,\"pct\":9.5},{\"label\":\"1980–1989\",\"units\":119,\"pct\":5.3},{\"label\":\"1990–1999\",\"units\":196,\"pct\":8.8},{\"label\":\"2000–2009\",\"units\":297,\"pct\":13.3},{\"label\":\"2010–2019\",\"units\":116,\"pct\":5.2},{\"label\":\"2020 or later\",\"units\":26,\"pct\":1.2}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -245,6 +263,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "30.9",
     "pctPre1960": "64.1",
     "pctOwnerOccupied": "94.7",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":360,\"pct\":30.9},{\"label\":\"1940–1949\",\"units\":106,\"pct\":9.1},{\"label\":\"1950–1959\",\"units\":281,\"pct\":24.1},{\"label\":\"1960–1969\",\"units\":143,\"pct\":12.3},{\"label\":\"1970–1979\",\"units\":63,\"pct\":5.4},{\"label\":\"1980–1989\",\"units\":67,\"pct\":5.8},{\"label\":\"1990–1999\",\"units\":7,\"pct\":0.6},{\"label\":\"2000–2009\",\"units\":47,\"pct\":4},{\"label\":\"2010–2019\",\"units\":64,\"pct\":5.5},{\"label\":\"2020 or later\",\"units\":27,\"pct\":2.3}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -258,6 +277,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "23.4",
     "pctPre1960": "46.8",
     "pctOwnerOccupied": "92.3",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":426,\"pct\":23.4},{\"label\":\"1940–1949\",\"units\":73,\"pct\":4},{\"label\":\"1950–1959\",\"units\":352,\"pct\":19.4},{\"label\":\"1960–1969\",\"units\":298,\"pct\":16.4},{\"label\":\"1970–1979\",\"units\":328,\"pct\":18},{\"label\":\"1980–1989\",\"units\":83,\"pct\":4.6},{\"label\":\"1990–1999\",\"units\":80,\"pct\":4.4},{\"label\":\"2000–2009\",\"units\":63,\"pct\":3.5},{\"label\":\"2010–2019\",\"units\":65,\"pct\":3.6},{\"label\":\"2020 or later\",\"units\":50,\"pct\":2.8}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -271,6 +291,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "13.2",
     "pctPre1960": "30.9",
     "pctOwnerOccupied": "76.3",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":227,\"pct\":13.2},{\"label\":\"1940–1949\",\"units\":132,\"pct\":7.7},{\"label\":\"1950–1959\",\"units\":174,\"pct\":10.1},{\"label\":\"1960–1969\",\"units\":403,\"pct\":23.4},{\"label\":\"1970–1979\",\"units\":171,\"pct\":9.9},{\"label\":\"1980–1989\",\"units\":61,\"pct\":3.5},{\"label\":\"1990–1999\",\"units\":136,\"pct\":7.9},{\"label\":\"2000–2009\",\"units\":234,\"pct\":13.6},{\"label\":\"2010–2019\",\"units\":187,\"pct\":10.8},{\"label\":\"2020 or later\",\"units\":0,\"pct\":0}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -284,6 +305,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "9.3",
     "pctPre1960": "23.6",
     "pctOwnerOccupied": "79.2",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":186,\"pct\":9.3},{\"label\":\"1940–1949\",\"units\":9,\"pct\":0.4},{\"label\":\"1950–1959\",\"units\":277,\"pct\":13.8},{\"label\":\"1960–1969\",\"units\":316,\"pct\":15.8},{\"label\":\"1970–1979\",\"units\":51,\"pct\":2.5},{\"label\":\"1980–1989\",\"units\":293,\"pct\":14.6},{\"label\":\"1990–1999\",\"units\":534,\"pct\":26.7},{\"label\":\"2000–2009\",\"units\":261,\"pct\":13},{\"label\":\"2010–2019\",\"units\":39,\"pct\":1.9},{\"label\":\"2020 or later\",\"units\":35,\"pct\":1.7}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -297,6 +319,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "24.2",
     "pctPre1960": "51",
     "pctOwnerOccupied": "54.5",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":2874,\"pct\":24.2},{\"label\":\"1940–1949\",\"units\":1717,\"pct\":14.4},{\"label\":\"1950–1959\",\"units\":1482,\"pct\":12.5},{\"label\":\"1960–1969\",\"units\":875,\"pct\":7.4},{\"label\":\"1970–1979\",\"units\":925,\"pct\":7.8},{\"label\":\"1980–1989\",\"units\":946,\"pct\":8},{\"label\":\"1990–1999\",\"units\":526,\"pct\":4.4},{\"label\":\"2000–2009\",\"units\":1377,\"pct\":11.6},{\"label\":\"2010–2019\",\"units\":1004,\"pct\":8.4},{\"label\":\"2020 or later\",\"units\":172,\"pct\":1.4}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -310,6 +333,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "33.7",
     "pctPre1960": "74.9",
     "pctOwnerOccupied": "90.2",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":1245,\"pct\":33.7},{\"label\":\"1940–1949\",\"units\":410,\"pct\":11.1},{\"label\":\"1950–1959\",\"units\":1113,\"pct\":30.1},{\"label\":\"1960–1969\",\"units\":264,\"pct\":7.1},{\"label\":\"1970–1979\",\"units\":34,\"pct\":0.9},{\"label\":\"1980–1989\",\"units\":161,\"pct\":4.4},{\"label\":\"1990–1999\",\"units\":82,\"pct\":2.2},{\"label\":\"2000–2009\",\"units\":183,\"pct\":5},{\"label\":\"2010–2019\",\"units\":135,\"pct\":3.7},{\"label\":\"2020 or later\",\"units\":69,\"pct\":1.9}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -323,6 +347,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "21.4",
     "pctPre1960": "55.4",
     "pctOwnerOccupied": "92.5",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":321,\"pct\":21.4},{\"label\":\"1940–1949\",\"units\":192,\"pct\":12.8},{\"label\":\"1950–1959\",\"units\":318,\"pct\":21.2},{\"label\":\"1960–1969\",\"units\":184,\"pct\":12.3},{\"label\":\"1970–1979\",\"units\":183,\"pct\":12.2},{\"label\":\"1980–1989\",\"units\":65,\"pct\":4.3},{\"label\":\"1990–1999\",\"units\":56,\"pct\":3.7},{\"label\":\"2000–2009\",\"units\":75,\"pct\":5},{\"label\":\"2010–2019\",\"units\":97,\"pct\":6.5},{\"label\":\"2020 or later\",\"units\":9,\"pct\":0.6}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -336,6 +361,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "3.5",
     "pctPre1960": "17.8",
     "pctOwnerOccupied": "84.1",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":52,\"pct\":3.5},{\"label\":\"1940–1949\",\"units\":0,\"pct\":0},{\"label\":\"1950–1959\",\"units\":215,\"pct\":14.3},{\"label\":\"1960–1969\",\"units\":71,\"pct\":4.7},{\"label\":\"1970–1979\",\"units\":233,\"pct\":15.5},{\"label\":\"1980–1989\",\"units\":555,\"pct\":37},{\"label\":\"1990–1999\",\"units\":167,\"pct\":11.1},{\"label\":\"2000–2009\",\"units\":142,\"pct\":9.5},{\"label\":\"2010–2019\",\"units\":64,\"pct\":4.3},{\"label\":\"2020 or later\",\"units\":0,\"pct\":0}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -349,6 +375,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "8.3",
     "pctPre1960": "25.6",
     "pctOwnerOccupied": "91.1",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":234,\"pct\":8.3},{\"label\":\"1940–1949\",\"units\":13,\"pct\":0.5},{\"label\":\"1950–1959\",\"units\":473,\"pct\":16.8},{\"label\":\"1960–1969\",\"units\":672,\"pct\":23.9},{\"label\":\"1970–1979\",\"units\":234,\"pct\":8.3},{\"label\":\"1980–1989\",\"units\":249,\"pct\":8.8},{\"label\":\"1990–1999\",\"units\":215,\"pct\":7.6},{\"label\":\"2000–2009\",\"units\":380,\"pct\":13.5},{\"label\":\"2010–2019\",\"units\":150,\"pct\":5.3},{\"label\":\"2020 or later\",\"units\":197,\"pct\":7}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -362,6 +389,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "2.1",
     "pctPre1960": "11.8",
     "pctOwnerOccupied": "88.9",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":82,\"pct\":2.1},{\"label\":\"1940–1949\",\"units\":64,\"pct\":1.7},{\"label\":\"1950–1959\",\"units\":313,\"pct\":8.1},{\"label\":\"1960–1969\",\"units\":718,\"pct\":18.5},{\"label\":\"1970–1979\",\"units\":594,\"pct\":15.3},{\"label\":\"1980–1989\",\"units\":674,\"pct\":17.4},{\"label\":\"1990–1999\",\"units\":384,\"pct\":9.9},{\"label\":\"2000–2009\",\"units\":568,\"pct\":14.6},{\"label\":\"2010–2019\",\"units\":347,\"pct\":8.9},{\"label\":\"2020 or later\",\"units\":134,\"pct\":3.5}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -375,6 +403,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "12.8",
     "pctPre1960": "36.7",
     "pctOwnerOccupied": "92.7",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":799,\"pct\":12.8},{\"label\":\"1940–1949\",\"units\":306,\"pct\":4.9},{\"label\":\"1950–1959\",\"units\":1186,\"pct\":19},{\"label\":\"1960–1969\",\"units\":1645,\"pct\":26.3},{\"label\":\"1970–1979\",\"units\":480,\"pct\":7.7},{\"label\":\"1980–1989\",\"units\":655,\"pct\":10.5},{\"label\":\"1990–1999\",\"units\":405,\"pct\":6.5},{\"label\":\"2000–2009\",\"units\":379,\"pct\":6.1},{\"label\":\"2010–2019\",\"units\":305,\"pct\":4.9},{\"label\":\"2020 or later\",\"units\":87,\"pct\":1.4}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -388,6 +417,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "17.1",
     "pctPre1960": "41.4",
     "pctOwnerOccupied": "81.4",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":461,\"pct\":17.1},{\"label\":\"1940–1949\",\"units\":82,\"pct\":3},{\"label\":\"1950–1959\",\"units\":571,\"pct\":21.2},{\"label\":\"1960–1969\",\"units\":470,\"pct\":17.5},{\"label\":\"1970–1979\",\"units\":84,\"pct\":3.1},{\"label\":\"1980–1989\",\"units\":214,\"pct\":8},{\"label\":\"1990–1999\",\"units\":410,\"pct\":15.2},{\"label\":\"2000–2009\",\"units\":90,\"pct\":3.3},{\"label\":\"2010–2019\",\"units\":308,\"pct\":11.4},{\"label\":\"2020 or later\",\"units\":0,\"pct\":0}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -401,6 +431,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "11.4",
     "pctPre1960": "34.9",
     "pctOwnerOccupied": "79.2",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":624,\"pct\":11.4},{\"label\":\"1940–1949\",\"units\":225,\"pct\":4.1},{\"label\":\"1950–1959\",\"units\":1055,\"pct\":19.3},{\"label\":\"1960–1969\",\"units\":1028,\"pct\":18.8},{\"label\":\"1970–1979\",\"units\":656,\"pct\":12},{\"label\":\"1980–1989\",\"units\":1071,\"pct\":19.6},{\"label\":\"1990–1999\",\"units\":390,\"pct\":7.1},{\"label\":\"2000–2009\",\"units\":233,\"pct\":4.3},{\"label\":\"2010–2019\",\"units\":146,\"pct\":2.7},{\"label\":\"2020 or later\",\"units\":27,\"pct\":0.5}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -414,6 +445,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "23.5",
     "pctPre1960": "70.9",
     "pctOwnerOccupied": "72.7",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":1593,\"pct\":23.5},{\"label\":\"1940–1949\",\"units\":1532,\"pct\":22.6},{\"label\":\"1950–1959\",\"units\":1673,\"pct\":24.7},{\"label\":\"1960–1969\",\"units\":658,\"pct\":9.7},{\"label\":\"1970–1979\",\"units\":605,\"pct\":8.9},{\"label\":\"1980–1989\",\"units\":177,\"pct\":2.6},{\"label\":\"1990–1999\",\"units\":103,\"pct\":1.5},{\"label\":\"2000–2009\",\"units\":100,\"pct\":1.5},{\"label\":\"2010–2019\",\"units\":236,\"pct\":3.5},{\"label\":\"2020 or later\",\"units\":91,\"pct\":1.3}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -427,6 +459,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "14.6",
     "pctPre1960": "68.3",
     "pctOwnerOccupied": "61.4",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":933,\"pct\":14.6},{\"label\":\"1940–1949\",\"units\":1549,\"pct\":24.3},{\"label\":\"1950–1959\",\"units\":1875,\"pct\":29.4},{\"label\":\"1960–1969\",\"units\":947,\"pct\":14.9},{\"label\":\"1970–1979\",\"units\":315,\"pct\":4.9},{\"label\":\"1980–1989\",\"units\":362,\"pct\":5.7},{\"label\":\"1990–1999\",\"units\":88,\"pct\":1.4},{\"label\":\"2000–2009\",\"units\":116,\"pct\":1.8},{\"label\":\"2010–2019\",\"units\":174,\"pct\":2.7},{\"label\":\"2020 or later\",\"units\":17,\"pct\":0.3}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -440,6 +473,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "19",
     "pctPre1960": "68.3",
     "pctOwnerOccupied": "70.6",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":1800,\"pct\":19},{\"label\":\"1940–1949\",\"units\":1559,\"pct\":16.4},{\"label\":\"1950–1959\",\"units\":3111,\"pct\":32.8},{\"label\":\"1960–1969\",\"units\":949,\"pct\":10},{\"label\":\"1970–1979\",\"units\":623,\"pct\":6.6},{\"label\":\"1980–1989\",\"units\":430,\"pct\":4.5},{\"label\":\"1990–1999\",\"units\":211,\"pct\":2.2},{\"label\":\"2000–2009\",\"units\":412,\"pct\":4.3},{\"label\":\"2010–2019\",\"units\":339,\"pct\":3.6},{\"label\":\"2020 or later\",\"units\":45,\"pct\":0.5}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -453,6 +487,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "11.9",
     "pctPre1960": "43.8",
     "pctOwnerOccupied": "78.1",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":385,\"pct\":11.9},{\"label\":\"1940–1949\",\"units\":322,\"pct\":10},{\"label\":\"1950–1959\",\"units\":709,\"pct\":21.9},{\"label\":\"1960–1969\",\"units\":553,\"pct\":17.1},{\"label\":\"1970–1979\",\"units\":224,\"pct\":6.9},{\"label\":\"1980–1989\",\"units\":249,\"pct\":7.7},{\"label\":\"1990–1999\",\"units\":101,\"pct\":3.1},{\"label\":\"2000–2009\",\"units\":367,\"pct\":11.3},{\"label\":\"2010–2019\",\"units\":260,\"pct\":8},{\"label\":\"2020 or later\",\"units\":65,\"pct\":2}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   },
@@ -466,6 +501,7 @@ export const TOWN_HOUSING_SEED: TownHousingSeed[] = [
     "pctPre1940": "42.8",
     "pctPre1960": "77.2",
     "pctOwnerOccupied": "64.3",
+    "erasJson": "[{\"label\":\"1939 or earlier\",\"units\":3050,\"pct\":42.8},{\"label\":\"1940–1949\",\"units\":1043,\"pct\":14.6},{\"label\":\"1950–1959\",\"units\":1412,\"pct\":19.8},{\"label\":\"1960–1969\",\"units\":407,\"pct\":5.7},{\"label\":\"1970–1979\",\"units\":259,\"pct\":3.6},{\"label\":\"1980–1989\",\"units\":312,\"pct\":4.4},{\"label\":\"1990–1999\",\"units\":209,\"pct\":2.9},{\"label\":\"2000–2009\",\"units\":148,\"pct\":2.1},{\"label\":\"2010–2019\",\"units\":247,\"pct\":3.5},{\"label\":\"2020 or later\",\"units\":42,\"pct\":0.6}]",
     "release": "ACS 2024 5-year",
     "fetchedAt": "2026-09-03"
   }
