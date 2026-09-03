@@ -112,3 +112,23 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   both unset on the live site.
 
 **Smoke 2026-08-27 05:39 UTC:** PASS — all 19 routes 200
+
+**Smoke 2026-09-03 00:40 UTC:** PASS — all 19 routes 200
+
+**Unclaimed batch 1, tranche 2 — 2026-08-27 (released early at Lucas's instruction):**
+  Status flipped draft→published on grounded-electric, academy-electrical,
+  sanctuary-spa-ambler, inbalance-wellness-spa, pure-spa-ambler. **21 new indexable URLs**
+  — exactly the projection, and inside the 40 ceiling set to compensate for tranche 1's
+  overage. Sitemap 343 → 364. County×category: /nj/bergen-county/electricians,
+  /pa/montgomery-county/spas. Town×category: 6 Bergen electricians (emerson, montvale,
+  oradell, park-ridge, river-vale, westwood) + 8 Montgomery spas (ambler, blue-bell,
+  collegeville, harleysville, lansdale, montgomery-township, north-wales,
+  skippack-township). Plus the 5 profiles. No republish needed — CMS status is read live;
+  code was unchanged (temp status endpoint added and deleted without ever shipping).
+  Badge check on production: Sanctuary renders grey "Credential on file" on both card and
+  profile with zero green-shield markup; InBalance (CZ123155) and Pure Spa (CZ116612) keep
+  "License verified"; the Ambler spas page header reads an honest "3 listed · 2
+  license-verified". Smoke 19/19, crawl 366 pages 0 broken. NOTE: the QA crawler was lost
+  in a scratchpad clean and rewritten — it now strips <script> before extracting hrefs, so
+  runtime-built link fragments no longer read as broken links.
+  Tranche 3 (Montgomery + Middlesex roofers, 50 URLs) holds for 2026-09-10.
