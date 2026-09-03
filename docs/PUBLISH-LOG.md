@@ -132,3 +132,15 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   in a scratchpad clean and rewritten — it now strips <script> before extracting hrefs, so
   runtime-built link fragments no longer read as broken links.
   Tranche 3 (Montgomery + Middlesex roofers, 50 URLs) holds for 2026-09-10.
+
+**Gate A — money-page upgrade — 2026-08-27:** Two reference pages built to the go-live spec:
+  /nj/bergen-county/westwood/plumbers (2,615 words, 842 unique tokens, 13 FAQs, 150 links)
+  and /nj/bergen-county/plumbers (2,203 / 767 / 10 / 146). Baseline was ~1,400; ranking
+  median ~2,225. New sections, all four live on both: sourced cost guide (16 rows) above the
+  listings, sortable real-<table> comparison, municipal permit/licensing block, Census
+  housing context incl. B25034 era table. New data layer: data/money/{cost-guides,
+  permit-offices,town-housing}.csv → generated modules (same CSV-as-truth pattern as guides),
+  src/lib/moneypage.ts, scripts/fetch-town-housing.ts (Census Reporter API + Census
+  gazetteer for GEOIDs; needs a User-Agent header or it 403s). 35/36 Bergen towns have
+  housing data. Byline + evaluated/verified/listed counters + CollectionPage dateModified
+  (from newestChange(), never "today") + FAQPage JSON-LD retained for Bing/AI only.
