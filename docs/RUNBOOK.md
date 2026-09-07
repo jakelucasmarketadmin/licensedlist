@@ -417,3 +417,107 @@ disclosed, and linked normally — see `/editorial-policy`.
 by design (3 concurrent, backs off on 429). Wix rate-limits aggressively; a
 fast crawl returns a screenful of false 429 "broken links" and can trip the
 bot-challenge page for several minutes.
+
+## 17. Monthly maintenance — the whole routine, in order (2026-09-07)
+
+This is what keeps the site healthy without active development. Budget about
+two hours a month. Nothing here needs a developer.
+
+### 1. License staleness sweep
+Export Businesses (Dashboard → Businesses → More Actions → Export to CSV, save
+into `backups/`), then:
+```bash
+npx tsx scripts/verify-licenses.ts --businesses backups/businesses-YYYY-MM-DD.csv --stale 180
+```
+Work `data/verification/stale.csv`. Re-check each against the registry named on
+the listing. Active → update `licenseVerifiedAt`. Lapsed/expired/revoked →
+`licenseStatus = suspended` (page 404s, drops from the sitemap on next render)
+and message the owner with the registry printout and a 30-day window.
+**Confirm the automatic amber still fires:** any verified listing whose
+`licenseVerifiedAt` is over 365 days old renders "Verification due" instead of
+the green badge — `src/components/site/TrustBadge.astro` does this on render,
+so it needs no cron, but check one listing a quarter.
+
+### 2. Registry refresh
+Re-pull the NYC HIC roster and re-run the normalizer:
+```bash
+npx tsx scripts/seed-registry.ts --source nyc-hic
+```
+Rows that disappear from the source are marked departed, not deleted.
+
+### 3. Jotform intake
+```bash
+npx tsx scripts/jotform-to-import.ts
+npx tsx scripts/import-businesses.ts data/intake/YYYY-MM-DD.csv --dry-run
+```
+Verify every license by hand before the real import. `data/import-rejects.csv`
+and `data/needs-verification.csv` are the two files to read.
+
+### 4. Claims and removals queue
+Approve claims; **honour every removal within 2 business days, no questions**,
+and record `optOutAt` — that is the permanent tombstone the importer and the
+registry ingest both skip. See §14.
+
+### 5. Review moderation queue
+Owner responses and flags. Never edit review text; never remove on owner
+request alone (docs/REVIEWS.md).
+
+### 6. Expired offers and events
+Auto-hidden on render by `offerExpiryLabel`/`eventDateLabel`. Confirm one of
+each still behaves, then move on.
+
+### 7. Weekly/monthly report
+```bash
+npx tsx scripts/weekly-report.ts --write
+node scripts/crawl.mjs
+```
+Read indexation and impressions against docs/LAUNCH-MONITORING.md. Anything
+with zero impressions after six months gets reviewed for consolidation.
+
+### 8. Cost guides and permit data — one county per month, on rotation
+Re-verify the figures in `data/money/cost-guides.csv` and
+`data/money/permit-offices.csv` for one county. **Bump `updatedAt` only if
+something actually changed** — `lastmod` trust is binary, and a date that moves
+without a content change poisons it.
+
+Adding a permit office is the highest-value repeatable content work available:
+
+1. Find the municipality's construction/building department page. Record the
+   exact office name, street address, phone, and office hours **from the
+   municipality's own site**, not from a directory.
+2. Record the inspection windows if published — this is the detail no
+   competitor has, and it is what actually sets a homeowner's timeline.
+3. Find the fee ordinance (most NJ boroughs are on ecode360; search
+   "{town} NJ code construction fees"). Transcribe the exact figures for the
+   subcodes that matter to the categories live in that town. **Cite the
+   ordinance number and amendment date.**
+4. Verify the department URL returns 200, then add the row and set
+   `verifiedAt`.
+5. `node scripts/generate-data-modules.mjs`, publish, spot-check the page.
+
+### 9. Town housing data for a new county
+```bash
+npx tsx scripts/fetch-town-housing.ts --state nj --county <county-slug>
+node scripts/generate-data-modules.mjs
+```
+Census Reporter rejects the default Node user-agent (the script sets one).
+Town names repeat across counties, so the gazetteer index is keyed by
+state+county; CDPs (Blue Bell, Harleysville…) are not county subdivisions and
+resolve through the place gazetteer fallback. Gazetteer files live in
+`data/money/gaz/`.
+
+## 18. Content cadence that needs no developer
+
+One of each per month, all three using data we already hold:
+
+- **A county cost guide** — a new row in `data/money/cost-guides.csv`. Two
+  independent national sources plus BLS wage data for the trade, plus at least
+  one exact municipal fee figure. Byline, sources with dates, AI-assist flag.
+- **A town permit office** — §17.8 above. Turns a `noindex` town hub into an
+  indexable one the moment it also has housing data.
+- **A seasonal guide** — `data/guides/*.csv`, rendered on the hubs. Tie it to
+  something real and dated (NOAA normals, a code change, a fee amendment).
+
+Every one of these carries a byline, real sources with retrieval dates, and an
+AI-assistance disclosure. None of them is padding: if a figure cannot be
+sourced, write the cost drivers instead and say so.
