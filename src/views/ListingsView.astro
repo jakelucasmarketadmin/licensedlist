@@ -72,6 +72,8 @@ const housing = town
 // NOAA 1991-2020 normals, by the station that governs each county we cover.
 const CLIMATE: Record<string, { snowInches: number; precipInches: number; station: string; period: string }> = {
   "nj|bergen-county": { snowInches: 31.5, precipInches: 46.6, station: "Newark Liberty Intl Airport (USW00014734)", period: "1991–2020" },
+  "nj|middlesex-county": { snowInches: 31.5, precipInches: 46.6, station: "Newark Liberty Intl Airport (USW00014734)", period: "1991–2020" },
+  "pa|montgomery-county": { snowInches: 23.1, precipInches: 44.11, station: "Philadelphia Intl Airport (USW00013739)", period: "1991–2020" },
 };
 const climate = county ? CLIMATE[`${state.slug}|${county.slug}`] : undefined;
 
@@ -81,6 +83,7 @@ const STOCK_NOTES: Record<string, string> = {
   plumbers: "Housing of that age is why so much plumbing work here is replacement rather than repair: cast-iron drain stacks and galvanised supply lines reach the end of their service life, and a leak in a 70-year-old line is usually a re-pipe conversation rather than a patch. It is also why permit-triggering work — water heaters, re-piping, new fixtures — comes up more often than in newer suburbs.",
   roofers: "Roofs on housing of that age have almost all been replaced at least once, so the job is usually a tear-off over an existing deck, and the deck condition is the variable that moves the quote. Ice-damming at the eaves is the recurring winter failure in this stock.",
   "hvac-contractors": "In housing of that age, ductwork and boiler systems were often designed for a different fuel and a different envelope, so replacement work frequently involves resizing rather than a like-for-like swap.",
+  spas: "Housing age has little bearing on this trade — what matters locally is that Pennsylvania licenses both the individual practitioner and the premises, and we say on each listing which of the two we verified.",
   electricians: "Housing of that age often still carries undersized service panels and, in the oldest quarter, cloth-insulated or knob-and-tube wiring — which is why panel upgrades and rewiring make up so much of the local job mix.",
 };
 const stockNote = STOCK_NOTES[category.slug];

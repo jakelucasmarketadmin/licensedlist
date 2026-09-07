@@ -46,27 +46,72 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * is Census Reporter summary level 060 → geoid "06000US{GEOID}".
  * Files: scripts/../data/money/gaz/gaz_cousubs_{fips}.txt
  */
+/** Same normalisation on both sides: the index strips the legal suffix, so the
+ * lookup must too, or "Washington Township" never matches "Washington". */
+const bareName = (n: string) =>
+  n.replace(/\s+(borough|township|town|city|village|CDP)$/i, "").toLowerCase();
+
 const gazIndex = new Map<string, { geoid: string; name: string }>();
+const loadedStates = new Set<string>();
+
+/**
+ * Town names repeat across counties in all three states — New Jersey alone has
+ * several "Washington township". Keying on name only silently dropped them, so
+ * the index is keyed by state|county|name, resolved through the county
+ * gazetteer (county subdivision GEOID = state(2) + county(3) + cousub(5)).
+ */
 function loadGazetteer(stateSlug: string) {
   const fips = STATE_FIPS[stateSlug];
-  const file = join(root, `data/money/gaz/gaz_cousubs_${fips}.txt`);
-  if (!existsSync(file)) throw new Error(`missing gazetteer ${file} — see docs/RUNBOOK.md`);
-  for (const line of readFileSync(file, "utf8").split("\n").slice(1)) {
+  const countyFile = join(root, `data/money/gaz/gaz_counties_${fips}.txt`);
+  const cousubFile = join(root, `data/money/gaz/gaz_cousubs_${fips}.txt`);
+  for (const f of [countyFile, cousubFile]) {
+    if (!existsSync(f)) throw new Error(`missing gazetteer ${f} — see docs/RUNBOOK.md §16`);
+  }
+  // county FIPS (5 digits) -> county slug, e.g. 34003 -> "bergen-county"
+  const countySlugByFips = new Map<string, string>();
+  for (const line of readFileSync(countyFile, "utf8").split("\n").slice(1)) {
     const cells = line.split("\t");
     if (cells.length < 4) continue;
     const geoid = cells[1]?.trim();
     const name = cells[3]?.trim();
     if (!geoid || !name) continue;
-    // "Westwood borough" / "Washington township" → match on the bare name too.
-    const bare = name.replace(/\s+(borough|township|town|city|village|CDP)$/i, "").toLowerCase();
-    gazIndex.set(`${stateSlug}|${bare}`, { geoid: `06000US${geoid}`, name });
+    countySlugByFips.set(geoid, name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""));
   }
+  for (const line of readFileSync(cousubFile, "utf8").split("\n").slice(1)) {
+    const cells = line.split("\t");
+    if (cells.length < 4) continue;
+    const geoid = cells[1]?.trim();
+    const name = cells[3]?.trim();
+    if (!geoid || !name) continue;
+    const countySlug = countySlugByFips.get(geoid.slice(0, 5));
+    if (!countySlug) continue;
+    gazIndex.set(`${stateSlug}|${countySlug}|${bareName(name)}`, { geoid: `06000US${geoid}`, name });
+  }
+  // Census-designated places (Blue Bell, Harleysville, Willow Grove…) are not
+  // county subdivisions, so they only exist in the place gazetteer. Indexed
+  // without a county key and consulted only when the cousub lookup misses.
+  const placeFile = join(root, `data/money/gaz/gaz_place_${fips}.txt`);
+  if (existsSync(placeFile)) {
+    for (const line of readFileSync(placeFile, "utf8").split("\n").slice(1)) {
+      const cells = line.split("\t");
+      if (cells.length < 4) continue;
+      const geoid = cells[1]?.trim();
+      const name = cells[3]?.trim();
+      if (!geoid || !name) continue;
+      const key = `${stateSlug}|place|${bareName(name)}`;
+      if (!gazIndex.has(key)) gazIndex.set(key, { geoid: `16000US${geoid}`, name });
+    }
+  }
+  loadedStates.add(stateSlug);
 }
 
-function geoidFor(name: string, stateSlug: string): { geoid: string; name: string } | null {
-  if (![...gazIndex.keys()].some((k) => k.startsWith(`${stateSlug}|`))) loadGazetteer(stateSlug);
-  const key = `${stateSlug}|${name.toLowerCase()}`;
-  return gazIndex.get(key) ?? null;
+function geoidFor(name: string, stateSlug: string, countySlug: string): { geoid: string; name: string } | null {
+  if (!loadedStates.has(stateSlug)) loadGazetteer(stateSlug);
+  return (
+    gazIndex.get(`${stateSlug}|${countySlug}|${bareName(name)}`) ??
+    gazIndex.get(`${stateSlug}|place|${bareName(name)}`) ??
+    null
+  );
 }
 
 async function housingFor(geoid: string) {
@@ -118,7 +163,7 @@ let added = 0, skipped = 0, failed: string[] = [];
 for (const t of towns as any[]) {
   const key = `${t.stateSlug}|${t.slug}`;
   if (existing.has(key)) { skipped++; continue; }
-  const geo = geoidFor(t.name, t.stateSlug);
+  const geo = geoidFor(t.name, t.stateSlug, t.countySlug);
   if (!geo) { failed.push(`${t.name} (no geoid)`); await sleep(250); continue; }
   const h = await housingFor(geo.geoid);
   if (!h) { failed.push(`${t.name} (geoid ${geo.geoid}: no data)`); await sleep(250); continue; }
