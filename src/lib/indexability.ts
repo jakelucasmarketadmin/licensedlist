@@ -70,9 +70,14 @@ export function computeIndexability(businesses: DirectoryBusiness[]): HubIndexab
   }
 
   // County×category uses the route's own membership rule (home county OR
-  // serves a town in the county).
+  // serves a town in the county). Each county is visited exactly once — an
+  // earlier version looped counties inside the town loop, which multiplied
+  // every count by the number of towns and qualified pages that then 404'd.
+  const seenCounties = new Set<string>();
   for (const t of getAllTowns()) {
     const countyKey = `${t.stateSlug}/${t.countySlug}`;
+    if (seenCounties.has(countyKey)) continue;
+    seenCounties.add(countyKey);
     const townSlugs = new Set(getTownsByCounty(t.stateSlug, t.countySlug).map((x) => x.slug));
     for (const b of published) {
       if (b.stateSlug !== t.stateSlug) continue;

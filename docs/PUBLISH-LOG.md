@@ -161,3 +161,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   an active indexing bug, not a migration choice). Smoke 19/19 against the new host.
   STILL OPEN on the domain: robots.txt is dashboard-managed and still advertises the old
   sitemap URL; the temp host 301s only its homepage and 404s deep URLs.
+
+**Smoke 2026-09-07 18:06 UTC:** PASS — all 19 routes 200
