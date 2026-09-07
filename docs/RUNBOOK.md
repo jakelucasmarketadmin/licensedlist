@@ -380,3 +380,40 @@ tap-to-call and tap-to-email the business itself, plus its website.
   `fetchQuestionsFor()` / `SiteQuestion`, the owner-inbox `answer-question` action.
 - Businesses with no email on file simply show Call + Website; the Email button
   renders only when `email` is populated.
+
+## 16. Launch: domain, brand, crawl architecture (2026-09-07)
+
+**Brand.** The name is **LicensedList**; tagline "Every listing checked against
+the state license registry." `SITE_NAME`/`SITE_TAGLINE` in `src/lib/site.ts` are
+the only place either is defined. **Never use "Vetted" as a product, badge or
+tier name** — there is an active US trademark (TrustTech LLC, Serial 97249765)
+covering directory services. "Verified", "license-verified" and "checked" are
+the approved words. US spelling ("license") throughout.
+
+**Standing rule: never create a Google Business Profile for LicensedList.**
+Google's eligibility guidelines exclude "brands, organizations, artists, and
+other online-only businesses" and separately "lead generation companies".
+Attempting it risks a suspension that can cascade to the whole account — for a
+business whose entire proposition is verification integrity, that is not a
+trade worth making. Apple Business Connect is fine and is a Lucas task.
+
+**Sitemaps.** Wix still hard-404s any `*.xml` route, even on the custom domain,
+so the sitemaps live at extensionless paths served as `application/xml`:
+`/sitemap-index` plus `/sitemap-{core,geo,categories,money,listings,editorial}`.
+`/sitemap` remains the flat urlset. Point robots.txt at `/sitemap-index`.
+
+**Indexability (`src/lib/indexability.ts`).** One computation drives both the
+sitemap and the `noindex` meta, so they can never disagree. A town hub is
+indexable only if it has a live geo×category page, a business based there, or
+BOTH Census housing data and a verified permit office. A category hub needs one
+published business or a real guide. Everything else renders but carries
+`noindex, follow` and stays out of the sitemap until it qualifies.
+
+**Link markup.** `rel="sponsored"` is for PAID placement only (featured/sponsor
+tiers). Agency clients are free, ranked by the same public score, visibly
+disclosed, and linked normally — see `/editorial-policy`.
+
+**Crawl check.** `node scripts/crawl.mjs https://www.licensedlist.com` — polite
+by design (3 concurrent, backs off on 429). Wix rate-limits aggressively; a
+fast crawl returns a screenful of false 429 "broken links" and can trip the
+bot-challenge page for several minutes.

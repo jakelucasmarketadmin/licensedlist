@@ -163,3 +163,23 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   sitemap URL; the temp host 301s only its homepage and 404s deep URLs.
 
 **Smoke 2026-09-07 18:06 UTC:** PASS — all 19 routes 200
+
+**LicensedList launch §1–§3 — 2026-09-07:** Renamed TriVetted → LicensedList across 53
+  files (src, data CSVs, docs, public); tagline now "Every listing checked against the state
+  license registry."; "Vetted" retired as a name (US TM 97249765). Normalized 47 stray
+  British "licence" spellings to US "license". Added favicon.svg + og-default.png (neither
+  existed) and wired icon/OG/Twitter tags. Deleted the dead Vibe-era SPA tree
+  (Router/Header/Footer/Head/HomePage .tsx — unreachable, still carried old branding).
+  Gate C: SITE_URL pinned to https://www.licensedlist.com; verified apex→www 301, old-host
+  homepage→new 301 single hop, old-host DEEP URLs 404 (Wix mapped root only — reported, not
+  fixable from our side); no page 200s on both hosts; no stray dev noindex; AI crawlers
+  (ClaudeBot, OAI-SearchBot) both served 200 with full HTML.
+  Gate B: split sitemaps at extensionless paths (Wix still 404s .xml) — index + 6 sections;
+  **indexable URLs pruned 364 → 197** (town hubs 162→35 indexable, categories 69→28) with
+  matching noindex on the pruned pages; /directory HTML sitemap (196 links); "Recently
+  added" homepage module; rel=sponsored restricted to paid placements only (agency clients
+  now followed + visibly disclosed, documented on /editorial-policy).
+  Bug found and fixed in the same pass: computeIndexability looped counties once per town,
+  inflating county×category counts so /directory linked 28 sub-threshold pages that 404'd.
+  Crawler moved into the repo (scripts/crawl.mjs) and made polite after a fast crawl tripped
+  Wix rate limiting. Final: smoke 19/19, crawl 644 pages **0 broken**.
