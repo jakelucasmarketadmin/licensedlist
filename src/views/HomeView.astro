@@ -35,6 +35,21 @@ try {
 } catch { /* line degrades */ }
 
 // Rotate the hero photo by time of day (server hour; page caches ~60s).
+/**
+ * "Recently added" (Gate B §3.3) — the newest verified listings, newest first.
+ * This is the highest-value indexing element on the site: it puts every new
+ * URL one hop from the most-crawled page and gives the freshness scheduler a
+ * standing reason to recrawl the homepage.
+ */
+const recentlyAdded = [...published]
+  .filter((b) => b.licenseStatus === "verified" || b.licenseStatus === "credential-only")
+  .sort((a, b) => {
+    const at = new Date((a as any)._createdDate ?? a.licenseVerifiedAt ?? 0).getTime();
+    const bt = new Date((b as any)._createdDate ?? b.licenseVerifiedAt ?? 0).getTime();
+    return bt - at;
+  })
+  .slice(0, 24);
+
 const heroPool = homeHeroPhotos(5);
 const heroPhoto = heroPool.length
   ? heroPool[new Date().getHours() % heroPool.length]
@@ -160,6 +175,36 @@ const STEPS = [
     });
   })();
 </script>
+
+{recentlyAdded.length > 0 && (
+  <section class="mx-auto max-w-6xl px-4 pt-14 sm:px-6" aria-labelledby="recent-heading" data-recently-added>
+    <div class="flex flex-wrap items-baseline justify-between gap-3">
+      <h2 id="recent-heading" class="font-display text-3xl font-semibold text-ink">
+        Recently added
+      </h2>
+      <a href="/directory" class="text-sm font-medium text-brand underline underline-offset-2">
+        Browse the full directory
+      </a>
+    </div>
+    <p class="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+      The newest listings to clear a license check, newest first — each one verified against
+      the registry named on its profile.
+    </p>
+    <ul class="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      {recentlyAdded.map((b) => (
+        <li class="rounded-card border border-line bg-surface px-4 py-3">
+          <a href={`/business/${b.slug}`} class="font-medium text-ink hover:text-brand">{b.name}</a>
+          <p class="mt-0.5 text-xs text-faint">
+            {b.city}{b.state ? `, ${b.state}` : ""}
+            {b.licenseVerifiedAt && (
+              <> · checked {new Date(b.licenseVerifiedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })}</>
+            )}
+          </p>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
 
 <!-- Bento explore -->
 <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="explore-heading">

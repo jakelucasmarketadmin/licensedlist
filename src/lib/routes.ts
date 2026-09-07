@@ -139,6 +139,14 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
     updated: "2026-08-27",
     crumb: "Deals",
   },
+  "/directory": {
+    title: `Directory Index — Every Town, County & Category · ${SITE_NAME}`,
+    description:
+      "The full LicensedList index: every state, county, town and category page with at least three verified listings or real local data. One click to anything on the site.",
+    path: "/directory",
+    updated: "2026-09-07",
+    crumb: "Directory",
+  },
   "/guides": {
     title: `Hiring & Licensing Guides · ${SITE_NAME}`,
     description:

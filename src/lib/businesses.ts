@@ -268,8 +268,22 @@ export const hasActivePaidTier = (b: DirectoryBusiness) =>
   (b.tier === "featured" || b.tier === "sponsor") &&
   (!b.featuredUntil || new Date(b.featuredUntil).getTime() > Date.now());
 
-export const isSponsoredPlacement = (b: DirectoryBusiness) =>
-  hasActivePaidTier(b) || truthy(b.isClient);
+/**
+ * Does this listing occupy a PAID placement? Only a live featured/sponsor tier
+ * does. `rel="sponsored"` describes payment for placement, and that is the
+ * only thing it should describe here.
+ *
+ * Agency-client listings are deliberately NOT included (changed 2026-09-07).
+ * They are free, ranked by the same published score as everyone else, and get
+ * no placement benefit; what is true about them is a material connection, and
+ * that is disclosed visibly on the card and the profile. Tagging an unpaid
+ * listing "sponsored" would have mislabelled the relationship and stripped a
+ * link the business earned on merit. See /editorial-policy.
+ */
+export const isSponsoredPlacement = (b: DirectoryBusiness) => hasActivePaidTier(b);
+
+/** Material connection to disclose visibly — never expressed as a link rel. */
+export const isAgencyClient = (b: DirectoryBusiness) => truthy(b.isClient);
 
 let cache: { at: number; items: DirectoryBusiness[] } | null = null;
 const CACHE_MS = 60_000;
