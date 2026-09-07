@@ -10,12 +10,14 @@ export const SITE_TAGLINE = "Vetted across NJ, NY & PA";
 /**
  * Canonical origin (https, no trailing slash) — the single source for
  * canonical URLs, og:url, JSON-LD ids, and the sitemap. Set PUBLIC_SITE_URL
- * in the environment when the custom domain is connected; the fallback is the
- * current Wix-hosted domain. Never derive canonicals from the request origin:
+ * in the environment to override it. Pinned to the custom domain 2026-09-07:
+ * licensedlist.com 301s to the www host, so www is the canonical form. The old
+ * Wix temp host now 404s on deep URLs, so canonicals must not point at it.
+ * Never derive canonicals from the request origin:
  * behind Wix's proxy, Astro.url reports an internal http:// scheme.
  */
 export const SITE_URL: string =
-  import.meta.env.PUBLIC_SITE_URL ?? "https://my-site-nf00gfth-tier201.wix-vibe-site.com";
+  import.meta.env.PUBLIC_SITE_URL ?? "https://www.licensedlist.com";
 
 /**
  * The real business showcased on the home hero, /how-we-verify, and
