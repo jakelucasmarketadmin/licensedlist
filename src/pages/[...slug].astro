@@ -43,9 +43,12 @@ import {
   listForCountyCategory,
   listForStateCategory,
   getBusinessBySlug,
+  fetchBusinesses,
+  isPublished,
   type ListingSet,
 } from "@/lib/businesses";
 import { fetchReviewsFor, fetchServicePricesFor } from "@/lib/reviews";
+import { computeIndexability } from "@/lib/indexability";
 import { photosOf } from "@/lib/businesses";
 import { imageAt, srcsetFor } from "@/lib/images";
 import {
@@ -241,10 +244,15 @@ if (!View) {
     } else if (hub.kind === "town" && county && town) {
       View = TownHubView;
       viewProps = { state, county, town };
+      // Gate B §3.1: a town hub with no live category page, no business and no
+      // local data is a doorway page. It still renders for a human who lands
+      // on it, but stays out of the index and the sitemap until it qualifies.
+      const townIdx = computeIndexability((await fetchBusinesses()).filter(isPublished));
       seo = {
         title: `Local Businesses in ${town.name}, ${state.abbr} · ${SITE_NAME}`,
         description: truncate(town.intro),
         path: `/${town.pathKey}`,
+        robots: townIdx.towns.has(town.pathKey) ? undefined : "noindex, follow",
       };
       trail = [
         { name: "Home", path: "/" },
@@ -357,7 +365,11 @@ if (!View && segments.length === 1) {
   if (category) {
     View = CategoryHubView;
     viewProps = { category };
+    // A category with no listings anywhere and no guide has nothing a visitor
+    // can act on — render it, but keep it out of the index (§3.1).
+    const catIdx = computeIndexability((await fetchBusinesses()).filter(isPublished));
     seo = {
+      robots: catIdx.categories.has(category.slug) ? undefined : "noindex, follow",
       title: `${category.name} in NJ, NY & PA · ${SITE_NAME}`,
       description: truncate(
         `Find ${category.name.toLowerCase()} across New Jersey, New York & Pennsylvania${category.licenseRequired ? " — every verified listing names the official license registry we checked" : ", vetted for identity, reviews, and responsiveness"}.`,
