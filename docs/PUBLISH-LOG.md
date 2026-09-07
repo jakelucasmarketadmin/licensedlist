@@ -146,3 +146,18 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   (from newestChange(), never "today") + FAQPage JSON-LD retained for Bing/AI only.
 
 **Smoke 2026-09-03 01:53 UTC:** PASS — all 19 routes 200
+
+**Smoke 2026-09-07 16:11 UTC:** PASS — all 19 routes 200
+
+**Q&A removed + SITE_URL pinned — 2026-09-07:** Public Q&A taken off profiles per Lucas —
+  a question form only works if the business can answer it, and that needs a per-business
+  inbox we don't operate. Contact is now direct: tap-to-call, tap-to-email (new Email button,
+  renders only where an email is on file) and website. Removed: QASection.astro,
+  /api/submit-question, fetchQuestionsFor/SiteQuestion, the owner-inbox Q&A tab and its
+  answer-question action. The `questions` collection is retained per the never-delete rule.
+  Separately: the custom domain went live mid-session (www.licensedlist.com). Canonicals,
+  og:url and the sitemap were still emitting the temp Wix host, which now 404s on deep URLs,
+  so SITE_URL is pinned to https://www.licensedlist.com (Gate C step 1 done early — it was
+  an active indexing bug, not a migration choice). Smoke 19/19 against the new host.
+  STILL OPEN on the domain: robots.txt is dashboard-managed and still advertises the old
+  sitemap URL; the temp host 301s only its homepage and 404s deep URLs.
