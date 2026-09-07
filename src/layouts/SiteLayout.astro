@@ -4,7 +4,7 @@ import Header from "@/components/site/Header.astro";
 import Footer from "@/components/site/Footer.astro";
 import ConciergeDrawer from "@/components/site/ConciergeDrawer.tsx";
 import { hasAi } from "@/lib/ai";
-import { SITE_NAME, SITE_URL, SITE_TAGLINE } from "@/lib/site";
+import { SITE_NAME, SITE_URL, SITE_TAGLINE, GOOGLE_SITE_VERIFICATION } from "@/lib/site";
 import { resolveOrigin, type PageSeo } from "@/lib/seo";
 
 interface Props {
@@ -32,6 +32,7 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_ID;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{seo.title}</title>
+    <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />
     <meta name="description" content={seo.description} />
     <meta name="robots" content={robots} />
     {isIndexable && <link rel="canonical" href={canonical} />}

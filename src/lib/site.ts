@@ -28,6 +28,13 @@ export const SITE_URL: string =
  * /for-businesses. Falls back to the sample specimen card when this record
  * isn't published — safe to rotate anytime.
  */
+/**
+ * Google Search Console HTML-tag verification. Google re-checks this
+ * periodically, so it has to stay in the head for as long as the property
+ * exists — removing it after verification un-verifies the property.
+ */
+export const GOOGLE_SITE_VERIFICATION = "5v8fLFhIyMKHYyVTiUre16aXwddn1PxtSe2HTTP5zPA";
+
 export const SHOWCASE_BUSINESS_SLUG = "hofmeister-plumbing";
 
 /** Contact for business onboarding until the claim flow ships (M4). */
