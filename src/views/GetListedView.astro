@@ -16,22 +16,50 @@ import { JOTFORM_FORM_ID, JOTFORM_FORM_URL } from "@/lib/jotform";
     before anything goes live.
   </p>
 
-  <div class="mt-8 overflow-hidden rounded-card border border-line bg-surface">
+  <!--
+    Do NOT clip this container. The iframe is sized by Jotform's resize
+    messages; if a message is ever missed or arrives late the form is taller
+    than the frame, and `overflow:hidden` would swallow the rest of it with no
+    scrollbar and no way to reach the submit button. Letting the iframe scroll
+    itself is the fallback that keeps the form usable no matter what.
+  -->
+  <div class="mt-8 rounded-card border border-line bg-surface">
     <iframe
       id={`JotFormIFrame-${JOTFORM_FORM_ID}`}
       src={JOTFORM_FORM_URL}
-      style="width:100%;height:2200px;border:none;"
+      style="width:100%;height:4200px;border:none;display:block;"
+      scrolling="yes"
       title="Add or update your listing"
       allow="geolocation; microphone; camera; fullscreen; payment"
     ></iframe>
   </div>
   <script is:inline data-astro-rerun src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
   <script is:inline data-astro-rerun define:vars={{ formId: JOTFORM_FORM_ID }}>
-    // Auto-resize the embed to its content; the 2200px style height above is
-    // the no-JS fallback (the page just scrolls).
-    if (typeof window.jotformEmbedHandler === "function") {
-      window.jotformEmbedHandler(`iframe[id='JotFormIFrame-${formId}']`, "https://form.jotform.com/");
-    }
+    // The handler script is a separate request, so a bare
+    // `typeof window.jotformEmbedHandler === "function"` check races it: when
+    // it loses, auto-resize never initialises and the form is cut off at
+    // whatever the fallback height happens to be. Poll briefly instead, and
+    // re-attach after client-side navigation (ClientRouter reuses the document).
+    (function () {
+      var selector = "iframe[id='JotFormIFrame-" + formId + "']";
+      var attempts = 0;
+      function attach() {
+        if (typeof window.jotformEmbedHandler === "function") {
+          window.jotformEmbedHandler(selector, "https://form.jotform.com/");
+          return true;
+        }
+        return false;
+      }
+      function poll() {
+        if (attach() || attempts++ > 40) return; // ~10s, then give up gracefully
+        setTimeout(poll, 250);
+      }
+      poll();
+      // A viewport change re-flows the form (mobile especially), which makes
+      // the previously negotiated height wrong until the next message.
+      window.addEventListener("resize", function () { attach(); });
+      document.addEventListener("astro:page-load", poll, { once: true });
+    })();
   </script>
 
   <p class="mt-4 text-sm text-faint">
