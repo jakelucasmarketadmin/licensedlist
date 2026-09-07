@@ -1,5 +1,5 @@
 /**
- * Generate the downloadable "TriVetted Best of {County} {Year}" badge SVG a
+ * Generate the downloadable "LicensedList Best of {County} {Year}" badge SVG a
  * winner can embed on their own site (plain link back, rel handled by us —
  * we never hand out embed code with dofollow links).
  *
@@ -20,7 +20,7 @@ const year = arg("year") ?? String(new Date().getFullYear());
 const demo = args.includes("--demo");
 const slug = county.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="280" viewBox="0 0 240 280" role="img" aria-label="TriVetted Best of ${county} ${year}">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="280" viewBox="0 0 240 280" role="img" aria-label="LicensedList Best of ${county} ${year}">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#14456b"/><stop offset="1" stop-color="#0b2b45"/>
@@ -28,7 +28,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="280" vi
   </defs>
   <path d="M120 6 L226 40 V150 C226 210 180 252 120 274 C60 252 14 210 14 150 V40 Z" fill="url(#bg)" stroke="#fffdf8" stroke-width="4"/>
   <path d="M120 26 L206 54 V148 C206 196 170 232 120 252 C70 232 34 196 34 148 V54 Z" fill="none" stroke="#c24e0a" stroke-width="2" opacity="0.9"/>
-  <text x="120" y="78" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="21" font-weight="700" fill="#fffdf8">TriVetted</text>
+  <text x="120" y="78" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="21" font-weight="700" fill="#fffdf8">LicensedList</text>
   <text x="120" y="106" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" letter-spacing="3" fill="#e6eef5">BEST OF</text>
   <text x="120" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="${county.length > 14 ? 15 : 18}" font-weight="700" fill="#fffdf8">${county.toUpperCase()}</text>
   <text x="120" y="182" text-anchor="middle" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#c24e0a">${year}</text>

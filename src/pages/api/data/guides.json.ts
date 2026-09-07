@@ -5,7 +5,7 @@ import { SITE_URL } from "@/lib/site";
 /** Read-only machine endpoint (D4): guide metadata + host page URLs. */
 export const GET: APIRoute = async () => {
   const body = {
-    source: "TriVetted editorial guides — sourced, human-reviewed",
+    source: "LicensedList editorial guides — sourced, human-reviewed",
     generatedAt: new Date().toISOString(),
     docs: `${SITE_URL}/ai-info`,
     guides: GUIDE_SEED.map((g) => ({

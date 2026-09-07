@@ -4,7 +4,7 @@ import Header from "@/components/site/Header.astro";
 import Footer from "@/components/site/Footer.astro";
 import ConciergeDrawer from "@/components/site/ConciergeDrawer.tsx";
 import { hasAi } from "@/lib/ai";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SITE_URL, SITE_TAGLINE } from "@/lib/site";
 import { resolveOrigin, type PageSeo } from "@/lib/seo";
 
 interface Props {
@@ -41,10 +41,17 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_ID;
     <meta property="og:title" content={seo.title} />
     <meta property="og:description" content={seo.description} />
     {isIndexable && <meta property="og:url" content={canonical} />}
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={`${SITE_URL}/og-default.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE_NAME} — ${SITE_TAGLINE}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={`${SITE_URL}/og-default.png`} />
     <meta name="twitter:title" content={seo.title} />
     <meta name="twitter:description" content={seo.description} />
 
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/og-default.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://static.wixstatic.com" />

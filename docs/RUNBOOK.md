@@ -221,7 +221,7 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   image for their own site — plain link back only, never embed code.
 - **Newsletter:** capture posts to `/api/subscribe` → `subscribers` (pending) + forwards
   to `GHL_NEWSLETTER_WEBHOOK` (set env). Build the GHL workflow with DOUBLE OPT-IN: send
-  confirmation email, only confirmed contacts join the "TriVetted Weekly" list. Digest
+  confirmation email, only confirmed contacts join the "LicensedList Weekly" list. Digest
   template: docs/outreach/newsletter-digest-template.md.
 - **New envs this batch:** GHL_NEWSLETTER_WEBHOOK.
 
@@ -350,10 +350,10 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   smoke + crawl + PUBLISH-LOG.
 - **Individual credentials (2026-08-27):** `licenseStatus = credential-only`
   renders the neutral "Credential on file" badge and never the green shield.
-  Licence number/source/verified-at stay blank (the business has no registry
+  License number/source/verified-at stay blank (the business has no registry
   record of its own); the whole story goes in `licenseHolder`, which renders as
   prose in the Verification block and must state explicitly that no facility
-  licence is on file. The importer accepts an optional `licenseStatus` CSV
+  license is on file. The importer accepts an optional `licenseStatus` CSV
   column as an override so a re-import can't demote such a listing to draft.
   Rules and worked examples: docs/VERIFICATION.md.
 - **Tranche release, step by step:** flipping `status` draft→published in the

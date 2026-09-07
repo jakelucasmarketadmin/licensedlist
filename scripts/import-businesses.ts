@@ -140,7 +140,7 @@ for (const [i, r] of raw.entries()) {
 
   const primaryCat = categories.get(r.primaryCategorySlug)!;
   // Optional explicit override for cases the rules below can't infer — today
-  // only "credential-only": the premises has no licence of its own and what we
+  // only "credential-only": the premises has no license of its own and what we
   // verified is a named individual's credential (docs/VERIFICATION.md). Without
   // it a re-import would demote such a listing to draft every time.
   const statusOverride = (r.licenseStatus ?? "").trim();

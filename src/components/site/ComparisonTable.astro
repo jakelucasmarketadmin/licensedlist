@@ -22,7 +22,7 @@ const rows = businesses.map((b) => {
   const services = (b.services ?? "").toLowerCase();
   const towns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
   const extra = additionalLicenses(b);
-  const licence =
+  const license =
     b.licenseStatus === "verified"
       ? [b.licenseNumber, ...extra.map((l) => l.number)].filter(Boolean).join(" + ")
       : b.licenseStatus === "credential-only"
@@ -36,7 +36,7 @@ const rows = businesses.map((b) => {
     rating: blendedRating(b),
     sources: ratingSourcesLabel(b),
     reviews: totalReviewCount(b),
-    licence,
+    license,
     verified: b.licenseStatus === "verified",
     years: b.yearsInBusiness ? Number(b.yearsInBusiness) : null,
     specialty: (b.services ?? "").split(",")[0]?.trim() ?? "",
@@ -56,7 +56,7 @@ const rows = businesses.map((b) => {
     </h2>
     <p class="mt-2 max-w-prose text-sm leading-relaxed text-muted">
       Every column is a fact we hold on the record, not a score we assigned. Sort any column;
-      licence numbers link through to the full verification record.
+      license numbers link through to the full verification record.
     </p>
 
     <div class="mt-4 overflow-x-auto rounded-card border border-line">
@@ -67,7 +67,7 @@ const rows = businesses.map((b) => {
         <thead>
           <tr class="bg-inset text-left">
             {[
-              ["Business", "text"], ["Rating", "num"], ["Reviews", "num"], ["Licence #", "text"],
+              ["Business", "text"], ["Rating", "num"], ["Reviews", "num"], ["License #", "text"],
               ["Years", "num"], ["Specialty", "text"], ["Serves", "num"],
               ["Emergency", "text"], ["Free estimate", "text"], ["", "none"],
             ].map(([label, kind], i) => (
@@ -99,7 +99,7 @@ const rows = businesses.map((b) => {
               </td>
               <td class="px-3 py-3 text-muted" data-sort-value={r.reviews}>{r.reviews || "—"}</td>
               <td class="px-3 py-3 font-mono text-xs text-muted">
-                {r.verified ? <a href={`/business/${r.slug}#verification`} class="underline underline-offset-2 hover:text-ink">{r.licence}</a> : r.licence}
+                {r.verified ? <a href={`/business/${r.slug}#verification`} class="underline underline-offset-2 hover:text-ink">{r.license}</a> : r.license}
               </td>
               <td class="px-3 py-3 text-muted" data-sort-value={r.years ?? -1}>{r.years ?? "—"}</td>
               <td class="px-3 py-3 text-muted">{r.specialty || "—"}</td>

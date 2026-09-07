@@ -1,4 +1,4 @@
-# TriVetted Weekly — digest template (GHL email)
+# LicensedList Weekly — digest template (GHL email)
 
 Subject: This week in tri-state local: {{new_count}} newly verified businesses
 

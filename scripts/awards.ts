@@ -1,5 +1,5 @@
 /**
- * TriVetted Best of {County} {Year} — winner computation (C4).
+ * LicensedList Best of {County} {Year} — winner computation (C4).
  *
  *   npx tsx scripts/awards.ts [--year 2027] [--reviews data/exports/reviews.csv]
  *

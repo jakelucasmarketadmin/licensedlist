@@ -90,7 +90,7 @@ function recolor(layer, c) {
 mkdirSync("src/map", { recursive: true });
 for (const [mode, palette] of Object.entries(PALETTES)) {
   const style = JSON.parse(JSON.stringify(base));
-  style.name = `TriVetted ${mode}`;
+  style.name = `LicensedList ${mode}`;
   style.layers = style.layers.map((l) => recolor(l, palette));
   writeFileSync(`src/map/style-${mode}.json`, JSON.stringify(style));
   console.log(`src/map/style-${mode}.json (${style.layers.length} layers)`);

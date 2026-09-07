@@ -126,7 +126,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/events": {
     title: `Local Events in NJ, NY & PA · ${SITE_NAME}`,
     description:
-      "Community events across the New Jersey, New York, and Pennsylvania towns TriVetted covers — submitted locally, checked before publishing.",
+      "Community events across the New Jersey, New York, and Pennsylvania towns LicensedList covers — submitted locally, checked before publishing.",
     path: "/events",
     updated: "2026-08-27",
     crumb: "Events",
@@ -150,7 +150,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/awards": {
     title: `Best of {County} Awards — Methodology · ${SITE_NAME}`,
     description:
-      "The TriVetted Best of {County} awards are computed from verified licenses and verified-hire reviews — never sold. Full methodology, public.",
+      "The LicensedList Best of {County} awards are computed from verified licenses and verified-hire reviews — never sold. Full methodology, public.",
     path: "/awards",
     updated: "2026-08-27",
     crumb: "Awards",
@@ -182,7 +182,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/ai-info": {
     title: `${SITE_NAME} for AI Assistants`,
     description:
-      "Structured, plain-language facts about TriVetted's license-verified directory — what the data means, how verification works, and how AI assistants can query and cite it.",
+      "Structured, plain-language facts about LicensedList's license-verified directory — what the data means, how verification works, and how AI assistants can query and cite it.",
     path: "/ai-info",
     updated: "2026-08-27",
     crumb: "AI info",

@@ -1,7 +1,7 @@
 import { BaseCrudService } from "@/integrations";
 
 /**
- * TriVetted Best of {County} {Year} (C4) — collection `awards`. Winners are
+ * LicensedList Best of {County} {Year} (C4) — collection `awards`. Winners are
  * COMPUTED (scripts/awards.ts), reviewed by the operator, then published —
  * never sold. Criteria (docs/AWARDS.md): verified license, ≥5 verified-hire
  * on-site reviews, ≥4.7 aspect average, response time < 24h, no unresolved

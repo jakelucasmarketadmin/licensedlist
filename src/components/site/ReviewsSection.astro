@@ -173,11 +173,11 @@ const fmtDate = (d?: string | Date) =>
                   <span class="font-semibold text-ink">{r.reviewerName ?? "Customer"}</span>
                   {r.townName && <span class="text-xs text-faint">· {r.townName}</span>}
                   {isVerifiedHire(r) ? (
-                    <span class="rounded-chip bg-[#177245] px-2 py-0.5 text-[11px] font-semibold text-white" title="This customer hired the business through a TriVetted quote request; the review link was sent to every customer of a completed job, never only happy ones.">
-                      Verified hire via TriVetted
+                    <span class="rounded-chip bg-[#177245] px-2 py-0.5 text-[11px] font-semibold text-white" title="This customer hired the business through a LicensedList quote request; the review link was sent to every customer of a completed job, never only happy ones.">
+                      Verified hire via LicensedList
                     </span>
                   ) : (
-                    <span class="rounded-chip bg-inset px-2 py-0.5 text-[11px] font-medium text-faint" title="Submitted through the public review form; identity checked, hire not confirmed through TriVetted.">
+                    <span class="rounded-chip bg-inset px-2 py-0.5 text-[11px] font-medium text-faint" title="Submitted through the public review form; identity checked, hire not confirmed through LicensedList.">
                       Unverified
                     </span>
                   )}
@@ -230,7 +230,7 @@ const fmtDate = (d?: string | Date) =>
         </p>
       )}
       <p class:list={["text-sm leading-relaxed text-muted", externalRating !== null && "mt-2"]}>
-        No on-site reviews yet. Hired through {`TriVetted`}? You'll get a one-time review link
+        No on-site reviews yet. Hired through {`LicensedList`}? You'll get a one-time review link
         after the job — it goes to every customer, never only the happy ones. You can also
         <a href={writeUrl} rel="nofollow" class="font-medium text-brand underline underline-offset-2"> write a review</a> now.
       </p>

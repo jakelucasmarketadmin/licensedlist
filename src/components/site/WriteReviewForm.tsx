@@ -161,7 +161,7 @@ export default function WriteReviewForm({ businessSlug, businessName, token }: P
         ) : (
           <p className="mt-1.5 text-sm text-muted">
             Public review — it will be labeled “Unverified” because the hire didn't go through
-            TriVetted.
+            LicensedList.
           </p>
         )}
       </div>

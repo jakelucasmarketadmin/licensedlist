@@ -9,8 +9,8 @@
 2. **No incentives conditioned on rating or content.** An incentive for leaving *a* review
    (any rating) is allowed only if the incentive is disclosed alongside the review; an
    incentive for a *positive* review is never allowed. (We currently offer no incentives.)
-3. **Relationship disclosure.** "Verified hire via TriVetted" means the reviewer hired the
-   business through a TriVetted quote request and got the one-time link after the job.
+3. **Relationship disclosure.** "Verified hire via LicensedList" means the reviewer hired the
+   business through a LicensedList quote request and got the one-time link after the job.
    Agency-client relationships are disclosed on listings; reviews from anyone affiliated
    with the business or the agency are refused in moderation.
 4. **No suppression.** Negative reviews are published under the same moderation rules as
@@ -50,7 +50,7 @@ The `/write-review` page shows this policy (keep in sync with
 - Write about your own, real experience with this business. One review per job.
 - Reviews are moderated for identity and job linkage only — we never filter, edit, or
   reorder by rating. Critical reviews are published under the same rules as positive ones.
-- "Verified hire" means the hire went through a TriVetted quote request and the review link
+- "Verified hire" means the hire went through a LicensedList quote request and the review link
   was sent after the job — to every customer, never only the happy ones.
 - No reviews from owners, employees, relatives, competitors, or anyone paid to write one.
 - Don't include other people's personal information, defamatory claims, or content

@@ -1,6 +1,6 @@
 ---
 /**
- * "TriVetted Weekly" capture (C5) — footer + hub pages. Double opt-in: the
+ * "LicensedList Weekly" capture (C5) — footer + hub pages. Double opt-in: the
  * address isn't subscribed until the confirmation email is clicked.
  */
 interface Props {
@@ -14,7 +14,7 @@ const uid = `nl-${Math.abs([...source].reduce((a, c) => a * 31 + c.charCodeAt(0)
 <form data-newsletter data-source={source} class:list={[!compact && "rounded-card border border-line bg-surface p-5"]}>
   {!compact && (
     <>
-      <h2 class="font-display text-lg font-semibold text-ink">TriVetted Weekly</h2>
+      <h2 class="font-display text-lg font-semibold text-ink">LicensedList Weekly</h2>
       <p class="mt-1 text-sm leading-relaxed text-muted">
         New verified businesses, local events, and one guide — every week, free.
       </p>

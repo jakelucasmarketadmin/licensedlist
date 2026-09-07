@@ -12,4 +12,4 @@ Verification (the green badge with the registry receipt) is optional and clearly
 Reply "unsubscribe" and we won't contact you again.
 
 {Sender name}
-TriVetted · {physical postal address}
+LicensedList · {physical postal address}

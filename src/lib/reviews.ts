@@ -34,7 +34,7 @@ export interface SiteReview {
   photosJson?: string | string[];
   /** true only when submitted via a one-time token from a won lead. */
   verifiedHire?: boolean | string;
-  /** trivetted (token flow) | public | owner-imported */
+  /** licensedlist (token flow) | public | owner-imported */
   source?: string;
   /** pending | published | rejected */
   moderationStatus?: string;

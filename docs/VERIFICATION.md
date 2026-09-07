@@ -5,11 +5,11 @@ and date.** Exact-license-number matches are the only auto-appliable result; eve
 match is human-reviewed. PA badges always carry the Attorney General's caveat that
 registration is not an endorsement of competency (built into the badge tooltip).
 
-## Individual credentials are never business licences
+## Individual credentials are never business licenses
 
-A licence issued to a *person* — an esthetician, a barber, a med spa's medical director, a
-master plumber — is a credential held by that individual. A licence issued to a *premises*
-or a *company* — a salon licence, an HIC registration, an electrical business permit — is
+A license issued to a *person* — an esthetician, a barber, a med spa's medical director, a
+master plumber — is a credential held by that individual. A license issued to a *premises*
+or a *company* — a salon license, an HIC registration, an electrical business permit — is
 what the badge is about. The two are never interchangeable, and the site must never let a
 reader mistake one for the other.
 
@@ -21,14 +21,14 @@ When the only thing we can verify is an individual's credential:
   are the business's own registry record, and it does not have one;
 - put the whole story in `licenseHolder`, which renders as prose in the Verification block:
   who holds it, the number, the status, the date, the registry, **and** the explicit
-  sentence that no facility licence is on file for the address;
+  sentence that no facility license is on file for the address;
 - repeat the qualifier in `sourceNotes` so the operator record matches the public one.
 
-Worked example — Sanctuary Spa, Ambler PA (2026-08-27): PA PALS has no facility licence at
+Worked example — Sanctuary Spa, Ambler PA (2026-08-27): PA PALS has no facility license at
 105 Mattison Ave under any name or board, so the business gets `credential-only`, and the
-owner's individual esthetician licence (Joanna I. Sigda, CQ117677, active, expires
+owner's individual esthetician license (Joanna I. Sigda, CQ117677, active, expires
 2027-01-31) is recorded as a credential. Contrast InBalance Wellness Spa (CZ123155) and
-Pure Spa (CZ116612): both are **Esthetician Salon** licences — facility licences at the
+Pure Spa (CZ116612): both are **Esthetician Salon** licenses — facility licenses at the
 listed addresses — so both keep the verified badge.
 
 Reading the PALS prefixes is usually enough to tell them apart: `CQ` = individual

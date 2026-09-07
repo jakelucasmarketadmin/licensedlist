@@ -1,4 +1,4 @@
-# TriVetted
+# LicensedList
 
 > License-verified local business directory for New Jersey, New York, and
 > Pennsylvania. Every "Verified" badge names the official government registry

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 /**
- * "Ask TriVetted" drawer (D3). Rendered ONLY when the server has an
+ * "Ask LicensedList" drawer (D3). Rendered ONLY when the server has an
  * ANTHROPIC_API_KEY (SiteLayout gates it), so there is never a dead button.
  * Answers come from /api/concierge — grounded in our own listings, guides,
  * reviews, and license data, with citations.
@@ -58,13 +58,13 @@ export default function ConciergeDrawer() {
         className="fixed bottom-4 right-4 z-40 rounded-chip bg-brand-deep px-4 py-2.5 text-sm font-semibold text-white shadow-lg hover:opacity-90"
         aria-haspopup="dialog"
       >
-        Ask TriVetted
+        Ask LicensedList
       </button>
       {open && (
-        <div role="dialog" aria-label="Ask TriVetted" className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-line bg-paper shadow-2xl">
+        <div role="dialog" aria-label="Ask LicensedList" className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-line bg-paper shadow-2xl">
           <div className="flex items-center justify-between border-b border-line bg-surface px-4 py-3">
             <div>
-              <p className="font-display text-lg font-semibold text-ink">Ask TriVetted</p>
+              <p className="font-display text-lg font-semibold text-ink">Ask LicensedList</p>
               <p className="text-[11px] text-faint">Answers come from our own listings, guides &amp; license data</p>
             </div>
             <button type="button" onClick={() => setOpen(false)} className="rounded-chip border border-line-strong px-3 py-1.5 text-sm font-medium text-ink">
@@ -126,7 +126,7 @@ export default function ConciergeDrawer() {
               </button>
             </div>
             <p className="mt-1.5 text-[10px] leading-snug text-faint">
-              AI answers from TriVetted's own data — may be imperfect; not legal or medical advice.
+              AI answers from LicensedList's own data — may be imperfect; not legal or medical advice.
               Rate-limited; questions are logged without your identity.
             </p>
           </form>

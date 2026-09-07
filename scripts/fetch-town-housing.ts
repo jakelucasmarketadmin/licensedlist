@@ -73,7 +73,7 @@ async function housingFor(geoid: string) {
   const url = `https://api.censusreporter.org/1.0/data/show/latest?table_ids=B25034,B25035,B25003&geo_ids=${geoid}`;
   // Census Reporter rejects the default Node user-agent, so identify ourselves.
   const res = await fetch(url, {
-    headers: { "User-Agent": "TriVetted/1.0 (local directory; admin@tier201.com)", Accept: "application/json" },
+    headers: { "User-Agent": "LicensedList/1.0 (local directory; admin@tier201.com)", Accept: "application/json" },
   }).catch(() => null);
   if (!res?.ok) return null;
   const body: any = await res.json().catch(() => null);

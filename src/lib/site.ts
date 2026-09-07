@@ -4,8 +4,12 @@
  * SITE_NAME is a working brand name — never hardcode it in copy, titles, or
  * components. Import it from here so the brand can be swapped in one place.
  */
-export const SITE_NAME = "TriVetted";
-export const SITE_TAGLINE = "Vetted across NJ, NY & PA";
+export const SITE_NAME = "LicensedList";
+// Note: "Vetted" is not used as a product, badge or tier name anywhere —
+// there is an active US trademark (TrustTech LLC, Serial 97249765) on VETTED
+// covering directory services. "Verified", "license-verified" and "checked"
+// are the words we use.
+export const SITE_TAGLINE = "Every listing checked against the state license registry.";
 
 /**
  * Canonical origin (https, no trailing slash) — the single source for

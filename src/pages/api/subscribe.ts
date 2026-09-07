@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { elevatedData, json, clean } from "@/lib/server-data";
 
 /**
- * "TriVetted Weekly" newsletter capture (C5). Stores the address in the
+ * "LicensedList Weekly" newsletter capture (C5). Stores the address in the
  * `subscribers` collection (status=pending) and forwards to GHL
  * (GHL_NEWSLETTER_WEBHOOK), which runs the double-opt-in confirmation email;
  * status flips to confirmed via the GHL workflow (manual/dashboard for now —

@@ -82,7 +82,7 @@ export const POST: APIRoute = async ({ request }) => {
           aspectsJson: Object.keys(aspects).length ? JSON.stringify(aspects) : "",
           photosJson: "",
           verifiedHire,
-          source: verifiedHire ? "trivetted" : "public",
+          source: verifiedHire ? "licensedlist" : "public",
           moderationStatus: "pending",
           leadId,
         },

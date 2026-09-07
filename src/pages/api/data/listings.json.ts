@@ -11,7 +11,7 @@ import { SITE_URL } from "@/lib/site";
 export const GET: APIRoute = async () => {
   const published = (await fetchBusinesses()).filter(isPublished);
   const body = {
-    source: "TriVetted — license-verified local business directory (NJ/NY/PA)",
+    source: "LicensedList — license-verified local business directory (NJ/NY/PA)",
     generatedAt: new Date().toISOString(),
     docs: `${SITE_URL}/ai-info`,
     listings: published.map((b) => ({

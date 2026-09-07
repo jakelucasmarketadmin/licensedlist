@@ -15,11 +15,11 @@ Approved-copy constraints (do not silently drift from these):
 
 ---
 
-**Subject:** Your business appears on TriVetted — here's the listing
+**Subject:** Your business appears on LicensedList — here's the listing
 
 Hi —
 
-**{{businessName}}** is listed on TriVetted, a directory of licensed local
+**{{businessName}}** is listed on LicensedList, a directory of licensed local
 businesses in New Jersey, New York, and Pennsylvania. Your listing is here:
 
 {{profileUrl}}
@@ -41,11 +41,11 @@ re-added:
 If we don't hear from you, the listing stays as it is: public information,
 clearly labeled unclaimed.
 
-One note on what the badges mean. Every "License verified" mark on TriVetted
+One note on what the badges mean. Every "License verified" mark on LicensedList
 names the official registry it was checked against and the date we checked it.
 Placement is never for sale.
 
-— The TriVetted team
+— The LicensedList team
 admin@tier201.com
 
 *This is a one-time notice, sent because your business appears in public

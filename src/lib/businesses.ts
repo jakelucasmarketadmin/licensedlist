@@ -196,15 +196,15 @@ export interface AdditionalLicense {
 
 /**
  * Human label for a licenseStatus value. "credential-only" means the premises
- * has no licence of its own on file and what we verified is a named
+ * has no license of its own on file and what we verified is a named
  * individual's personal credential — recorded, but never badged as a business
- * licence (docs/VERIFICATION.md).
+ * license (docs/VERIFICATION.md).
  */
 export function licenseStatusLabel(status?: string): string {
   switch (status) {
     case "verified": return "verified";
     case "not-required": return "not required for this category";
-    case "credential-only": return "credential on file (no facility licence)";
+    case "credential-only": return "credential on file (no facility license)";
     case "suspended": return "suspended";
     case "unverified": return "not verified";
     default: return status ?? "unknown";

@@ -9,7 +9,7 @@ import { getCategory } from "@/lib/taxonomy";
 import { getState, getCounty } from "@/lib/geo";
 
 /**
- * "Ask TriVetted" concierge (D3): RAG over OUR OWN data only — listings,
+ * "Ask LicensedList" concierge (D3): RAG over OUR OWN data only — listings,
  * guides, on-site reviews, license records. No web browsing. Answers cite the
  * pages the facts came from; a quote request is one suggested action. Rate
  * limited per IP; every exchange logged (question + which sources answered,
@@ -92,7 +92,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const result = await askClaudeJson<Answer>({
     system:
-      'You are the concierge for TriVetted, a license-verified local business directory for NJ/NY/PA. Answer ONLY from the provided context — if the context doesn\'t contain the answer, say so plainly and point to the closest page. Keys: answer (3-5 plain sentences, no hype), citations (array of {title, path} — only paths that appear in [brackets] in the context), suggestQuote (true when the user seems ready to hire). Never give legal or medical advice; never invent businesses, prices, or license facts.',
+      'You are the concierge for LicensedList, a license-verified local business directory for NJ/NY/PA. Answer ONLY from the provided context — if the context doesn\'t contain the answer, say so plainly and point to the closest page. Keys: answer (3-5 plain sentences, no hype), citations (array of {title, path} — only paths that appear in [brackets] in the context), suggestQuote (true when the user seems ready to hire). Never give legal or medical advice; never invent businesses, prices, or license facts.',
     prompt: `CONTEXT:\n${context.slice(0, 7000)}\n\nQUESTION: ${question}`,
     maxTokens: 500,
   });

@@ -52,7 +52,7 @@ function scoreBusiness(b: DirectoryBusiness, reviewCount: number) {
     { label: "Team", done: teamOf(b).length > 0, points: 5, todo: "Introduce your team — faces build trust." },
     { label: "FAQ", done: faqOf(b).length > 0, points: 5, todo: "Answer 3 common questions in your FAQ." },
     { label: "License verified", done: b.licenseStatus === "verified", points: 14, todo: "Get license-verified — the strongest trust signal and AI-citation anchor." },
-    { label: "On-site reviews (3+)", done: reviewCount >= 3, points: 10, todo: "Win jobs through TriVetted quotes — verified reviews unlock the rating schema AI reads." },
+    { label: "On-site reviews (3+)", done: reviewCount >= 3, points: 10, todo: "Win jobs through LicensedList quotes — verified reviews unlock the rating schema AI reads." },
   ];
   const total = checks.reduce((s, c) => s + c.points, 0);
   const earned = checks.filter((c) => c.done).reduce((s, c) => s + c.points, 0);
