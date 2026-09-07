@@ -265,3 +265,16 @@ facts rule.
   generated data; citations restricted to paths present in the context.
 - **My projects = leads by member email** (no separate linkage table); documented that
   the quote email must match the sign-in email.
+
+## Old temp host: deep URLs 404 rather than redirect (2026-09-07)
+
+`my-site-nf00gfth-tier201.wix-vibe-site.com` 301s only its homepage to
+`https://www.licensedlist.com/`; every deep URL returns 404. Wix's redirect
+layer mapped the root only, and we can't change it.
+
+**Decision: leave it.** Near-zero external links ever pointed at the temp host,
+Search Console's Change of Address was never available to us (we can't
+DNS-verify `wix-vibe-site.com`), and a clean 404 is a more honest signal to a
+crawler than a soft redirect that dumps every deep URL on the homepage — which
+Google treats as a soft 404 anyway. Verified 2026-09-07 across the homepage and
+10 deep URLs; apex→www is a clean single-hop 301 and no page 200s on both hosts.
