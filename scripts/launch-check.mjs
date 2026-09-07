@@ -15,7 +15,9 @@
  */
 const args = process.argv.slice(2);
 const baseIdx = args.indexOf("--base");
-const BASE = baseIdx >= 0 ? args[baseIdx + 1].replace(/\/$/, "") : "https://my-site-nf00gfth-tier201.wix-vibe-site.com";
+// Default is the live canonical host. The old Wix temp host now 404s on deep
+// URLs (docs/DECISIONS.md), so pointing this at it produces 29 phantom failures.
+const BASE = baseIdx >= 0 ? args[baseIdx + 1].replace(/\/$/, "") : "https://www.licensedlist.com";
 
 const results = [];
 const check = (group, name, ok, note = "") => {
@@ -95,8 +97,11 @@ for (const path of NOINDEX) {
 {
   const { html } = await get("/business/hofmeister-plumbing");
   check("sponsored", "client profile shows label", html.includes("client of the agency"));
-  const websiteSponsored = /rel="sponsored nofollow"[^>]*target="_blank"|target="_blank"[^>]*rel="sponsored nofollow"/.test(html);
-  check("sponsored", "client outbound link rel=sponsored", websiteSponsored);
+  // Policy changed 2026-09-07: rel="sponsored" describes PAID placement only.
+  // An agency client on the free tier is labelled visibly and linked like any
+  // other listing — so the correct assertion is the opposite of the old one.
+  const clientNotSponsored = !/rel="sponsored/.test(html);
+  check("sponsored", "client listing is NOT rel=sponsored (labelled instead)", clientNotSponsored);
   const list = await get("/nj/bergen-county/hackensack/roofers");
   check("sponsored", "list page labels paid placement", !list.html.includes("Featured ·") || list.html.includes("paid placement, always labeled"));
 }
