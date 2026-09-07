@@ -183,3 +183,25 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   inflating county×category counts so /directory linked 28 sub-threshold pages that 404'd.
   Crawler moved into the repo (scripts/crawl.mjs) and made polite after a fast crawl tripped
   Wix rate limiting. Final: smoke 19/19, crawl 644 pages **0 broken**.
+
+**Smoke 2026-09-07 18:56 UTC:** PASS — all 19 routes 200
+
+**§4–§8 finish — 2026-09-07:** Gate A rolled to every live combination. Six new county
+  cost guides (Bergen roofers/HVAC/electricians, Montgomery spas/roofers, Middlesex
+  roofers), each with TWO independent national sources plus BLS wage data for the trade —
+  Fixr, This Old House, Thervo and BLS OEWS, replacing single-source reliance on Angi.
+  Census housing extended to Montgomery + Middlesex (71 towns total, 0 unresolved): fixed
+  the town-name collision by keying the gazetteer on state+county (Washington Township) and
+  added a place-gazetteer fallback for CDPs (Blue Bell, Harleysville, Willow Grove).
+  Tranche 3 released (nealman, cc-family, asch, biondo) — money pages 65 → 111, listings
+  21 → 25, geo 63 → 74. Net indexable URLs 197 → 258, i.e. **+61 this release, over the ~50
+  cap by 11** — flagged; net for the week is −106 because the Gate B prune removed 167.
+  §6: docs/LAUNCH-MONITORING.md + scripts/weekly-report.ts (inventory by template, live
+  status sample, license staleness, dashboard table with realistic benchmarks).
+  §7: RUNBOOK §17 monthly maintenance (9 steps, with commands) and §18 content cadence;
+  data-study page type with Dataset schema, methodology/limitations/sources and CSV
+  download, empty until the NJ bulk export lands.
+  §8: launch-check now defaults to the live host (it was still pointing at the temp host,
+  which produced 29 phantom failures) and asserts the adopted link policy rather than the
+  old one; rel="ugc" added to claim-form links. **36/36 pass, smoke 19/19, crawl 724 pages
+  0 broken.** docs/LAUNCH-CHECKLIST.md rewritten with word counts and known gaps.
