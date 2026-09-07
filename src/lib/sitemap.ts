@@ -5,6 +5,7 @@ import { GEO_DATA_UPDATED } from "@/data/geo.generated";
 import { getCategories } from "./taxonomy";
 import { getGuide } from "./guides";
 import { computeIndexability } from "./indexability";
+import { allStudies } from "./studies";
 import {
   fetchBusinesses,
   isPublished,
@@ -82,6 +83,11 @@ async function collectSitemapEntries(): Promise<SitemapEntry[]> {
         GEO_DATA_UPDATED,
       ),
     });
+  }
+
+  // Data studies are editorial: stable URLs, real dateModified.
+  for (const study of allStudies()) {
+    entries.push({ path: `/studies/${study.slug}`, section: "editorial", lastmod: study.updatedAt });
   }
 
   try {

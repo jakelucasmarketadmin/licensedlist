@@ -169,11 +169,18 @@ for (const [rel, constName, typeName] of [
   ['data/money/cost-guides.csv', 'COST_GUIDE_SEED', 'CostGuideSeed'],
   ['data/money/permit-offices.csv', 'PERMIT_OFFICE_SEED', 'PermitOfficeSeed'],
   ['data/money/town-housing.csv', 'TOWN_HOUSING_SEED', 'TownHousingSeed'],
+  ['data/studies/studies.csv', 'STUDY_SEED', 'StudySeed'],
 ]) {
   let rows = [];
-  try { rows = readCsv(rel); } catch { continue; }
-  if (!rows.length) continue;
-  const keys = Object.keys(rows[0]);
+  let header = [];
+  try {
+    rows = readCsv(rel);
+    header = readFileSync(join(root, rel), 'utf8').split(String.fromCharCode(10))[0].split(',');
+  } catch { continue; }
+  // An empty CSV still emits its module so imports resolve before any rows
+  // exist — the studies table ships empty until the first study lands.
+  const keys = rows.length ? Object.keys(rows[0]) : header.map((h) => h.trim()).filter(Boolean);
+  if (!keys.length) continue;
   const iface = `export interface ${typeName} {\n${keys.map((k) => `  ${k}: string;`).join('\n')}\n}`;
   const out = rel.split('/').pop().replace('.csv', '.generated.ts');
   writeFileSync(

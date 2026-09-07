@@ -34,6 +34,7 @@ import AccountView from "@/views/AccountView.astro";
 import AiInfoView from "@/views/AiInfoView.astro";
 import RemoveListingView from "@/views/RemoveListingView.astro";
 import DirectoryView from "@/views/DirectoryView.astro";
+import StudyView from "@/views/StudyView.astro";
 import WhyVerifiedView from "@/views/WhyVerifiedView.astro";
 import { SITE_NAME } from "@/lib/site";
 import { ROUTE_SEO } from "@/lib/routes";
@@ -50,6 +51,7 @@ import {
 } from "@/lib/businesses";
 import { fetchReviewsFor, fetchServicePricesFor } from "@/lib/reviews";
 import { computeIndexability } from "@/lib/indexability";
+import { getStudy, datasetJsonLd } from "@/lib/studies";
 import { photosOf } from "@/lib/businesses";
 import { imageAt, srcsetFor } from "@/lib/images";
 import {
@@ -357,6 +359,27 @@ if (!View && segments.length >= 2 && segments.length <= 4) {
         ];
       }
     }
+  }
+}
+
+// --- /studies/{slug}: data studies (§7.4) ----------------------------------
+if (!View && segments.length === 2 && segments[0] === "studies") {
+  const study = getStudy(segments[1]);
+  if (study) {
+    View = StudyView;
+    viewProps = { study };
+    seo = {
+      title: `${study.title} · ${SITE_NAME}`,
+      description: truncate(study.summary),
+      path: pathname,
+      ogType: "article",
+    };
+    trail = [
+      { name: "Home", path: "/" },
+      { name: "Studies", path: "/studies" },
+      { name: study.title, path: pathname },
+    ];
+    jsonLd = [breadcrumbJsonLd(origin, trail), datasetJsonLd(origin, study)];
   }
 }
 
