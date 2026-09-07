@@ -45,7 +45,7 @@ import {
   getBusinessBySlug,
   type ListingSet,
 } from "@/lib/businesses";
-import { fetchReviewsFor, fetchServicePricesFor, fetchQuestionsFor } from "@/lib/reviews";
+import { fetchReviewsFor, fetchServicePricesFor } from "@/lib/reviews";
 import { photosOf } from "@/lib/businesses";
 import { imageAt, srcsetFor } from "@/lib/images";
 import {
@@ -132,10 +132,9 @@ if (!View && segments.length === 2 && segments[0] === "business") {
   const business = await getBusinessBySlug(segments[1], preview);
   if (business) {
     const slug = business.slug ?? "";
-    const [reviews, servicePrices, questions] = await Promise.all([
+    const [reviews, servicePrices] = await Promise.all([
       fetchReviewsFor(slug),
       fetchServicePricesFor(slug),
-      fetchQuestionsFor(slug),
     ]);
     const state = business.stateSlug ? getState(business.stateSlug) : undefined;
     const county =
@@ -157,7 +156,7 @@ if (!View && segments.length === 2 && segments[0] === "business") {
       { name: business.name ?? "Business", path: pathname },
     ];
     View = BusinessProfileView;
-    viewProps = { business, trail, reviews, servicePrices, questions };
+    viewProps = { business, trail, reviews, servicePrices };
     // Preload the mosaic's main image — the profile's LCP element.
     const mainPhoto = photosOf(business)[0];
     if (mainPhoto) {

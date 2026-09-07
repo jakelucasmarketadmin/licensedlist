@@ -4,7 +4,6 @@ import TrustBadge from "@/components/site/TrustBadge.astro";
 import QuoteRequestForm from "@/components/site/QuoteRequestForm.tsx";
 import PhotoMosaic from "@/components/site/PhotoMosaic.astro";
 import ReviewsSection from "@/components/site/ReviewsSection.astro";
-import QASection from "@/components/site/QASection.astro";
 import PhIcon from "@/components/site/PhIcon.astro";
 import { SITE_NAME, SITE_URL, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
 import { jotformUpdateUrl } from "@/lib/jotform";
@@ -34,7 +33,6 @@ import {
 import {
   type SiteReview,
   type ServicePrice,
-  type SiteQuestion,
   siteAverage,
   highlightsOf,
   popularServices,
@@ -52,9 +50,8 @@ interface Props {
   trail: { name: string; path: string }[];
   reviews?: SiteReview[];
   servicePrices?: ServicePrice[];
-  questions?: SiteQuestion[];
 }
-const { business: b, trail, reviews = [], servicePrices = [], questions = [] } = Astro.props;
+const { business: b, trail, reviews = [], servicePrices = [] } = Astro.props;
 
 const category = b.primaryCategorySlug ? getCategory(b.primaryCategorySlug) : undefined;
 const town =
@@ -139,7 +136,6 @@ const tabs = [
   { id: "photos-projects", label: "Photos & projects", show: projects.length > 0 || photos.length > 1 },
   { id: "verification", label: "Verification", show: true },
   { id: "reviews", label: "Reviews", show: true },
-  { id: "qa", label: "Q&A", show: true },
   { id: "hours-location", label: "Hours & location", show: true },
   { id: "team", label: "Team", show: team.length > 0 },
   { id: "faq", label: "FAQ", show: faq.length > 0 },
@@ -487,10 +483,6 @@ const tabs = [
         <ReviewsSection business={b} reviews={reviews} summary={reviewSummary} />
       </section>
 
-      <section id="qa" class="scroll-mt-32">
-        <QASection businessSlug={b.slug ?? ""} businessName={b.name ?? "the owner"} questions={questions} />
-      </section>
-
       <section id="hours-location" class="scroll-mt-32" aria-labelledby="hours-h">
         <h2 id="hours-h" class="font-display text-2xl font-semibold text-ink">Hours &amp; location</h2>
         <div class="mt-4 grid gap-4 sm:grid-cols-2">
@@ -598,12 +590,23 @@ const tabs = [
                 Call {b.phone}
               </a>
             )}
+            {b.email && (
+              <a href={`mailto:${b.email}`} data-email-biz class="rounded-chip border border-line-strong px-4 py-2.5 text-sm font-semibold text-ink hover:bg-inset">
+                Email
+              </a>
+            )}
             {b.website && (
               <a href={b.website} rel={sponsored ? "sponsored nofollow" : "nofollow"} target="_blank" class="rounded-chip border border-line-strong px-4 py-2.5 text-sm font-semibold text-ink hover:bg-inset">
                 Website
               </a>
             )}
           </div>
+          {(b.phone || b.email) && (
+            <p class="mt-2 text-xs leading-relaxed text-faint">
+              Contact {b.name} directly — {SITE_NAME} doesn't sit in the middle of the
+              conversation.
+            </p>
+          )}
           <div class="mt-2 flex gap-2">
             <button type="button" data-save-biz aria-pressed="false" class="flex-1 rounded-chip border border-line px-3 py-2 text-sm font-medium text-muted transition-colors hover:border-brand hover:text-ink aria-pressed:border-brand aria-pressed:bg-brand-wash aria-pressed:text-brand">
               ♡ Save
@@ -673,6 +676,11 @@ const tabs = [
     {b.phone && (
       <a href={`tel:${b.phone.replace(/[^+\d]/g, "")}`} class="flex-1 rounded-chip bg-accent px-4 py-2.5 text-center text-sm font-semibold text-accent-ink">
         Call now
+      </a>
+    )}
+    {b.email && (
+      <a href={`mailto:${b.email}`} data-email-biz class="flex-1 rounded-chip border border-line-strong px-4 py-2.5 text-center text-sm font-semibold text-ink">
+        Email
       </a>
     )}
     {unclaimed ? (

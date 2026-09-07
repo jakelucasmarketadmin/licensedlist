@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { elevatedData, json, clean } from "@/lib/server-data";
 
 /**
- * Owner inbox: leads pipeline, review responses, Q&A answers.
+ * Owner inbox: leads pipeline and review responses.
  *
  * Auth model matches /api/owner-listing: signed-in Wix member + an approved
  * `claims` record. Every mutation re-checks that the target row belongs to
@@ -44,10 +44,9 @@ export const GET: APIRoute = async () => {
     const slug = await ownedBusinessSlug(query, memberId);
     if (!slug) return json({ ok: false, error: "no approved claim" }, 403);
 
-    const [leads, reviews, questions] = await Promise.all([
+    const [leads, reviews] = await Promise.all([
       rowsFor(query, "leads", "businessSlugs", slug),
       rowsFor(query, "reviews", "businessSlug", slug),
-      rowsFor(query, "questions", "businessSlug", slug),
     ]);
     return json({
       ok: true,
@@ -76,14 +75,6 @@ export const GET: APIRoute = async () => {
         ownerResponse: r.ownerResponse ?? "",
         ownerFlag: r.ownerFlag ?? "",
         createdAt: r._createdDate ?? null,
-      })),
-      questions: questions.map((q: any) => ({
-        _id: q._id,
-        question: q.question,
-        askerName: q.askerName,
-        answer: q.answer ?? "",
-        moderationStatus: q.moderationStatus,
-        createdAt: q._createdDate ?? null,
       })),
     });
   } catch (err) {
@@ -153,19 +144,6 @@ export const POST: APIRoute = async ({ request }) => {
         dataItem: {
           data: { ...review, ownerFlag: `${reason} (flagged ${new Date().toISOString()})` },
         },
-      });
-      return json({ ok: true });
-    }
-
-    if (action === "answer-question") {
-      const answer = clean(body.answer, 2000);
-      if (!answer) return json({ ok: false, error: "empty answer" }, 400);
-      const q = await loadOwned("questions", "businessSlug");
-      if (!q) return json({ ok: false, error: "not found" }, 404);
-      // Stays in moderation until published from the dashboard (RUNBOOK §8).
-      await updateItem(id, {
-        dataCollectionId: "questions",
-        dataItem: { data: { ...q, answer, answeredAt: new Date().toISOString() } },
       });
       return json({ ok: true });
     }

@@ -27,7 +27,7 @@ export const SHOWCASE_BUSINESS_SLUG = "hofmeister-plumbing";
 /** Contact for business onboarding until the claim flow ships (M4). */
 export const BUSINESS_CONTACT_EMAIL = "admin@tier201.com";
 
-/** Where "Report" links on reviews and Q&A deliver (docs/REVIEWS.md moderation). */
+/** Where "Report" links on reviews deliver (docs/REVIEWS.md moderation). */
 export const REVIEW_REPORT_EMAIL = "admin@tier201.com";
 
 export const STATES = [

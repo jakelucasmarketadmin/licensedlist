@@ -146,7 +146,7 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   segment; hand-building transforms onto a bare `...~mv2.jpg` URL returns 403, so the
   pipeline serves bare media URLs untouched.
 
-## 8. Reviews, Q&A & the owner inbox (Batch B)
+## 8. Reviews & the owner inbox (Batch B)
 
 ### Review invitations (the 7-day clock)
 - Owner marks a lead **won** in `/owner` → `wonAt` stamps. 7 days later the consumer gets a
@@ -171,7 +171,7 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
 - `/owner` (requires approved claim) now has Inbox tabs: **Leads** (pipeline
   new→contacted→won/lost — won starts the review clock), **Reviews** (public responses;
   "Suggest a reply" uses `ANTHROPIC_API_KEY` when set, else a labeled template; owner
-  always edits and posts manually), **Q&A** (answers await dashboard publish).
+  always edits and posts manually).
 
 ### Jotform — new optional questions (add to the intake form; label-matched, any qid)
 | Label starts with | Type | Maps to |
@@ -365,3 +365,18 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   the link crawl, and a PUBLISH-LOG entry naming the pages that went live.
   Projected sizes (measured 2026-08-27): tranche 2 = **21** new URLs,
   tranche 3 = **50**.
+
+## 15. Public Q&A removed (2026-09-07)
+
+Profiles no longer carry an "Ask this business a question" form, and the owner
+inbox no longer has a Q&A tab. Reason: a question only works if the business
+can answer it, and that needs a per-business inbox we do not operate — setting
+one up for every listing is not workable. Contact on a profile is now direct:
+tap-to-call and tap-to-email the business itself, plus its website.
+
+- The `questions` collection is **retained** with any existing rows (standing
+  rule: never delete a Wix collection). Nothing reads or writes it.
+- Deleted: `src/components/site/QASection.astro`, `src/pages/api/submit-question.ts`,
+  `fetchQuestionsFor()` / `SiteQuestion`, the owner-inbox `answer-question` action.
+- Businesses with no email on file simply show Call + Website; the Email button
+  renders only when `email` is populated.

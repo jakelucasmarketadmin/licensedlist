@@ -2,7 +2,11 @@ import { BaseCrudService } from "@/integrations";
 import type { DirectoryBusiness } from "@/lib/businesses";
 
 /**
- * On-site review system — collections `reviews`, `servicePrices`, `questions`.
+ * On-site review system — collections `reviews` and `servicePrices`.
+ *
+ * The public Q&A was removed 2026-09-07: answering questions needs a per-business
+ * inbox we don't run, so profiles link straight to the business's own phone and
+ * email instead. The `questions` collection is retained with its existing rows.
  *
  * Reads run with elevated permissions server-side (the collections are not
  * publicly readable because pending items carry reviewer emails); the harness
@@ -52,17 +56,6 @@ export interface ServicePrice {
   sortOrder?: number;
 }
 
-export interface SiteQuestion {
-  _id: string;
-  businessSlug?: string;
-  question?: string;
-  askerName?: string;
-  answer?: string;
-  answeredAt?: string | Date;
-  /** pending | published | rejected */
-  moderationStatus?: string;
-  _createdDate?: string | Date;
-}
 
 export const ASPECT_KEYS = ["quality", "communication", "value", "timeliness"] as const;
 export const ASPECT_LABELS: Record<(typeof ASPECT_KEYS)[number], string> = {
@@ -153,16 +146,6 @@ export async function fetchServicePricesFor(slug: string): Promise<ServicePrice[
   return all
     .filter((p) => p.businessSlug === slug && p.service)
     .sort((a, b) => (Number(a.sortOrder) || 0) - (Number(b.sortOrder) || 0));
-}
-
-/** Published Q&A for one business, newest first. */
-export async function fetchQuestionsFor(slug: string): Promise<SiteQuestion[]> {
-  const all = await cachedAll<SiteQuestion>("questions");
-  return all
-    .filter((q) => q.businessSlug === slug && q.moderationStatus === "published" && q.answer)
-    .sort(
-      (a, b) => new Date(b._createdDate ?? 0).getTime() - new Date(a._createdDate ?? 0).getTime(),
-    );
 }
 
 // ---- Derived display data ---------------------------------------------------

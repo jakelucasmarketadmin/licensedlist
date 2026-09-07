@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 /**
  * Owner inbox tabs: lead pipeline (new → contacted → won/lost), review
  * responses with labeled AI-drafted suggestions (owner edits, never
- * auto-posted), and Q&A answers. All server calls go through
+ * auto-posted). All server calls go through
  * /api/owner-inbox, which re-checks the approved claim on every request.
  */
 interface Lead {
@@ -31,14 +31,6 @@ interface Review {
   ownerFlag: string;
   createdAt: string | null;
 }
-interface Question {
-  _id: string;
-  question: string;
-  askerName: string;
-  answer: string;
-  moderationStatus: string;
-  createdAt: string | null;
-}
 
 const inputClass =
   'w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none';
@@ -55,13 +47,13 @@ async function post(action: string, payload: Record<string, unknown>) {
 }
 
 export default function OwnerInbox() {
-  const [tab, setTab] = useState<'leads' | 'reviews' | 'qa'>('leads');
-  const [data, setData] = useState<{ leads: Lead[]; reviews: Review[]; questions: Question[] } | null | 'loading'>('loading');
+  const [tab, setTab] = useState<'leads' | 'reviews'>('leads');
+  const [data, setData] = useState<{ leads: Lead[]; reviews: Review[] } | null | 'loading'>('loading');
 
   const reload = () =>
     fetch('/api/owner-inbox')
       .then((r) => r.json())
-      .then((r) => setData(r.ok ? { leads: r.leads, reviews: r.reviews, questions: r.questions } : null))
+      .then((r) => setData(r.ok ? { leads: r.leads, reviews: r.reviews } : null))
       .catch(() => setData(null));
 
   useEffect(() => {
@@ -71,11 +63,9 @@ export default function OwnerInbox() {
   if (data === 'loading') return <p className="text-sm text-muted">Loading inbox…</p>;
   if (data === null) return null;
 
-  const pendingQ = data.questions.filter((q) => !q.answer).length;
-  const tabs: ['leads' | 'reviews' | 'qa', string][] = [
+  const tabs: ['leads' | 'reviews', string][] = [
     ['leads', `Leads (${data.leads.filter((l) => l.status === 'new').length} new)`],
     ['reviews', `Reviews (${data.reviews.length})`],
-    ['qa', `Q&A${pendingQ ? ` (${pendingQ} waiting)` : ''}`],
   ];
 
   return (
@@ -97,7 +87,6 @@ export default function OwnerInbox() {
 
       {tab === 'leads' && <LeadsTab leads={data.leads} onChange={reload} />}
       {tab === 'reviews' && <ReviewsTab reviews={data.reviews} onChange={reload} />}
-      {tab === 'qa' && <QATab questions={data.questions} onChange={reload} />}
     </div>
   );
 }
@@ -245,48 +234,3 @@ function ReviewsTab({ reviews, onChange }: { reviews: Review[]; onChange: () => 
   );
 }
 
-function QATab({ questions, onChange }: { questions: Question[]; onChange: () => void }) {
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [busy, setBusy] = useState<string | null>(null);
-  if (!questions.length) return <p className="mt-4 text-sm text-faint">No questions yet.</p>;
-  return (
-    <div className="mt-4 space-y-3">
-      {questions.map((q) => (
-        <div key={q._id} className="rounded-[10px] border border-line p-3">
-          <p className="text-sm font-semibold text-ink">Q: {q.question}</p>
-          <p className="mt-0.5 text-xs text-faint">{q.askerName} · {fmt(q.createdAt)} · {q.moderationStatus}</p>
-          {q.answer ? (
-            <p className="mt-2 rounded-[8px] bg-inset p-2 text-sm text-muted">
-              <span className="font-semibold text-ink">Your answer:</span> {q.answer}
-            </p>
-          ) : (
-            <div className="mt-2">
-              <textarea
-                rows={2}
-                value={answers[q._id] ?? ''}
-                onChange={(e) => setAnswers((a) => ({ ...a, [q._id]: e.target.value }))}
-                className={inputClass}
-                placeholder="Write your answer…"
-              />
-              <button
-                disabled={busy === q._id || !(answers[q._id] ?? '').trim()}
-                onClick={async () => {
-                  setBusy(q._id);
-                  await post('answer-question', { id: q._id, answer: answers[q._id] }).catch(() => {});
-                  setBusy(null);
-                  onChange();
-                }}
-                className="mt-1.5 rounded-chip bg-accent px-3 py-1.5 text-xs font-semibold text-accent-ink hover:bg-accent-hover disabled:opacity-50"
-              >
-                Save answer
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
-      <p className="text-[11px] leading-relaxed text-faint">
-        Answered questions publish after a quick moderation check.
-      </p>
-    </div>
-  );
-}

@@ -144,3 +144,5 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   gazetteer for GEOIDs; needs a User-Agent header or it 403s). 35/36 Bergen towns have
   housing data. Byline + evaluated/verified/listed counters + CollectionPage dateModified
   (from newestChange(), never "today") + FAQPage JSON-LD retained for Bing/AI only.
+
+**Smoke 2026-09-03 01:53 UTC:** PASS — all 19 routes 200
