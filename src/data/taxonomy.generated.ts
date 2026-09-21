@@ -2,7 +2,7 @@
 // Source of truth: data/geo/*.csv and data/taxonomy/*.csv (edit those, re-run the script).
 
 export interface CategoryGroupSeed { name: string; slug: string; sortOrder?: number; icon: string }
-export interface CategorySeed { name: string; slug: string; groupSlug: string; schemaType: string; categoryKind?: string; licenseRequired: boolean; licenseSourcesByState: Record<string, string>; synonyms: string[]; sortOrder?: number }
+export interface CategorySeed { name: string; slug: string; groupSlug: string; schemaType: string; licenseRequired: boolean; licenseSourcesByState: Record<string, string>; synonyms: string[]; sortOrder?: number }
 
 export const CATEGORY_GROUP_SEED: CategoryGroupSeed[] = [
   {
@@ -61,7 +61,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "roofers",
     "groupSlug": "home-property",
     "schemaType": "RoofingContractor",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -81,7 +80,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "plumbers",
     "groupSlug": "home-property",
     "schemaType": "Plumber",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA State Board of Master Plumbers",
@@ -101,7 +99,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "electricians",
     "groupSlug": "home-property",
     "schemaType": "Electrician",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA Board of Examiners of Electrical Contractors",
@@ -121,7 +118,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "hvac-contractors",
     "groupSlug": "home-property",
     "schemaType": "HVACBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HVACR Licensing Board",
@@ -142,7 +138,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "general-contractors",
     "groupSlug": "home-property",
     "schemaType": "GeneralContractor",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -162,7 +157,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "landscapers",
     "groupSlug": "home-property",
     "schemaType": "LocalBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -183,7 +177,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "house-cleaners",
     "groupSlug": "home-property",
     "schemaType": "LocalBusiness",
-    "categoryKind": "trade",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -199,7 +192,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "painters",
     "groupSlug": "home-property",
     "schemaType": "HousePainter",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -219,7 +211,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "flooring-contractors",
     "groupSlug": "home-property",
     "schemaType": "HomeAndConstructionBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -240,7 +231,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "masonry-contractors",
     "groupSlug": "home-property",
     "schemaType": "HomeAndConstructionBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -261,7 +251,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "fence-contractors",
     "groupSlug": "home-property",
     "schemaType": "HomeAndConstructionBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -282,7 +271,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "tree-services",
     "groupSlug": "home-property",
     "schemaType": "LocalBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ Board of Tree Experts (LTE/LTCO registration)",
@@ -302,7 +290,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "pest-control",
     "groupSlug": "home-property",
     "schemaType": "LocalBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DEP pesticide applicator licensing",
@@ -323,7 +310,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "junk-removal",
     "groupSlug": "home-property",
     "schemaType": "LocalBusiness",
-    "categoryKind": "trade",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -339,7 +325,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "movers",
     "groupSlug": "home-property",
     "schemaType": "MovingCompany",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA public movers and warehousemen licensing",
@@ -359,7 +344,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "locksmiths",
     "groupSlug": "home-property",
     "schemaType": "Locksmith",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA Fire Alarm, Burglar Alarm and Locksmith Advisory Committee"
@@ -377,7 +361,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "garage-door-repair",
     "groupSlug": "home-property",
     "schemaType": "HomeAndConstructionBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -397,7 +380,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "gutter-services",
     "groupSlug": "home-property",
     "schemaType": "HomeAndConstructionBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -417,7 +399,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "chimney-sweeps",
     "groupSlug": "home-property",
     "schemaType": "HomeAndConstructionBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -437,7 +418,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "handyman-services",
     "groupSlug": "home-property",
     "schemaType": "HomeAndConstructionBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -457,7 +437,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "auto-repair",
     "groupSlug": "auto",
     "schemaType": "AutoRepair",
-    "categoryKind": "retail",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NY": "NY DMV repair shop registration",
@@ -477,7 +456,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "auto-body",
     "groupSlug": "auto",
     "schemaType": "AutoBodyShop",
-    "categoryKind": "retail",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ MVC auto body repair facility license",
@@ -496,7 +474,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "tire-shops",
     "groupSlug": "auto",
     "schemaType": "TireShop",
-    "categoryKind": "retail",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -512,7 +489,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "car-washes",
     "groupSlug": "auto",
     "schemaType": "AutoWash",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -528,7 +504,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "towing",
     "groupSlug": "auto",
     "schemaType": "AutomotiveBusiness",
-    "categoryKind": "trade",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -544,7 +519,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "auto-glass",
     "groupSlug": "auto",
     "schemaType": "AutoRepair",
-    "categoryKind": "trade",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -560,7 +534,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "restaurants",
     "groupSlug": "food-drink",
     "schemaType": "Restaurant",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -576,7 +549,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "pizzerias",
     "groupSlug": "food-drink",
     "schemaType": "Restaurant",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -592,7 +564,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "delis",
     "groupSlug": "food-drink",
     "schemaType": "FoodEstablishment",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -609,7 +580,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "bakeries",
     "groupSlug": "food-drink",
     "schemaType": "Bakery",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -626,7 +596,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "cafes",
     "groupSlug": "food-drink",
     "schemaType": "CafeOrCoffeeShop",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -643,7 +612,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "caterers",
     "groupSlug": "food-drink",
     "schemaType": "FoodEstablishment",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -659,7 +627,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "dentists",
     "groupSlug": "health-medical",
     "schemaType": "Dentist",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense",
@@ -680,7 +647,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "chiropractors",
     "groupSlug": "health-medical",
     "schemaType": "MedicalBusiness",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense",
@@ -700,7 +666,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "physical-therapists",
     "groupSlug": "health-medical",
     "schemaType": "Physiotherapy",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense",
@@ -721,7 +686,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "dermatologists",
     "groupSlug": "health-medical",
     "schemaType": "Dermatology",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense",
@@ -741,7 +705,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "optometrists",
     "groupSlug": "health-medical",
     "schemaType": "Optician",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense",
@@ -762,7 +725,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "veterinarians",
     "groupSlug": "health-medical",
     "schemaType": "VeterinaryCare",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense",
@@ -782,7 +744,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "urgent-care",
     "groupSlug": "health-medical",
     "schemaType": "MedicalClinic",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense",
@@ -802,7 +763,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "med-spas",
     "groupSlug": "health-medical",
     "schemaType": "MedicalBusiness",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense",
@@ -823,7 +783,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "salons-barbers",
     "groupSlug": "beauty-personal-care",
     "schemaType": "HairSalon",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA Board of Cosmetology and Hairstyling",
@@ -844,7 +803,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "nail-salons",
     "groupSlug": "beauty-personal-care",
     "schemaType": "NailSalon",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA Board of Cosmetology and Hairstyling",
@@ -864,7 +822,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "spas",
     "groupSlug": "beauty-personal-care",
     "schemaType": "DaySpa",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA massage and bodywork therapy licensing",
@@ -885,7 +842,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "tattoo-studios",
     "groupSlug": "beauty-personal-care",
     "schemaType": "TattooParlor",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -901,7 +857,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "tanning-salons",
     "groupSlug": "beauty-personal-care",
     "schemaType": "TanningSalon",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -917,7 +872,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "attorneys",
     "groupSlug": "professional-financial",
     "schemaType": "Attorney",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ Courts attorney index",
@@ -938,7 +892,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "accountants",
     "groupSlug": "professional-financial",
     "schemaType": "AccountingService",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA MyLicense (Board of Accountancy)",
@@ -958,7 +911,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "insurance-agents",
     "groupSlug": "professional-financial",
     "schemaType": "InsuranceAgency",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DOBI insurance licensee search",
@@ -978,7 +930,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "real-estate-agents",
     "groupSlug": "professional-financial",
     "schemaType": "RealEstateAgent",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DOBI Real Estate Commission licensee search",
@@ -998,7 +949,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "financial-advisors",
     "groupSlug": "professional-financial",
     "schemaType": "FinancialService",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "FINRA BrokerCheck / NJ Bureau of Securities",
@@ -1018,7 +968,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "marketing-agencies",
     "groupSlug": "professional-financial",
     "schemaType": "ProfessionalService",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1035,7 +984,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "it-services",
     "groupSlug": "professional-financial",
     "schemaType": "ProfessionalService",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1052,7 +1000,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "photographers",
     "groupSlug": "professional-financial",
     "schemaType": "ProfessionalService",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1068,7 +1015,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "florists",
     "groupSlug": "retail",
     "schemaType": "Florist",
-    "categoryKind": "retail",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1084,7 +1030,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "jewelers",
     "groupSlug": "retail",
     "schemaType": "JewelryStore",
-    "categoryKind": "retail",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1100,7 +1045,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "furniture-stores",
     "groupSlug": "retail",
     "schemaType": "FurnitureStore",
-    "categoryKind": "retail",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1116,7 +1060,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "bike-shops",
     "groupSlug": "retail",
     "schemaType": "BikeStore",
-    "categoryKind": "retail",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1132,7 +1075,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "daycares",
     "groupSlug": "family-education-community",
     "schemaType": "ChildCare",
-    "categoryKind": "practice",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCF Office of Licensing child care lookup",
@@ -1152,7 +1094,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "tutoring",
     "groupSlug": "family-education-community",
     "schemaType": "LocalBusiness",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1169,7 +1110,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "music-lessons",
     "groupSlug": "family-education-community",
     "schemaType": "LocalBusiness",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1185,7 +1125,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "martial-arts",
     "groupSlug": "family-education-community",
     "schemaType": "SportsActivityLocation",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1202,7 +1141,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "gyms",
     "groupSlug": "family-education-community",
     "schemaType": "ExerciseGym",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1218,7 +1156,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "windows-doors-siding",
     "groupSlug": "home-property",
     "schemaType": "HomeAndConstructionBusiness",
-    "categoryKind": "trade",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NJ": "NJ DCA HIC registration",
@@ -1239,7 +1176,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "video-production",
     "groupSlug": "professional-financial",
     "schemaType": "ProfessionalService",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1255,7 +1191,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "trade-schools",
     "groupSlug": "family-education-community",
     "schemaType": "EducationalOrganization",
-    "categoryKind": "practice",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1271,7 +1206,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "cannabis-dispensaries",
     "groupSlug": "retail",
     "schemaType": "Store",
-    "categoryKind": "venue",
     "licenseRequired": true,
     "licenseSourcesByState": {
       "NY": "NY Office of Cannabis Management"
@@ -1288,7 +1222,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "golf-courses",
     "groupSlug": "family-education-community",
     "schemaType": "GolfCourse",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1303,7 +1236,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "hotels-lodging",
     "groupSlug": "family-education-community",
     "schemaType": "LodgingBusiness",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [
@@ -1320,7 +1252,6 @@ export const CATEGORY_SEED: CategorySeed[] = [
     "slug": "event-venues",
     "groupSlug": "family-education-community",
     "schemaType": "EventVenue",
-    "categoryKind": "venue",
     "licenseRequired": false,
     "licenseSourcesByState": {},
     "synonyms": [

@@ -1,10 +1,8 @@
 ---
 import BreadcrumbGeo from "@/components/site/BreadcrumbGeo.astro";
 import MethodologyStrip from "@/components/site/MethodologyStrip.astro";
+import CategoriesEmptyState from "@/components/site/CategoriesEmptyState.astro";
 import { getCountiesByState, getTownsByCounty, type StateSeed } from "@/lib/geo";
-import { getCategory } from "@/lib/taxonomy";
-import { fetchBusinesses, isPublished, categoriesOf, servesTown } from "@/lib/businesses";
-import { computeIndexability } from "@/lib/indexability";
 import { SITE_NAME } from "@/lib/site";
 import { getGuide } from "@/lib/guides";
 import GuideSection from "@/components/site/GuideSection.astro";
@@ -15,51 +13,6 @@ interface Props {
 const { state } = Astro.props;
 const counties = getCountiesByState(state.slug);
 const licensingGuide = getGuide("state", state.slug, "licensing-");
-
-/**
- * Real inventory, not a "coming soon" placeholder: this hub previously
- * rendered an empty state while 110 money pages beneath it were live and
- * indexed. For each category present in the state we count published
- * listings and link to the deepest page that actually qualifies — the
- * state×category page when it clears the 3-listing rule, otherwise the
- * strongest county page. Categories with listings but no qualifying page
- * render as plain text with a count (§1.7: never link to an excluded page).
- */
-const published = (await fetchBusinesses()).filter(isPublished).filter((b) => b.stateSlug === state.slug);
-const idx = computeIndexability(await fetchBusinesses());
-const byCategory = new Map<string, { total: number; byCounty: Map<string, number> }>();
-for (const b of published) {
-  for (const slug of categoriesOf(b)) {
-    const entry = byCategory.get(slug) ?? { total: 0, byCounty: new Map<string, number>() };
-    entry.total += 1;
-    for (const county of counties) {
-      const townSlugs = getTownsByCounty(state.slug, county.slug).map((t) => t.slug);
-      const inCounty = b.countySlug === county.slug || townSlugs.some((t) => servesTown(b, t));
-      if (inCounty) entry.byCounty.set(county.slug, (entry.byCounty.get(county.slug) ?? 0) + 1);
-    }
-    byCategory.set(slug, entry);
-  }
-}
-const serviceLinks = [...byCategory.entries()]
-  .map(([slug, entry]) => {
-    const category = getCategory(slug);
-    if (!category) return null;
-    const statePath = `/${state.slug}/${slug}`;
-    if (idx.money.has(statePath)) return { category, count: entry.total, href: statePath, scope: state.name };
-    const best = [...entry.byCounty.entries()]
-      .map(([countySlug, n]) => ({ countySlug, n, path: `/${state.slug}/${countySlug}/${slug}` }))
-      .filter((c) => idx.money.has(c.path))
-      .sort((a, b) => b.n - a.n)[0];
-    if (best) {
-      const county = counties.find((c) => c.slug === best.countySlug);
-      return { category, count: entry.total, href: best.path, scope: county?.name ?? state.name };
-    }
-    return { category, count: entry.total, href: null, scope: null };
-  })
-  .filter((x): x is NonNullable<typeof x> => Boolean(x))
-  .sort((a, b) => b.count - a.count);
-const linkable = serviceLinks.filter((s) => s.href);
-const unlinked = serviceLinks.filter((s) => !s.href);
 
 const faq = [
   {
@@ -114,35 +67,9 @@ const faq = [
     <h2 id="categories-heading" class="font-display text-2xl font-semibold text-ink">
       Find a service
     </h2>
-    <p class="mt-2 max-w-prose text-sm leading-relaxed text-muted">
-      {published.length} verified {published.length === 1 ? "listing" : "listings"} across
-      {" "}{serviceLinks.length} {serviceLinks.length === 1 ? "category" : "categories"} in
-      {" "}{state.name}. Every link below goes to a page with at least three licensed
-      businesses on it.
-    </p>
-    {linkable.length > 0 && (
-      <ul class="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-        {linkable.map((s) => (
-          <li>
-            <a
-              href={s.href}
-              class="flex items-baseline justify-between gap-3 rounded-card border border-line bg-surface px-4 py-3 transition-colors hover:border-brand"
-            >
-              <span class="font-medium text-ink">{s.category.name}</span>
-              <span class="whitespace-nowrap text-xs text-faint">
-                {s.count} in {s.scope}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
-    {unlinked.length > 0 && (
-      <p class="mt-4 max-w-prose text-sm leading-relaxed text-faint">
-        Listed but not yet at three per town, so they have no page of their own:
-        {" "}{unlinked.map((s) => `${s.category.name} (${s.count})`).join(", ")}.
-      </p>
-    )}
+    <div class="mt-5">
+      <CategoriesEmptyState scopeName={state.name} />
+    </div>
   </section>
 
   <div class="mt-12">

@@ -7,7 +7,6 @@ import Pic from "@/components/site/Pic.astro";
 import { getStates, getCountiesByState, getAllTowns } from "@/lib/geo";
 import { fetchBusinesses, isPublished, blendedRating } from "@/lib/businesses";
 import { registryTotals } from "@/lib/registry";
-import { computeIndexability } from "@/lib/indexability";
 import { upcomingEvents, thisWeekend, eventDateLabel } from "@/lib/events";
 import NlIntake from "@/components/site/NlIntake.tsx";
 import { latestGuides } from "@/lib/guides";
@@ -25,11 +24,7 @@ try {
 // headline counts every vetted listing and license-verified stays precise.
 const publishedCount = published.length;
 const verifiedCount = published.filter((b) => b.licenseStatus === "verified").length;
-// "Towns" used to count the seeded geography (162) while only a fraction had
-// a live page — a visitor could see the gap in one click on /directory. Count
-// what is actually reachable instead.
 const townCount = getAllTowns().length;
-const liveTownCount = computeIndexability(published).towns.size;
 const registryCount = new Set(
   published.filter((b) => b.licenseStatus === "verified").map((b) => b.licenseSource).filter(Boolean),
 ).size;
@@ -125,7 +120,7 @@ const STEPS = [
         </div>
         <p class="mt-4 font-mono text-xs text-white/80">
           {publishedCount} vetted {publishedCount === 1 ? "business" : "businesses"} · {verifiedCount} license-verified
-          {registeredTotal > 0 && ` · ${registeredTotal.toLocaleString("en-US")} license records on file`} · {liveTownCount} towns live
+          {registeredTotal > 0 && ` · ${registeredTotal.toLocaleString("en-US")} licensed businesses on file`} · {townCount} towns
         </p>
         <p class="absolute bottom-2 right-4 text-[11px] text-white/60">
           {heroPhoto.caption} · <a href="/credits" class="underline">credit</a>
@@ -151,7 +146,7 @@ const STEPS = [
       </div>
       <p class="mt-4 font-mono text-xs text-muted">
         {publishedCount} vetted businesses · {verifiedCount} license-verified
-        {registeredTotal > 0 && ` · ${registeredTotal.toLocaleString("en-US")} license records on file`} · {liveTownCount} towns live
+        {registeredTotal > 0 && ` · ${registeredTotal.toLocaleString("en-US")} licensed businesses on file`} · {townCount} towns
       </p>
     </div>
   )}
@@ -267,6 +262,8 @@ const STEPS = [
               </li>
             ))}
           </ul>
+        ) : (
+          <p class="mt-3 text-sm text-faint">Nothing listed yet — <a href="/events" class="underline">see all events</a>.</p>
         )}
         <a href="/events" class="mt-3 inline-block text-sm font-medium text-brand underline underline-offset-2">All events</a>
       </div>

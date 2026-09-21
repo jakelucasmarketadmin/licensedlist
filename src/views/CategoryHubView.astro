@@ -31,10 +31,10 @@ const art = categoryArt(category.slug);
 const topRated = [...businesses]
   .sort((a, b) => (blendedRating(b) ?? 0) - (blendedRating(a) ?? 0))
   .slice(0, 6);
-function countyCount(stateSlug: string, countySlug: string): number {
-  if (businesses.length === 0) return 0;
+function countyQualifies(stateSlug: string, countySlug: string): boolean {
+  if (businesses.length === 0) return false;
   const townSlugs = new Set(getTownsByCounty(stateSlug, countySlug).map((t) => t.slug));
-  return businesses.filter(
+  const count = businesses.filter(
     (b) =>
       b.stateSlug === stateSlug &&
       (b.countySlug === countySlug ||
@@ -42,26 +42,8 @@ function countyCount(stateSlug: string, countySlug: string): number {
         .split(",")
         .some((t) => townSlugs.has(t.trim()))),
   ).length;
+  return count >= 3;
 }
-
-/**
- * §1.7: link only to counties where this category actually has a listing.
- * /roofers previously linked all 25 counties while roofers existed in 3 —
- * 22 links spending crawl budget on hubs with nothing of the kind on them,
- * and a dead end for the reader. Counties with none are named in plain text
- * so the coverage is still honest, without the link.
- */
-const countiesByState = states.map((state) => {
-  const all = getCountiesByState(state.slug).map((county) => ({
-    county,
-    count: countyCount(state.slug, county.slug),
-  }));
-  return {
-    state,
-    covered: all.filter((c) => c.count > 0).sort((a, b) => b.count - a.count),
-    uncovered: all.filter((c) => c.count === 0).map((c) => c.county),
-  };
-}).filter((g) => g.covered.length > 0 || g.uncovered.length > 0);
 ---
 
 <article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
@@ -132,31 +114,27 @@ const countiesByState = states.map((state) => {
       Browse by county — town pages publish as soon as three verified businesses are behind them.
     </p>
     <div class="mt-5 grid gap-6 lg:grid-cols-3">
-      {countiesByState.map(({ state, covered, uncovered }) => (
+      {states.map((state) => (
         <div>
           <h3 class="font-display text-lg font-semibold text-ink">
             <a href={`/${state.slug}`} class="hover:text-brand">{state.name}</a>
           </h3>
-          {covered.length > 0 && (
-            <ul class="mt-3 flex flex-wrap gap-1.5">
-              {covered.map(({ county, count }) => (
-                <li>
-                  <a
-                    href={count >= 3 ? `/${county.pathKey}/${category.slug}` : `/${county.pathKey}`}
-                    class="inline-block rounded-chip bg-inset px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-brand-wash hover:text-brand"
-                  >
-                    {county.name.replace(/ County$/, "")}
-                    <span class="ml-1 text-[10px] text-faint">{count}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-          {uncovered.length > 0 && (
-            <p class="mt-3 text-xs leading-relaxed text-faint">
-              Not yet covered: {uncovered.map((c) => c.name.replace(/ County$/, "")).join(", ")}.
-            </p>
-          )}
+          <ul class="mt-3 flex flex-wrap gap-1.5">
+            {getCountiesByState(state.slug).map((county) => (
+              <li>
+                <a
+                  href={
+                    countyQualifies(state.slug, county.slug)
+                      ? `/${county.pathKey}/${category.slug}`
+                      : `/${county.pathKey}`
+                  }
+                  class="inline-block rounded-chip bg-inset px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-brand-wash hover:text-brand"
+                >
+                  {county.name.replace(/ County$/, "")}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       ))}
     </div>

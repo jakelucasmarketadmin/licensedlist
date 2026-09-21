@@ -18,10 +18,6 @@ interface Props { businesses: DirectoryBusiness[]; placeName: string; categoryNa
 const { businesses, placeName, categoryName } = Astro.props;
 
 const yes = (v: unknown) => v === true || v === "true";
-/** "Not stated" beats an em-dash: it says whose gap it is. */
-const stated = (v: boolean) => (v ? "Yes" : "Not stated");
-// A column that is empty for every row is noise, not information — omit it
-// entirely rather than shipping a wall of placeholders (§1.4).
 const rows = businesses.map((b) => {
   const services = (b.services ?? "").toLowerCase();
   const towns = (b.serviceTownSlugs ?? "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -51,20 +47,6 @@ const rows = businesses.map((b) => {
     unclaimed: isUnclaimed(b),
   };
 });
-const anyEmergency = rows.some((r) => r.emergency);
-const anyFreeEstimate = rows.some((r) => r.freeEstimate);
-const anyYears = rows.some((r) => r.years !== null);
-const anySpecialty = rows.some((r) => r.specialty);
-
-const columns: [string, string][] = [
-  ["Business", "text"], ["Rating", "num"], ["Reviews", "num"], ["License #", "text"],
-  ...(anyYears ? ([["Years", "num"]] as [string, string][]) : []),
-  ...(anySpecialty ? ([["Specialty", "text"]] as [string, string][]) : []),
-  ["Serves", "num"],
-  ...(anyEmergency ? ([["Emergency", "text"]] as [string, string][]) : []),
-  ...(anyFreeEstimate ? ([["Free estimate", "text"]] as [string, string][]) : []),
-  ["", "none"],
-];
 ---
 
 {rows.length > 1 && (
@@ -113,21 +95,19 @@ const columns: [string, string][] = [
                 )}
               </th>
               <td class="px-3 py-3 text-ink" data-sort-value={r.rating ?? -1}>
-                {r.rating ? <>{r.rating}★ <span class="text-xs text-faint">{r.sources}</span></> : "Not stated"}
+                {r.rating ? <>{r.rating}★ <span class="text-xs text-faint">{r.sources}</span></> : "—"}
               </td>
-              <td class="px-3 py-3 text-muted" data-sort-value={r.reviews}>{r.reviews || "None yet"}</td>
+              <td class="px-3 py-3 text-muted" data-sort-value={r.reviews}>{r.reviews || "—"}</td>
               <td class="px-3 py-3 font-mono text-xs text-muted">
                 {r.verified ? <a href={`/business/${r.slug}#verification`} class="underline underline-offset-2 hover:text-ink">{r.license}</a> : r.license}
               </td>
-              {anyYears && (
-                <td class="px-3 py-3 text-muted" data-sort-value={r.years ?? -1}>{r.years ?? "Not stated"}</td>
-              )}
-              {anySpecialty && <td class="px-3 py-3 text-muted">{r.specialty || "Not stated"}</td>}
+              <td class="px-3 py-3 text-muted" data-sort-value={r.years ?? -1}>{r.years ?? "—"}</td>
+              <td class="px-3 py-3 text-muted">{r.specialty || "—"}</td>
               <td class="px-3 py-3 text-muted" data-sort-value={r.servesCount}>
-                {r.servesCount ? `${r.servesCount} towns` : r.homeTown || "Not stated"}
+                {r.servesCount ? `${r.servesCount} towns` : r.homeTown || "—"}
               </td>
-              {anyEmergency && <td class="px-3 py-3 text-muted">{stated(r.emergency)}</td>}
-              {anyFreeEstimate && <td class="px-3 py-3 text-muted">{stated(r.freeEstimate)}</td>}
+              <td class="px-3 py-3 text-muted">{r.emergency ? "Yes" : "—"}</td>
+              <td class="px-3 py-3 text-muted">{r.freeEstimate ? "Yes" : "—"}</td>
               <td class="px-3 py-3 text-right">
                 <a href={`/business/${r.slug}`} class="rounded-chip border border-line-strong px-3 py-1 text-xs font-semibold text-ink hover:bg-inset">
                   Profile
