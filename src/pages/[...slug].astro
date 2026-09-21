@@ -51,6 +51,14 @@ import {
 } from "@/lib/businesses";
 import { fetchReviewsFor, fetchServicePricesFor } from "@/lib/reviews";
 import { computeIndexability } from "@/lib/indexability";
+import {
+  businessDescription,
+  townHubDescription,
+  countyHubDescription,
+  stateHubDescription,
+  moneyPageDescription,
+} from "@/lib/descriptions";
+import { townStatsFor, countyStatsFor, stateStatsFor } from "@/lib/hubstats";
 import { getStudy, datasetJsonLd } from "@/lib/studies";
 import { photosOf } from "@/lib/businesses";
 import { imageAt, srcsetFor } from "@/lib/images";
@@ -174,7 +182,17 @@ if (!View && segments.length === 2 && segments[0] === "business") {
     }
     seo = {
       title: `${business.name} · ${category?.name ?? "Local Business"} in ${business.city}, ${business.state} · ${SITE_NAME}`,
-      description: truncate(business.description ?? `${business.name} on ${SITE_NAME}.`),
+      description: businessDescription({
+        name: business.name ?? "",
+        categoryName: category?.name,
+        townName: business.city,
+        stateAbbr: business.state,
+        licenseNumber: business.licenseStatus === "verified" ? business.licenseNumber : undefined,
+        licenseSource: business.licenseStatus === "verified" ? business.licenseSource : undefined,
+        verifiedMonth: business.licenseVerifiedAt
+          ? new Date(business.licenseVerifiedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })
+          : undefined,
+      }),
       path: pathname,
       // DEMO drafts render only in preview and are never indexable.
       robots: business.status === "published" ? undefined : "noindex, nofollow",
@@ -219,12 +237,22 @@ if (!View) {
   const hub = matchHubPath(pathname);
   if (hub) {
     const { state, county, town } = hub;
+    const hubBusinesses = (await fetchBusinesses()).filter(isPublished);
+    const stateStats = stateStatsFor(hubBusinesses, state.slug);
+    const countyStats = county ? countyStatsFor(hubBusinesses, state.slug, county.slug) : stateStats;
+    const townStats = town ? townStatsFor(hubBusinesses, state.slug, town.slug) : countyStats;
     if (hub.kind === "state") {
       View = StateHubView;
       viewProps = { state };
       seo = {
         title: `Local Pros Across ${state.name} (${state.abbr}) · ${SITE_NAME}`,
-        description: truncate(state.intro),
+        description: stateHubDescription({
+          stateName: state.name,
+          listingCount: stateStats.listings,
+          verifiedCount: stateStats.verified,
+          countyCount: stateStats.counties,
+          registryCount: stateStats.registry,
+        }),
         path: `/${state.slug}`,
       };
       trail = [
@@ -236,7 +264,13 @@ if (!View) {
       viewProps = { state, county };
       seo = {
         title: `${county.name}, ${state.abbr} Local Services · ${SITE_NAME}`,
-        description: truncate(county.intro),
+        description: countyHubDescription({
+          countyName: county.name,
+          stateAbbr: state.abbr,
+          listingCount: countyStats.listings,
+          verifiedCount: countyStats.verified,
+          townCount: countyStats.towns,
+        }),
         path: `/${county.pathKey}`,
       };
       trail = [
@@ -250,10 +284,17 @@ if (!View) {
       // Gate B §3.1: a town hub with no live category page, no business and no
       // local data is a doorway page. It still renders for a human who lands
       // on it, but stays out of the index and the sitemap until it qualifies.
-      const townIdx = computeIndexability((await fetchBusinesses()).filter(isPublished));
+      const townIdx = computeIndexability(hubBusinesses);
       seo = {
         title: `Local Businesses in ${town.name}, ${state.abbr} · ${SITE_NAME}`,
-        description: truncate(town.intro),
+        description: townHubDescription({
+          townName: town.name,
+          countyName: county.name,
+          stateAbbr: state.abbr,
+          listingCount: townStats.listings,
+          verifiedCount: townStats.verified,
+          categoryCount: townStats.categories,
+        }),
         path: `/${town.pathKey}`,
         robots: townIdx.towns.has(town.pathKey) ? undefined : "noindex, follow",
       };
@@ -329,9 +370,14 @@ if (!View && segments.length >= 2 && segments.length <= 4) {
         });
         seo = {
           title: `${listings.organic.length} Best ${category.name} in ${placeName} (Updated ${updatedLabel}) · ${SITE_NAME}`,
-          description: truncate(
-            `The best ${category.name.toLowerCase()} in ${placeName}, ranked by verified licenses, real reviews, and responsiveness — never by payment. Updated ${updatedLabel}.`,
-          ),
+          description: moneyPageDescription({
+            categoryName: category.name,
+            placeName,
+            listingCount: listings.organic.length,
+            verifiedCount: listings.organic.filter((b) => b.licenseStatus === "verified").length,
+            licenseSource: category.licenseSourcesByState[state.abbr],
+            hasCostGuide: true,
+          }),
           path: pathname,
           robots: preview || filter ? "noindex, follow" : undefined,
         };
