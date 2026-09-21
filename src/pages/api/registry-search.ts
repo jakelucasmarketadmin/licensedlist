@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { formatZip } from "@/lib/businesses";
 import { json, clean } from "@/lib/server-data";
 import { searchRegistered } from "@/lib/registry";
 import { getCategory } from "@/lib/taxonomy";
@@ -25,7 +26,7 @@ export const GET: APIRoute = async ({ url }) => {
         name: r.name,
         city: r.city,
         address1: formatAddress(r.address1),
-        zip: [r.stateSlug?.toUpperCase(), r.zip].filter(Boolean).join(" "),
+        zip: [r.stateSlug?.toUpperCase(), formatZip(r.zip)].filter(Boolean).join(" "),
         licenseNumber: r.licenseNumber,
         licenseExpiresAt: r.licenseExpiresAt ?? "",
         category: getCategory(r.primaryCategorySlug ?? "")?.name ?? "",

@@ -19,6 +19,7 @@ import {
   isDemo,
   isUnclaimed,
   licenseStatusLabel,
+  formatZip,
   publicSources,
   ratingReportedVia,
   listForTownCategory,
@@ -509,7 +510,7 @@ const tabs = [
           <div class="rounded-card border border-line bg-surface p-5">
             <h3 class="font-display text-lg font-semibold text-ink">Location &amp; service area</h3>
             {b.address1 && (
-              <p class="mt-2 text-sm text-muted">{b.address1}{b.address2 ? `, ${b.address2}` : ""}, {b.city}, {b.state} {b.zip}</p>
+              <p class="mt-2 text-sm text-muted">{b.address1}{b.address2 ? `, ${b.address2}` : ""}, {b.city}, {b.state} {formatZip(b.zip)}</p>
             )}
             {profileMapPoints.length > 0 && (
               <div class="mt-3">

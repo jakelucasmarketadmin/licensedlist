@@ -1,4 +1,5 @@
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "./site";
+import { formatZip } from "@/lib/businesses";
 
 /** Per-page SEO contract rendered by the site layout. */
 export interface PageSeo {
@@ -134,7 +135,7 @@ export function localBusinessJsonLd(
       ...(b.address1 ? { streetAddress: b.address1 } : {}),
       addressLocality: b.city,
       addressRegion: b.state,
-      ...(b.zip ? { postalCode: b.zip } : {}),
+      ...(b.zip ? { postalCode: formatZip(b.zip) } : {}),
       addressCountry: "US",
     };
   }
