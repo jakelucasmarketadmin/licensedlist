@@ -33,6 +33,8 @@ export function compose(clauses: string[], max = MAX): string {
 }
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+/** "an electrician", "a roofer" — the article has to agree or the line reads wrong. */
+const article = (word: string) => (/^[aeiou]/i.test(word) ? "an" : "a");
 
 export function businessDescription(opts: {
   name: string;
@@ -45,7 +47,7 @@ export function businessDescription(opts: {
 }): string {
   const where = [opts.townName, opts.stateAbbr].filter(Boolean).join(", ");
   const what = opts.categoryName ? opts.categoryName.toLowerCase().replace(/s$/, "") : "business";
-  const lead = where ? `${opts.name} is a ${what} in ${where}.` : `${opts.name}.`;
+  const lead = where ? `${opts.name} is ${article(what)} ${what} in ${where}.` : `${opts.name}.`;
   const licence =
     opts.licenseNumber && opts.licenseSource
       ? `License ${opts.licenseNumber} verified against ${opts.licenseSource}${opts.verifiedMonth ? ` in ${opts.verifiedMonth}` : ""}.`
@@ -66,7 +68,7 @@ export function townHubDescription(opts: {
     ? `${plural(opts.listingCount, "listing")}, ${opts.verifiedCount} license-verified against the official state registry.`
     : `Part of ${opts.countyName} — license records and permit details for every trade we cover.`;
   const cats = opts.categoryCount
-    ? `Compare ${plural(opts.categoryCount, "category")} serving the town.`
+    ? `Compare ${plural(opts.categoryCount, "category", "categories")} serving the town.`
     : `${opts.countyName}, ${opts.stateAbbr}.`;
   return compose([lead, counts, cats]);
 }
