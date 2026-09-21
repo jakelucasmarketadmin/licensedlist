@@ -8,8 +8,14 @@
  * Where no defensible figure exists we write the cost drivers instead.
  */
 import type { CostGuide } from "@/lib/moneypage";
-interface Props { guide: CostGuide; placeName: string; categoryName: string }
-const { guide, placeName, categoryName } = Astro.props;
+interface Props {
+  guide: CostGuide;
+  placeName: string;
+  categoryName: string;
+  /** Kind-specific heading; falls back to the trade phrasing. */
+  heading?: string;
+}
+const { guide, placeName, categoryName, heading } = Astro.props;
 
 // **bold** → <strong>; the modifier copy is authored, not user input.
 const renderModifier = (text: string) =>
@@ -21,7 +27,7 @@ const updated = new Date(guide.updatedAt).toLocaleDateString("en-US", {
 
 <section class="mt-10" aria-labelledby="cost-heading" data-cost-guide>
   <h2 id="cost-heading" class="font-display text-2xl font-semibold text-ink">
-    What {categoryName.toLowerCase()} cost in {placeName}
+    {heading ?? `What ${categoryName.toLowerCase()} cost in ${placeName}`}
   </h2>
 
   <p class="mt-3 max-w-prose text-lg leading-relaxed text-muted">{guide.headline}</p>

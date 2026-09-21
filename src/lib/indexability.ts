@@ -13,7 +13,7 @@
  * third listing and the page qualifies on the next build.
  */
 import { getAllTowns, getTownsByCounty, type TownSeed } from "@/lib/geo";
-import { getCategories } from "@/lib/taxonomy";
+import { getCategories, getCategory, kindOf } from "@/lib/taxonomy";
 import { getGuide } from "@/lib/guides";
 import { permitOfficeFor, townHousingFor } from "@/lib/moneypage";
 import {
@@ -62,9 +62,15 @@ export function computeIndexability(businesses: DirectoryBusiness[]): HubIndexab
       for (const c of cats) townCat.set(`${t.pathKey}|${c}`, (townCat.get(`${t.pathKey}|${c}`) ?? 0) + 1);
     }
   }
+  // §1.6: until a category has a categoryKind and therefore a matching
+  // section set, its money pages render generic boilerplate — keep them out
+  // of the index rather than shipping "Hiring spas… what to know".
+  const kindReady = (slug: string) => Boolean(kindOf(getCategory(slug)));
+
   for (const [key, n] of townCat) {
     if (n < MIN_LISTINGS) continue;
     const [pathKey, cat] = key.split("|");
+    if (!kindReady(cat)) continue;
     money.add(`/${pathKey}/${cat}`);
     towns.add(pathKey);
   }
@@ -92,6 +98,7 @@ export function computeIndexability(businesses: DirectoryBusiness[]): HubIndexab
   for (const [key, n] of countyCat) {
     if (n < MIN_LISTINGS) continue;
     const [pathKey, cat] = key.split("|");
+    if (!kindReady(cat)) continue;
     money.add(`/${pathKey}/${cat}`);
   }
 
