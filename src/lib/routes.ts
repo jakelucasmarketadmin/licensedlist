@@ -10,7 +10,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/": {
     title: `${SITE_NAME} · Verified Local Pros in NJ, NY & PA`,
     description:
-      "Find licensed, vetted local businesses across New Jersey, New York & Pennsylvania. Every verified badge names the official state registry it was checked against — and the date we checked.",
+      "Licensed local businesses in New Jersey, New York and Pennsylvania. Every listing names the state registry we checked it against, and the date.",
     path: "/",
     updated: "2026-08-27",
     crumb: "Home",
@@ -18,7 +18,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/how-we-verify": {
     title: `How We Verify Local Businesses · ${SITE_NAME}`,
     description:
-      "The exact checks behind every badge: identity, license verification against official state registries, cross-platform review analysis, and responsiveness — plus how listings are ordered.",
+      "How LicensedList verifies a listing: four checks, the official registry named on every badge, and the date we checked it. Read the full methodology.",
     path: "/how-we-verify",
     updated: "2026-08-27",
     crumb: "How we verify",
@@ -26,7 +26,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/for-businesses": {
     title: `List Your Business · ${SITE_NAME}`,
     description:
-      "Claim your free listing and get your license verified against the official state registry. Paid placement is always labeled and never changes rankings or reviews.",
+      "List your business free on LicensedList. We verify your license against the state registry, show the date we checked, and never sell ranking position.",
     path: "/for-businesses",
     updated: "2026-08-27",
     crumb: "For businesses",
@@ -49,7 +49,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/for-businesses/why-verified": {
     title: `Why a Verified Listing Is Worth Having · ${SITE_NAME}`,
     description:
-      "A badge homeowners can check against the official registry, rankings money can't touch, and leads with recorded consent — why businesses list on the tri-state's verified directory.",
+      "Why license verification matters to a homeowner, and what a verified badge on LicensedList actually means. Registry named, date shown, never for sale.",
     path: "/for-businesses/why-verified",
     updated: "2026-08-27",
     crumb: "Why verified",
@@ -142,7 +142,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/directory": {
     title: `Directory Index — Every Town, County & Category · ${SITE_NAME}`,
     description:
-      "The full LicensedList index: every state, county, town and category page with at least three verified listings or real local data. One click to anything on the site.",
+      "Every LicensedList page in one index: states, counties, towns and categories with at least three licensed businesses or real local data behind them.",
     path: "/directory",
     updated: "2026-09-07",
     crumb: "Directory",
@@ -190,7 +190,7 @@ export const ROUTE_SEO: Record<string, PageSeo> = {
   "/ai-info": {
     title: `${SITE_NAME} for AI Assistants`,
     description:
-      "Structured, plain-language facts about LicensedList's license-verified directory — what the data means, how verification works, and how AI assistants can query and cite it.",
+      "How LicensedList structures its data for AI assistants: registry-sourced license records, each with a named source and a check date you can re-verify.",
     path: "/ai-info",
     updated: "2026-08-27",
     crumb: "AI info",
