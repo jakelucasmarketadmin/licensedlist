@@ -86,6 +86,7 @@ try {
 
 const categories = readCsv('data/taxonomy/categories.csv').map((r) => ({
   name: r.name, slug: r.slug, groupSlug: r.groupSlug, schemaType: r.schemaType,
+  categoryKind: r.categoryKind || undefined,
   licenseRequired: bool(r.licenseRequired),
   licenseSourcesByState: JSON.parse(r.licenseSourcesByState || '{}'),
   synonyms: list(r.synonyms), sortOrder: num(r.sortOrder),
@@ -153,7 +154,7 @@ writeFileSync(
   join(root, 'src/data/taxonomy.generated.ts'),
   `${banner}
 export interface CategoryGroupSeed { name: string; slug: string; sortOrder?: number; icon: string }
-export interface CategorySeed { name: string; slug: string; groupSlug: string; schemaType: string; licenseRequired: boolean; licenseSourcesByState: Record<string, string>; synonyms: string[]; sortOrder?: number }
+export interface CategorySeed { name: string; slug: string; groupSlug: string; schemaType: string; categoryKind?: string; licenseRequired: boolean; licenseSourcesByState: Record<string, string>; synonyms: string[]; sortOrder?: number }
 
 export const CATEGORY_GROUP_SEED: CategoryGroupSeed[] = ${JSON.stringify(categoryGroups, null, 2)};
 

@@ -7,7 +7,7 @@ import { SITE_NAME, BUSINESS_CONTACT_EMAIL } from "@/lib/site";
 import type { CategorySeed } from "@/lib/taxonomy";
 import type { StateSeed, CountySeed, TownSeed } from "@/lib/geo";
 import { getNearbyTowns, getTownsByCounty } from "@/lib/geo";
-import { getCategoriesByGroup, getCategories } from "@/lib/taxonomy";
+import { getCategoriesByGroup, getCategories, vocabFor, kindOf } from "@/lib/taxonomy";
 import {
   type ListingSet,
   type DirectoryBusiness,
@@ -55,6 +55,12 @@ const totalCount = listings.organic.length;
 const verifiedCount = listings.organic.filter((b) => b.licenseStatus === "verified").length;
 
 const licenseSource = category.licenseSourcesByState[state.abbr];
+
+// §1.6: section set and vocabulary come from the category kind. A category
+// with no kind set renders no kind-specific sections at all (and its money
+// pages are excluded from the index by computeIndexability).
+const vocab = vocabFor(category);
+const categoryKind = kindOf(category);
 
 // ---- Money-page sections (Gate A). Each renders only when we hold real,
 // sourced data for this page; nothing is stubbed or invented. ----
@@ -282,7 +288,12 @@ const FILTERS = [
   </div>
 
   {costGuide && (
-    <CostGuide guide={costGuide} placeName={placeName} categoryName={category.name} />
+    <CostGuide
+      guide={costGuide}
+      placeName={placeName}
+      categoryName={category.name}
+      heading={vocab?.costHeading(category.name.toLowerCase(), placeName)}
+    />
   )}
 
   {(featured.length + organic.length) > 1 && (
@@ -631,7 +642,9 @@ const FILTERS = [
 
   <section class="mt-12 max-w-prose" aria-labelledby="guide-heading">
     <h2 id="guide-heading" class="font-display text-2xl font-semibold text-ink">
-      Hiring {category.name.toLowerCase()} in {placeName}: what to know
+      {vocab
+        ? vocab.guideHeading(category.name.toLowerCase(), placeName)
+        : `${category.name} in ${placeName}`}
     </h2>
     <div class="mt-3 space-y-3 leading-relaxed text-muted">
       {category.licenseRequired && licenseSource ? (
@@ -653,7 +666,7 @@ const FILTERS = [
     </div>
   </section>
 
-  {permitOffice && town && (
+  {vocab?.showPermits && permitOffice && town && (
     <PermitOffice
       office={permitOffice}
       townName={town.name}
@@ -665,7 +678,7 @@ const FILTERS = [
     />
   )}
 
-  {scope === "county" && county && (
+  {vocab?.showPermits && scope === "county" && county && (
     <section class="mt-10 max-w-prose" aria-labelledby="countypermit-heading" data-permit-office>
       <h2 id="countypermit-heading" class="font-display text-2xl font-semibold text-ink">
         Licensing and permits across {county.name}
@@ -709,7 +722,7 @@ const FILTERS = [
     </section>
   )}
 
-  {housing && (
+  {vocab?.showHousingContext && housing && (
     <LocalContext
       housing={housing}
       placeName={placeName}

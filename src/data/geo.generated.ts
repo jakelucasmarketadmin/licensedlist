@@ -7,7 +7,7 @@ export interface TownSeed { name: string; slug: string; countySlug: string; stat
 
 /** Newest mtime across the source CSVs — a REAL content-change date for the
  * hub pages this data renders (sitemap lastmod; never the build time). */
-export const GEO_DATA_UPDATED = "2026-09-07";
+export const GEO_DATA_UPDATED = "2026-09-21";
 
 export const STATE_SEED: StateSeed[] = [
   {

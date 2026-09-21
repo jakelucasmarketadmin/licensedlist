@@ -129,6 +129,23 @@ export const photosOf = (b: DirectoryBusiness) =>
 const list = (v?: string) => (v ? v.split(",").map((s) => s.trim()).filter(Boolean) : []);
 const truthy = (v: unknown) => v === true || v === "true";
 
+/**
+ * US ZIP, normalised for display and for structured data.
+ *
+ * The CMS stores some ZIPs as numbers, which silently eats the leading zero —
+ * every New Jersey ZIP starts with 0, so "07656" came back as 7656 and
+ * rendered as "Park Ridge, NJ 7656" on every NJ listing and in every
+ * PostalAddress. Left-pad to five characters; pass ZIP+4 through untouched.
+ */
+export function formatZip(zip: unknown): string {
+  const raw = String(zip ?? "").trim();
+  if (!raw) return "";
+  const plus4 = raw.match(/^(\d{1,5})-(\d{4})$/);
+  if (plus4) return `${plus4[1].padStart(5, "0")}-${plus4[2]}`;
+  if (/^\d{1,5}$/.test(raw)) return raw.padStart(5, "0");
+  return raw; // already non-numeric (or foreign) — leave it alone
+}
+
 export const isDemo = (b: DirectoryBusiness) => (b.sourceNotes ?? "").includes("DEMO");
 
 /** Unclaimed public-records tier: full profile + threshold credit, but

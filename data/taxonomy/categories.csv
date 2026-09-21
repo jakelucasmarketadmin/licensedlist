@@ -1,70 +1,70 @@
-name,slug,groupSlug,schemaType,licenseRequired,licenseSourcesByState,synonyms,sortOrder
-Roofers,roofers,home-property,RoofingContractor,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","roofing,roof repair,roof replacement,shingle repair",1
-Plumbers,plumbers,home-property,Plumber,true,"{""NJ"":""NJ DCA State Board of Master Plumbers"",""NY"":""NYC DOB / local municipal licensing"",""PA"":""Local municipal licensing""}","plumbing,drain cleaning,water heater repair,sewer repair",2
-Electricians,electricians,home-property,Electrician,true,"{""NJ"":""NJ DCA Board of Examiners of Electrical Contractors"",""NY"":""NYC DOB / local municipal licensing"",""PA"":""Local municipal licensing / PA AG HICPA registration""}","electrical contractor,wiring,panel upgrade,ev charger installation",3
-HVAC Contractors,hvac-contractors,home-property,HVACBusiness,true,"{""NJ"":""NJ DCA HVACR Licensing Board"",""NY"":""NYC DOB / local municipal licensing"",""PA"":""PA AG HICPA registration""}","heating,air conditioning,ac repair,furnace repair,heat pump",4
-General Contractors,general-contractors,home-property,GeneralContractor,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","home improvement contractor,remodeling,renovation,home additions",5
-Landscapers,landscapers,home-property,LocalBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","landscaping,lawn care,lawn maintenance,hardscaping,yard work",6
-House Cleaners,house-cleaners,home-property,LocalBusiness,false,{},"house cleaning,maid service,deep cleaning,move-out cleaning",7
-Painters,painters,home-property,HousePainter,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","painting,interior painting,exterior painting,house painting",8
-Flooring Contractors,flooring-contractors,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","flooring,hardwood floors,floor installation,tile,carpet installation",9
-Masonry Contractors,masonry-contractors,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","masonry,brickwork,stonework,concrete,paver installation",10
-Fence Contractors,fence-contractors,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","fencing,fence installation,fence repair,vinyl fence,wood fence",11
-Tree Services,tree-services,home-property,LocalBusiness,true,"{""NJ"":""NJ Board of Tree Experts (LTE/LTCO registration)"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","tree removal,tree trimming,stump grinding,arborist",12
-Pest Control,pest-control,home-property,LocalBusiness,true,"{""NJ"":""NJ DEP pesticide applicator licensing"",""NY"":""NY DEC pesticide applicator certification"",""PA"":""PA Dept of Agriculture pesticide applicator licensing""}","exterminator,pest removal,termite control,bed bugs,rodent control",13
-Junk Removal,junk-removal,home-property,LocalBusiness,false,{},"junk hauling,debris removal,cleanouts,appliance removal",14
-Movers,movers,home-property,MovingCompany,true,"{""NJ"":""NJ DCA public movers and warehousemen licensing"",""NY"":""NYS DOT household goods carrier registry"",""PA"":""PA PUC household goods carrier certificate""}","moving company,local movers,long distance movers,packing services",15
-Locksmiths,locksmiths,home-property,Locksmith,true,"{""NJ"":""NJ DCA Fire Alarm, Burglar Alarm and Locksmith Advisory Committee""}","lockout service,rekeying,lock installation,key duplication",16
-Garage Door Repair,garage-door-repair,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","garage doors,garage door installation,garage door opener,spring repair",17
-Gutter Services,gutter-services,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","gutter cleaning,gutter installation,gutter guards,downspouts",18
-Chimney Sweeps,chimney-sweeps,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","chimney cleaning,chimney repair,chimney inspection,fireplace repair",19
-Handyman Services,handyman-services,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","handyman,odd jobs,home repairs,small repairs",20
-Auto Repair Shops,auto-repair,auto,AutoRepair,true,"{""NY"":""NY DMV repair shop registration"",""PA"":""PennDOT official inspection station lookup""}","mechanic,car repair,oil change,brake repair,engine repair",21
-Auto Body Shops,auto-body,auto,AutoBodyShop,true,"{""NJ"":""NJ MVC auto body repair facility license"",""NY"":""NY DMV repair shop registration""}","collision repair,body shop,dent repair,auto painting",22
-Tire Shops,tire-shops,auto,TireShop,false,{},"tires,tire replacement,tire rotation,wheel alignment",23
-Car Washes,car-washes,auto,AutoWash,false,{},"car wash,auto detailing,hand wash,interior detailing",24
-Towing Services,towing,auto,AutomotiveBusiness,false,{},"tow truck,roadside assistance,flatbed towing,jump start",25
-Auto Glass Shops,auto-glass,auto,AutoRepair,false,{},"windshield replacement,windshield repair,window tinting,glass repair",26
-Restaurants,restaurants,food-drink,Restaurant,false,{},"dining,eateries,places to eat,takeout",27
-Pizzerias,pizzerias,food-drink,Restaurant,false,{},"pizza,pizza places,slices,pizza delivery",28
-Delis,delis,food-drink,FoodEstablishment,false,{},"delicatessen,sandwiches,subs,hoagies,bagels",29
-Bakeries,bakeries,food-drink,Bakery,false,{},"bakery,cakes,pastries,bread,custom cakes",30
-Cafes,cafes,food-drink,CafeOrCoffeeShop,false,{},"coffee shops,espresso,coffee,tea houses,brunch",31
-Caterers,caterers,food-drink,FoodEstablishment,false,{},"catering,event catering,wedding catering,corporate catering",32
-Dentists,dentists,health-medical,Dentist,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","dental,dentistry,teeth cleaning,dental implants,orthodontists",33
-Chiropractors,chiropractors,health-medical,MedicalBusiness,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","chiropractic,back pain,spinal adjustment,neck pain",34
-Physical Therapists,physical-therapists,health-medical,Physiotherapy,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","physical therapy,pt,rehab,sports rehab,injury recovery",35
-Dermatologists,dermatologists,health-medical,Dermatology,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","dermatology,skin doctor,acne treatment,skin cancer screening",36
-Optometrists,optometrists,health-medical,Optician,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","eye doctor,eye exam,glasses,contact lenses,vision care",37
-Veterinarians,veterinarians,health-medical,VeterinaryCare,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","vet,animal hospital,pet care,emergency vet",38
-Urgent Care Centers,urgent-care,health-medical,MedicalClinic,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","walk-in clinic,immediate care,after hours care,minor emergencies",39
-Med Spas,med-spas,health-medical,MedicalBusiness,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","medical spa,botox,fillers,laser treatments,aesthetic medicine",40
-Hair Salons & Barbers,salons-barbers,beauty-personal-care,HairSalon,true,"{""NJ"":""NJ DCA Board of Cosmetology and Hairstyling"",""NY"":""NY Dept of State appearance enhancement licensing"",""PA"":""PA PALS (State Board of Cosmetology)""}","haircut,barbershop,hair stylist,hair color,blowout",41
-Nail Salons,nail-salons,beauty-personal-care,NailSalon,true,"{""NJ"":""NJ DCA Board of Cosmetology and Hairstyling"",""NY"":""NY Dept of State appearance enhancement licensing"",""PA"":""PA PALS (State Board of Cosmetology)""}","manicure,pedicure,gel nails,acrylic nails",42
-Spas,spas,beauty-personal-care,DaySpa,true,"{""NJ"":""NJ DCA massage and bodywork therapy licensing"",""NY"":""NYS Office of the Professions (massage therapy)"",""PA"":""PA PALS (State Board of Massage Therapy)""}","day spa,massage,facials,body treatments,wellness",43
-Tattoo Studios,tattoo-studios,beauty-personal-care,TattooParlor,false,{},"tattoos,tattoo artists,piercings,body art",44
-Tanning Salons,tanning-salons,beauty-personal-care,TanningSalon,false,{},"tanning,spray tan,tanning beds,sunless tanning",45
-Attorneys,attorneys,professional-financial,Attorney,true,"{""NJ"":""NJ Courts attorney index"",""NY"":""NYS Unified Court System attorney search"",""PA"":""PA Disciplinary Board attorney search""}","lawyers,law firms,legal services,personal injury,estate planning",46
-Accountants,accountants,professional-financial,AccountingService,true,"{""NJ"":""NJ DCA MyLicense (Board of Accountancy)"",""NY"":""NYS Office of the Professions (CPA)"",""PA"":""PA PALS (State Board of Accountancy)""}","cpa,tax preparation,bookkeeping,tax accountants",47
-Insurance Agents,insurance-agents,professional-financial,InsuranceAgency,true,"{""NJ"":""NJ DOBI insurance licensee search"",""NY"":""NY DFS insurance producer lookup"",""PA"":""PA Insurance Department producer lookup""}","insurance agency,auto insurance,home insurance,life insurance",48
-Real Estate Agents,real-estate-agents,professional-financial,RealEstateAgent,true,"{""NJ"":""NJ DOBI Real Estate Commission licensee search"",""NY"":""NY Dept of State eAccessNY"",""PA"":""PA PALS (State Real Estate Commission)""}","realtors,real estate brokers,homes for sale,property agents",49
-Financial Advisors,financial-advisors,professional-financial,FinancialService,true,"{""NJ"":""FINRA BrokerCheck / NJ Bureau of Securities"",""NY"":""FINRA BrokerCheck / SEC IAPD"",""PA"":""FINRA BrokerCheck / PA Dept of Banking and Securities""}","financial planning,wealth management,retirement planning,investment advisors",50
-Marketing Agencies,marketing-agencies,professional-financial,ProfessionalService,false,{},"digital marketing,seo,advertising agencies,social media marketing,web design",51
-IT Services,it-services,professional-financial,ProfessionalService,false,{},"managed it,computer repair,tech support,cybersecurity,network support",52
-Photographers,photographers,professional-financial,ProfessionalService,false,{},"photography,wedding photographers,portrait photography,headshots",53
-Florists,florists,retail,Florist,false,{},"flower shops,flower delivery,bouquets,wedding flowers",54
-Jewelers,jewelers,retail,JewelryStore,false,{},"jewelry stores,engagement rings,watch repair,custom jewelry",55
-Furniture Stores,furniture-stores,retail,FurnitureStore,false,{},"furniture,home furnishings,mattresses,sofas",56
-Bike Shops,bike-shops,retail,BikeStore,false,{},"bicycle shops,bike repair,e-bikes,cycling gear",57
-Daycares,daycares,family-education-community,ChildCare,true,"{""NJ"":""NJ DCF Office of Licensing child care lookup"",""NY"":""NY OCFS day care lookup"",""PA"":""PA DHS child care provider search (COMPASS)""}","childcare,day care centers,preschool,early learning",58
-Tutoring Services,tutoring,family-education-community,LocalBusiness,false,{},"tutors,test prep,sat prep,math tutoring,reading help",59
-Music Lessons,music-lessons,family-education-community,LocalBusiness,false,{},"music schools,piano lessons,guitar lessons,voice lessons",60
-Martial Arts Studios,martial-arts,family-education-community,SportsActivityLocation,false,{},"karate,jiu jitsu,taekwondo,self defense,mma",61
-Gyms,gyms,family-education-community,ExerciseGym,false,{},"fitness centers,health clubs,personal training,crossfit",62
-"Windows, Doors & Siding",windows-doors-siding,home-property,HomeAndConstructionBusiness,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","window installation,window replacement,siding,door installation,exterior remodeling",63
-Video Production,video-production,professional-financial,ProfessionalService,false,{},"videography,corporate video,commercial production,editing",64
-Trade Schools,trade-schools,family-education-community,EducationalOrganization,false,{},"vocational school,career training,apprenticeship prep,bootcamp",65
-Cannabis Dispensaries,cannabis-dispensaries,retail,Store,true,"{""NY"":""NY Office of Cannabis Management""}","dispensary,adult-use cannabis,smoke shop",66
-Golf Courses,golf-courses,family-education-community,GolfCourse,false,{},"golf club,driving range,golf lessons",67
-Hotels & Lodging,hotels-lodging,family-education-community,LodgingBusiness,false,{},"hotel,inn,resort,lodge,bed and breakfast",68
-Event Venues,event-venues,family-education-community,EventVenue,false,{},"wedding venue,banquet hall,event space",69
+name,slug,groupSlug,schemaType,categoryKind,licenseRequired,licenseSourcesByState,synonyms,sortOrder
+Roofers,roofers,home-property,RoofingContractor,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","roofing,roof repair,roof replacement,shingle repair",1
+Plumbers,plumbers,home-property,Plumber,trade,true,"{""NJ"":""NJ DCA State Board of Master Plumbers"",""NY"":""NYC DOB / local municipal licensing"",""PA"":""Local municipal licensing""}","plumbing,drain cleaning,water heater repair,sewer repair",2
+Electricians,electricians,home-property,Electrician,trade,true,"{""NJ"":""NJ DCA Board of Examiners of Electrical Contractors"",""NY"":""NYC DOB / local municipal licensing"",""PA"":""Local municipal licensing / PA AG HICPA registration""}","electrical contractor,wiring,panel upgrade,ev charger installation",3
+HVAC Contractors,hvac-contractors,home-property,HVACBusiness,trade,true,"{""NJ"":""NJ DCA HVACR Licensing Board"",""NY"":""NYC DOB / local municipal licensing"",""PA"":""PA AG HICPA registration""}","heating,air conditioning,ac repair,furnace repair,heat pump",4
+General Contractors,general-contractors,home-property,GeneralContractor,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","home improvement contractor,remodeling,renovation,home additions",5
+Landscapers,landscapers,home-property,LocalBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","landscaping,lawn care,lawn maintenance,hardscaping,yard work",6
+House Cleaners,house-cleaners,home-property,LocalBusiness,trade,false,{},"house cleaning,maid service,deep cleaning,move-out cleaning",7
+Painters,painters,home-property,HousePainter,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","painting,interior painting,exterior painting,house painting",8
+Flooring Contractors,flooring-contractors,home-property,HomeAndConstructionBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","flooring,hardwood floors,floor installation,tile,carpet installation",9
+Masonry Contractors,masonry-contractors,home-property,HomeAndConstructionBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","masonry,brickwork,stonework,concrete,paver installation",10
+Fence Contractors,fence-contractors,home-property,HomeAndConstructionBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","fencing,fence installation,fence repair,vinyl fence,wood fence",11
+Tree Services,tree-services,home-property,LocalBusiness,trade,true,"{""NJ"":""NJ Board of Tree Experts (LTE/LTCO registration)"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","tree removal,tree trimming,stump grinding,arborist",12
+Pest Control,pest-control,home-property,LocalBusiness,trade,true,"{""NJ"":""NJ DEP pesticide applicator licensing"",""NY"":""NY DEC pesticide applicator certification"",""PA"":""PA Dept of Agriculture pesticide applicator licensing""}","exterminator,pest removal,termite control,bed bugs,rodent control",13
+Junk Removal,junk-removal,home-property,LocalBusiness,trade,false,{},"junk hauling,debris removal,cleanouts,appliance removal",14
+Movers,movers,home-property,MovingCompany,trade,true,"{""NJ"":""NJ DCA public movers and warehousemen licensing"",""NY"":""NYS DOT household goods carrier registry"",""PA"":""PA PUC household goods carrier certificate""}","moving company,local movers,long distance movers,packing services",15
+Locksmiths,locksmiths,home-property,Locksmith,trade,true,"{""NJ"":""NJ DCA Fire Alarm, Burglar Alarm and Locksmith Advisory Committee""}","lockout service,rekeying,lock installation,key duplication",16
+Garage Door Repair,garage-door-repair,home-property,HomeAndConstructionBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","garage doors,garage door installation,garage door opener,spring repair",17
+Gutter Services,gutter-services,home-property,HomeAndConstructionBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","gutter cleaning,gutter installation,gutter guards,downspouts",18
+Chimney Sweeps,chimney-sweeps,home-property,HomeAndConstructionBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","chimney cleaning,chimney repair,chimney inspection,fireplace repair",19
+Handyman Services,handyman-services,home-property,HomeAndConstructionBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","handyman,odd jobs,home repairs,small repairs",20
+Auto Repair Shops,auto-repair,auto,AutoRepair,retail,true,"{""NY"":""NY DMV repair shop registration"",""PA"":""PennDOT official inspection station lookup""}","mechanic,car repair,oil change,brake repair,engine repair",21
+Auto Body Shops,auto-body,auto,AutoBodyShop,retail,true,"{""NJ"":""NJ MVC auto body repair facility license"",""NY"":""NY DMV repair shop registration""}","collision repair,body shop,dent repair,auto painting",22
+Tire Shops,tire-shops,auto,TireShop,retail,false,{},"tires,tire replacement,tire rotation,wheel alignment",23
+Car Washes,car-washes,auto,AutoWash,venue,false,{},"car wash,auto detailing,hand wash,interior detailing",24
+Towing Services,towing,auto,AutomotiveBusiness,trade,false,{},"tow truck,roadside assistance,flatbed towing,jump start",25
+Auto Glass Shops,auto-glass,auto,AutoRepair,trade,false,{},"windshield replacement,windshield repair,window tinting,glass repair",26
+Restaurants,restaurants,food-drink,Restaurant,venue,false,{},"dining,eateries,places to eat,takeout",27
+Pizzerias,pizzerias,food-drink,Restaurant,venue,false,{},"pizza,pizza places,slices,pizza delivery",28
+Delis,delis,food-drink,FoodEstablishment,venue,false,{},"delicatessen,sandwiches,subs,hoagies,bagels",29
+Bakeries,bakeries,food-drink,Bakery,venue,false,{},"bakery,cakes,pastries,bread,custom cakes",30
+Cafes,cafes,food-drink,CafeOrCoffeeShop,venue,false,{},"coffee shops,espresso,coffee,tea houses,brunch",31
+Caterers,caterers,food-drink,FoodEstablishment,venue,false,{},"catering,event catering,wedding catering,corporate catering",32
+Dentists,dentists,health-medical,Dentist,practice,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","dental,dentistry,teeth cleaning,dental implants,orthodontists",33
+Chiropractors,chiropractors,health-medical,MedicalBusiness,practice,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","chiropractic,back pain,spinal adjustment,neck pain",34
+Physical Therapists,physical-therapists,health-medical,Physiotherapy,practice,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","physical therapy,pt,rehab,sports rehab,injury recovery",35
+Dermatologists,dermatologists,health-medical,Dermatology,practice,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","dermatology,skin doctor,acne treatment,skin cancer screening",36
+Optometrists,optometrists,health-medical,Optician,practice,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","eye doctor,eye exam,glasses,contact lenses,vision care",37
+Veterinarians,veterinarians,health-medical,VeterinaryCare,practice,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","vet,animal hospital,pet care,emergency vet",38
+Urgent Care Centers,urgent-care,health-medical,MedicalClinic,practice,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","walk-in clinic,immediate care,after hours care,minor emergencies",39
+Med Spas,med-spas,health-medical,MedicalBusiness,practice,true,"{""NJ"":""NJ DCA MyLicense"",""NY"":""NYS Office of the Professions"",""PA"":""PA PALS""}","medical spa,botox,fillers,laser treatments,aesthetic medicine",40
+Hair Salons & Barbers,salons-barbers,beauty-personal-care,HairSalon,practice,true,"{""NJ"":""NJ DCA Board of Cosmetology and Hairstyling"",""NY"":""NY Dept of State appearance enhancement licensing"",""PA"":""PA PALS (State Board of Cosmetology)""}","haircut,barbershop,hair stylist,hair color,blowout",41
+Nail Salons,nail-salons,beauty-personal-care,NailSalon,practice,true,"{""NJ"":""NJ DCA Board of Cosmetology and Hairstyling"",""NY"":""NY Dept of State appearance enhancement licensing"",""PA"":""PA PALS (State Board of Cosmetology)""}","manicure,pedicure,gel nails,acrylic nails",42
+Spas,spas,beauty-personal-care,DaySpa,practice,true,"{""NJ"":""NJ DCA massage and bodywork therapy licensing"",""NY"":""NYS Office of the Professions (massage therapy)"",""PA"":""PA PALS (State Board of Massage Therapy)""}","day spa,massage,facials,body treatments,wellness",43
+Tattoo Studios,tattoo-studios,beauty-personal-care,TattooParlor,practice,false,{},"tattoos,tattoo artists,piercings,body art",44
+Tanning Salons,tanning-salons,beauty-personal-care,TanningSalon,practice,false,{},"tanning,spray tan,tanning beds,sunless tanning",45
+Attorneys,attorneys,professional-financial,Attorney,practice,true,"{""NJ"":""NJ Courts attorney index"",""NY"":""NYS Unified Court System attorney search"",""PA"":""PA Disciplinary Board attorney search""}","lawyers,law firms,legal services,personal injury,estate planning",46
+Accountants,accountants,professional-financial,AccountingService,practice,true,"{""NJ"":""NJ DCA MyLicense (Board of Accountancy)"",""NY"":""NYS Office of the Professions (CPA)"",""PA"":""PA PALS (State Board of Accountancy)""}","cpa,tax preparation,bookkeeping,tax accountants",47
+Insurance Agents,insurance-agents,professional-financial,InsuranceAgency,practice,true,"{""NJ"":""NJ DOBI insurance licensee search"",""NY"":""NY DFS insurance producer lookup"",""PA"":""PA Insurance Department producer lookup""}","insurance agency,auto insurance,home insurance,life insurance",48
+Real Estate Agents,real-estate-agents,professional-financial,RealEstateAgent,practice,true,"{""NJ"":""NJ DOBI Real Estate Commission licensee search"",""NY"":""NY Dept of State eAccessNY"",""PA"":""PA PALS (State Real Estate Commission)""}","realtors,real estate brokers,homes for sale,property agents",49
+Financial Advisors,financial-advisors,professional-financial,FinancialService,practice,true,"{""NJ"":""FINRA BrokerCheck / NJ Bureau of Securities"",""NY"":""FINRA BrokerCheck / SEC IAPD"",""PA"":""FINRA BrokerCheck / PA Dept of Banking and Securities""}","financial planning,wealth management,retirement planning,investment advisors",50
+Marketing Agencies,marketing-agencies,professional-financial,ProfessionalService,practice,false,{},"digital marketing,seo,advertising agencies,social media marketing,web design",51
+IT Services,it-services,professional-financial,ProfessionalService,practice,false,{},"managed it,computer repair,tech support,cybersecurity,network support",52
+Photographers,photographers,professional-financial,ProfessionalService,practice,false,{},"photography,wedding photographers,portrait photography,headshots",53
+Florists,florists,retail,Florist,retail,false,{},"flower shops,flower delivery,bouquets,wedding flowers",54
+Jewelers,jewelers,retail,JewelryStore,retail,false,{},"jewelry stores,engagement rings,watch repair,custom jewelry",55
+Furniture Stores,furniture-stores,retail,FurnitureStore,retail,false,{},"furniture,home furnishings,mattresses,sofas",56
+Bike Shops,bike-shops,retail,BikeStore,retail,false,{},"bicycle shops,bike repair,e-bikes,cycling gear",57
+Daycares,daycares,family-education-community,ChildCare,practice,true,"{""NJ"":""NJ DCF Office of Licensing child care lookup"",""NY"":""NY OCFS day care lookup"",""PA"":""PA DHS child care provider search (COMPASS)""}","childcare,day care centers,preschool,early learning",58
+Tutoring Services,tutoring,family-education-community,LocalBusiness,practice,false,{},"tutors,test prep,sat prep,math tutoring,reading help",59
+Music Lessons,music-lessons,family-education-community,LocalBusiness,practice,false,{},"music schools,piano lessons,guitar lessons,voice lessons",60
+Martial Arts Studios,martial-arts,family-education-community,SportsActivityLocation,practice,false,{},"karate,jiu jitsu,taekwondo,self defense,mma",61
+Gyms,gyms,family-education-community,ExerciseGym,venue,false,{},"fitness centers,health clubs,personal training,crossfit",62
+"Windows, Doors & Siding",windows-doors-siding,home-property,HomeAndConstructionBusiness,trade,true,"{""NJ"":""NJ DCA HIC registration"",""NY"":""NYC DCWP / county HIC"",""PA"":""PA AG HICPA registration""}","window installation,window replacement,siding,door installation,exterior remodeling",63
+Video Production,video-production,professional-financial,ProfessionalService,practice,false,{},"videography,corporate video,commercial production,editing",64
+Trade Schools,trade-schools,family-education-community,EducationalOrganization,practice,false,{},"vocational school,career training,apprenticeship prep,bootcamp",65
+Cannabis Dispensaries,cannabis-dispensaries,retail,Store,venue,true,"{""NY"":""NY Office of Cannabis Management""}","dispensary,adult-use cannabis,smoke shop",66
+Golf Courses,golf-courses,family-education-community,GolfCourse,venue,false,{},"golf club,driving range,golf lessons",67
+Hotels & Lodging,hotels-lodging,family-education-community,LodgingBusiness,venue,false,{},"hotel,inn,resort,lodge,bed and breakfast",68
+Event Venues,event-venues,family-education-community,EventVenue,venue,false,{},"wedding venue,banquet hall,event space",69
