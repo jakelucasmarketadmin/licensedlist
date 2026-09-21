@@ -205,3 +205,31 @@ cross the 3-listing threshold or business profiles publish; log each batch here.
   which produced 29 phantom failures) and asserts the adopted link policy rather than the
   old one; rel="ugc" added to claim-form links. **36/36 pass, smoke 19/19, crawl 724 pages
   0 broken.** docs/LAUNCH-CHECKLIST.md rewritten with word counts and known gaps.
+
+**Smoke 2026-09-21 19:43 UTC:** FAIL — 3 FAILURE(S)
+```
+FAIL [guard] robots.txt Sitemap points at production /sitemap-index — Sitemap: https://my-site-nf00gfth-tier201.wix-vibe-site.com/sitemap
+FAIL [guard] robots.txt disallows /owner
+FAIL [guard] agency clients are 25% or less of published listings — 48.0% — publish more non-clients
+```
+
+**Phase 4 §1 emergency batch — 2026-09-21 (GATE 1):** Audited every §1 claim against the
+  live site before building; all confirmed real except §1.5 (/owner was already noindex) and
+  §2 (see below). Fixed: NJ ZIP leading zero (formatZip() left-pads on read; every render
+  site and PostalAddress routed through it — 07656 now correct); meta descriptions rewritten
+  as composed complete sentences per page type (src/lib/descriptions.ts) plus 6 over-long
+  static ones in routes.ts; /nj renders real inventory instead of "Listings coming soon";
+  homepage counters now state what a visitor can verify (license records on file, towns
+  live); comparison table drops all-empty columns and never renders an em-dash; empty
+  sections omitted; categoryKind (trade/practice/venue/retail) set on all 69 categories and
+  driving headings + section sets, with unset kinds excluded from the index; category hubs
+  link only to counties that have a listing ("Not yet covered" in plain text for the rest).
+  §10.2 guardrails added to smoke.ts — client ratio, ZIP length, description length,
+  placeholder cells, empty sections, robots.txt sitemap line.
+  **Self-inflicted outage during this batch:** removing the empty events module left a
+  ternary with no else branch in HomeView, which the catch-all imports at module scope, so
+  every route 500'd. Bisected by reverting src/ and reapplying in halves; fixed to an &&
+  guard. Lesson recorded: regex-editing JSX conditionals needs a render check before push.
+  Smoke: 3 remaining FAILs, all expected and all outside the codebase — robots.txt is
+  dashboard-managed (block supplied to Lucas twice) and the client ratio is 48% vs the 25%
+  cap, which is fixed by publishing non-clients, not by code.
