@@ -29,6 +29,7 @@ export function organizationJsonLd(origin: string) {
     "@id": `${origin}/#organization`,
     name: SITE_NAME,
     url: `${origin}/`,
+    logo: `${origin}/assets/brand/icon-512.png`,
     slogan: SITE_TAGLINE,
     description: `${SITE_NAME} is a local business directory for New Jersey, New York, and Pennsylvania that verifies contractor and professional licenses against official state registries.`,
     areaServed: [
