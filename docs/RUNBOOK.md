@@ -219,6 +219,8 @@ client-side and reveal the next rung, so a dead link never shows a gray box.
   `awards` collection as pending, flip to published. Badge files:
   `scripts/award-badge.ts --county "Bergen County" --year 2026`. Winners get the badge
   image for their own site — plain link back only, never embed code.
+- **Listing badges:** verified/listed badges for businesses' own sites — see docs/BADGES.md.
+  Re-run `node scripts/listing-badge.mjs` after every verify-licenses pass.
 - **Newsletter:** capture posts to `/api/subscribe` → `subscribers` (pending) + forwards
   to `GHL_NEWSLETTER_WEBHOOK` (set env). Build the GHL workflow with DOUBLE OPT-IN: send
   confirmation email, only confirmed contacts join the "LicensedList Weekly" list. Digest
