@@ -36,6 +36,13 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? o
 /** "an electrician", "a roofer" — the article has to agree or the line reads wrong. */
 const article = (word: string) => (/^[aeiou]/i.test(word) ? "an" : "a");
 
+/** A business's `seoLabel` ("barber") title-cased for the <title> tag, or
+ * undefined when unset so the caller falls back to the category name. */
+export function seoLabelText(label?: string): string | undefined {
+  const t = label?.trim();
+  return t ? t.replace(/\b\w/g, (c) => c.toUpperCase()) : undefined;
+}
+
 export function businessDescription(opts: {
   name: string;
   categoryName?: string;
@@ -46,7 +53,12 @@ export function businessDescription(opts: {
   verifiedMonth?: string;
 }): string {
   const where = [opts.townName, opts.stateAbbr].filter(Boolean).join(", ");
-  const what = opts.categoryName ? opts.categoryName.toLowerCase().replace(/s$/, "") : "business";
+  // Compound labels ("Hair Salons & Barbers") don't singularise — "a hair
+  // salons & barber" — so they fall back to the generic noun.
+  const what =
+    opts.categoryName && !/[&,]/.test(opts.categoryName)
+      ? opts.categoryName.toLowerCase().replace(/s$/, "")
+      : "business";
   const lead = where ? `${opts.name} is ${article(what)} ${what} in ${where}.` : `${opts.name}.`;
   const licence =
     opts.licenseNumber && opts.licenseSource
