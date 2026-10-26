@@ -93,6 +93,27 @@ export function itemListJsonLd(
   };
 }
 
+const SCHEMA_DAYS: [string, string][] = [
+  ["mon", "Monday"], ["tue", "Tuesday"], ["wed", "Wednesday"], ["thu", "Thursday"],
+  ["fri", "Friday"], ["sat", "Saturday"], ["sun", "Sunday"],
+];
+const hhmm = (t: string) => {
+  const m = t.trim().match(/^(\d{1,2}):(\d{2})$/);
+  return m ? `${m[1].padStart(2, "0")}:${m[2]}` : null;
+};
+
+/** hoursJson ranges ("9:00-19:00") as OpeningHoursSpecification; "closed" and
+ * anything unparseable ("by appointment") is omitted rather than guessed. */
+export function openingHoursSpec(hours?: Record<string, string> | null) {
+  if (!hours) return [];
+  return SCHEMA_DAYS.flatMap(([key, day]) => {
+    const [open, close] = String(hours[key] ?? "").split("-").map(hhmm);
+    return open && close
+      ? [{ "@type": "OpeningHoursSpecification", dayOfWeek: day, opens: open, closes: close }]
+      : [];
+  });
+}
+
 /**
  * Full LocalBusiness for profile pages. Never includes aggregateRating —
  * that's reserved for real on-site user ratings (none exist yet), never
@@ -113,6 +134,9 @@ export function localBusinessJsonLd(
     zip?: string;
     lat?: number;
     lng?: number;
+    photos?: string[];
+    /** parseHours() shape: { mon: "9:00-19:00" | "closed", ... } */
+    hours?: Record<string, string> | null;
   },
   /**
    * On-site verified review data ONLY (docs/REVIEWS.md): pass real published
@@ -143,6 +167,9 @@ export function localBusinessJsonLd(
   if (b.lat != null && b.lng != null) {
     node.geo = { "@type": "GeoCoordinates", latitude: b.lat, longitude: b.lng };
   }
+  if (b.photos?.length) node.image = b.photos.slice(0, 3);
+  const opening = openingHoursSpec(b.hours);
+  if (opening.length) node.openingHoursSpecification = opening;
   const rated = (siteReviews ?? []).filter(
     (r) => Number(r.rating) >= 1 && Number(r.rating) <= 5,
   );
