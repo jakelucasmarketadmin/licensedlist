@@ -178,7 +178,7 @@ function MapInner({ markers }: { markers: MapBiz[] }) {
       />
       <div ref={containerRef} className="relative h-full w-full" />
       {glFailed && (
-        <p className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-chip bg-brand-deep/85 px-3 py-1.5 text-xs font-medium text-white shadow-md">
+        <p className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-chip bg-[#0f1a16]/85 px-3 py-1.5 text-xs font-medium text-white shadow-md">
           Interactive map unavailable in this browser — showing the area map
         </p>
       )}

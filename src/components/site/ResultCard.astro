@@ -124,7 +124,7 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
             />
             <a
               href="/credits"
-              class="absolute bottom-1.5 right-1.5 rounded-chip bg-brand-deep/75 px-2 py-0.5 text-[10px] text-white/90 opacity-0 transition-opacity group-hover:opacity-100"
+              class="absolute bottom-1.5 right-1.5 rounded-chip bg-[#0f1a16]/75 px-2 py-0.5 text-[10px] text-white/90 opacity-0 transition-opacity group-hover:opacity-100"
               title={`${townPhoto.caption} — ${townPhoto.author}, ${townPhoto.license}`}
             >
               area photo · credit
@@ -151,13 +151,13 @@ const bizSizes = horizontal ? "(min-width: 768px) 38vw, 100vw" : "(min-width: 10
 
         <div class="absolute left-2 top-2 flex flex-wrap gap-1.5">
           {b.licenseStatus === "verified" && (
-            <span class="rounded-chip bg-[#177245] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Verified</span>
+            <span class="rounded-chip border border-[#c6a15b]/50 bg-[#0f1a16] px-2 py-0.5 text-[11px] font-semibold tracking-wide text-[#d6bb7f] shadow-sm">✓ Verified</span>
           )}
           {inFeaturedBlock && (
-            <span class="rounded-chip bg-[#14456b] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Featured</span>
+            <span class="rounded-chip bg-[#c6a15b] px-2 py-0.5 text-[11px] font-semibold tracking-wide text-[#15140f] shadow-sm">Featured</span>
           )}
           {topRated && (
-            <span class="rounded-chip bg-[#0b2b45] px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Top rated</span>
+            <span class="rounded-chip bg-[#0f1a16] px-2 py-0.5 text-[11px] font-semibold tracking-wide text-white shadow-sm">Top rated</span>
           )}
         </div>
       </div>

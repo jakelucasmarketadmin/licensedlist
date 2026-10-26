@@ -11,7 +11,7 @@ const NAV_LINKS = [
 ];
 ---
 
-<header class="sticky top-0 z-50 border-b border-line bg-surface">
+<header class="on-dark sticky top-0 z-50 bg-paper">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
     <a href="/" class="flex shrink-0 items-center gap-2" aria-label={`${SITE_NAME} home`}>
       <Wordmark />
@@ -19,20 +19,23 @@ const NAV_LINKS = [
 
     <div class="flex items-center gap-1 sm:gap-2">
       <nav aria-label="Main" class="hidden items-center gap-1 md:flex">
-        <a href="/categories" class="rounded-chip px-3 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink">
+        <a href="/categories" class="px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-ink">
           Categories
         </a>
-        <a href="/how-we-verify" class="rounded-chip px-3 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink">
+        <a href="/how-we-verify" class="px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-ink">
           How we verify
         </a>
-        <a href="/about" class="hidden rounded-chip px-3 py-2 text-sm font-medium text-muted hover:bg-inset hover:text-ink lg:block">
+        <a href="/for-businesses" class="px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-ink">
+          For businesses
+        </a>
+        <a href="/about" class="hidden px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-ink lg:block">
           About
         </a>
       </nav>
 
       <a
         href="/for-businesses/get-listed"
-        class="rounded-chip bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
+        class="ml-1 rounded-chip bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
       >
         List your business
       </a>
@@ -51,19 +54,19 @@ const NAV_LINKS = [
         </summary>
         <nav
           aria-label="Mobile"
-          class="absolute right-0 top-12 z-50 w-56 rounded-card border border-line bg-surface p-2 shadow-lg"
+          class="absolute right-0 top-12 z-50 w-60 rounded-card border border-line bg-surface p-2 shadow-lg"
         >
           {NAV_LINKS.map((link) => (
             <a
               href={link.href}
-              class="block rounded-[10px] px-4 py-3 text-sm font-medium text-ink hover:bg-inset"
+              class="block rounded-[8px] px-4 py-3 text-sm font-medium text-ink hover:bg-inset"
             >
               {link.label}
             </a>
           ))}
           <a
             href="/for-businesses/get-listed"
-            class="mt-1 block rounded-[10px] bg-accent px-4 py-3 text-center text-sm font-semibold text-accent-ink"
+            class="mt-1 block rounded-[8px] bg-accent px-4 py-3 text-center text-sm font-semibold text-accent-ink"
           >
             Get listed free
           </a>
@@ -71,4 +74,5 @@ const NAV_LINKS = [
       </details>
     </div>
   </div>
+  <hr class="gold-rule" />
 </header>
