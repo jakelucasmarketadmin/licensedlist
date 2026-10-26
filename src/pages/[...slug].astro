@@ -53,6 +53,7 @@ import { fetchReviewsFor, fetchServicePricesFor } from "@/lib/reviews";
 import { computeIndexability } from "@/lib/indexability";
 import {
   businessDescription,
+  seoLabelText,
   townHubDescription,
   countyHubDescription,
   stateHubDescription,
@@ -60,7 +61,7 @@ import {
 } from "@/lib/descriptions";
 import { townStatsFor, countyStatsFor, stateStatsFor } from "@/lib/hubstats";
 import { getStudy, datasetJsonLd } from "@/lib/studies";
-import { photosOf } from "@/lib/businesses";
+import { photosOf, parseHours } from "@/lib/businesses";
 import { imageAt, srcsetFor } from "@/lib/images";
 import {
   organizationJsonLd,
@@ -181,10 +182,10 @@ if (!View && segments.length === 2 && segments[0] === "business") {
       };
     }
     seo = {
-      title: `${business.name} · ${category?.name ?? "Local Business"} in ${business.city}, ${business.state} · ${SITE_NAME}`,
+      title: `${business.name} · ${seoLabelText(business.seoLabel) ?? category?.name ?? "Local Business"} in ${business.city}, ${business.state} · ${SITE_NAME}`,
       description: businessDescription({
         name: business.name ?? "",
-        categoryName: category?.name,
+        categoryName: business.seoLabel?.trim() || category?.name,
         townName: business.city,
         stateAbbr: business.state,
         licenseNumber: business.licenseStatus === "verified" ? business.licenseNumber : undefined,
@@ -203,7 +204,12 @@ if (!View && segments.length === 2 && segments[0] === "business") {
       // (docs/REVIEWS.md) — never for DEMO records.
       localBusinessJsonLd(
         origin,
-        { ...business, schemaType: category?.schemaType },
+        {
+          ...business,
+          schemaType: category?.schemaType,
+          photos: photosOf(business),
+          hours: parseHours(business),
+        },
         business.status === "published"
           ? reviews.map((r) => ({
               rating: r.rating,

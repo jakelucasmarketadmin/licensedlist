@@ -7,8 +7,21 @@ import { getCountiesByState } from "@/lib/geo";
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-line bg-surface">
-  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+<footer class="on-dark club-band">
+  <hr class="gold-rule" />
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <div class="mb-12 flex flex-wrap items-end justify-between gap-6 border-b border-line pb-10">
+      <p class="max-w-2xl font-display text-2xl leading-snug text-ink sm:text-3xl">
+        Not every business makes the list.
+        <span class="text-muted">The ones here were checked against the official registry first.</span>
+      </p>
+      <a
+        href="/for-businesses/get-listed"
+        class="rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
+      >
+        Apply to be listed
+      </a>
+    </div>
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
       <div class="max-w-xs">
         <a href="/" aria-label={`${SITE_NAME} home`}><Wordmark /></a>
@@ -18,13 +31,13 @@ const year = new Date().getFullYear();
           business earns a badge.
         </p>
         <div class="mt-5">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-faint">LicensedList Weekly</h2>
+          <h2 class="eyebrow text-gold">LicensedList Weekly</h2>
           <NewsletterSignup source="footer" compact />
         </div>
       </div>
 
       <nav aria-label="Directory">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-faint">Directory</h2>
+        <h2 class="eyebrow text-gold">Directory</h2>
         <ul class="mt-3 space-y-2 text-sm">
           <li><a class="text-muted hover:text-ink" href="/">Find a pro</a></li>
           <li><a class="text-muted hover:text-ink" href="/categories">All categories</a></li>
@@ -36,7 +49,7 @@ const year = new Date().getFullYear();
           <li><a class="text-muted hover:text-ink" href="/account">My projects</a></li>
           <li><a class="text-muted hover:text-ink" href="/how-we-verify">How we verify</a></li>
         </ul>
-        <h2 class="mt-6 text-xs font-semibold uppercase tracking-wider text-faint">Coverage</h2>
+        <h2 class="mt-6 eyebrow text-gold">Coverage</h2>
         <ul class="mt-3 space-y-3 text-sm">
           {STATES.map((s) => (
             <li>
@@ -55,7 +68,7 @@ const year = new Date().getFullYear();
       </nav>
 
       <nav aria-label="For businesses">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-faint">For businesses</h2>
+        <h2 class="eyebrow text-gold">For businesses</h2>
         <ul class="mt-3 space-y-2 text-sm">
           <li><a class="text-muted hover:text-ink" href="/for-businesses/get-listed">List your business</a></li>
           <li><a class="text-muted hover:text-ink" href="/claim">Claim your listing</a></li>
@@ -66,7 +79,7 @@ const year = new Date().getFullYear();
       </nav>
 
       <nav aria-label="Company">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-faint">Company</h2>
+        <h2 class="eyebrow text-gold">Company</h2>
         <ul class="mt-3 space-y-2 text-sm">
           <li><a class="text-muted hover:text-ink" href="/about">About</a></li>
           <li><a class="text-muted hover:text-ink" href="/editorial-policy">Editorial policy</a></li>

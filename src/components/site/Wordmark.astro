@@ -2,20 +2,21 @@
 import { SITE_NAME } from "@/lib/site";
 ---
 
-<span class="flex items-center gap-2">
+{/* Rendered inside .on-dark surfaces (header, footer): gold seal + ivory name. */}
+<span class="flex items-center gap-2.5">
   <span
-    class="flex h-8 w-8 items-center justify-center rounded-[10px] bg-brand-deep text-white"
+    class="flex h-8 w-8 items-center justify-center rounded-full border border-gold-soft text-gold"
     aria-hidden="true"
   >
     {/* shield-check */}
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
+      stroke-width="1.75"
       stroke-linecap="round"
       stroke-linejoin="round"
     >
@@ -25,5 +26,5 @@ import { SITE_NAME } from "@/lib/site";
       <path d="m9 12 2 2 4-4"></path>
     </svg>
   </span>
-  <span class="font-display text-lg font-bold tracking-tight text-ink">{SITE_NAME}</span>
+  <span class="font-display text-lg font-medium tracking-tight text-ink">{SITE_NAME}</span>
 </span>
