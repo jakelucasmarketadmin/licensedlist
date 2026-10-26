@@ -104,14 +104,14 @@ const mapPoints = [
       <figure class="reveal overflow-hidden rounded-card border border-line">
         <div class="relative">
           <Pic src={heroPhoto.url} alt={heroPhoto.alt} aspect={21 / 9} sizes="(min-width: 1280px) 1152px, 100vw" priority class="max-h-[340px]" />
-          <figcaption class="absolute bottom-0 right-0 rounded-tl-card bg-[#0f1a16]/70 px-3 py-1 text-[11px] text-white/90">
+          <figcaption class="absolute bottom-0 right-0 rounded-tl-card bg-brand-deep/70 px-3 py-1 text-[11px] text-white/90">
             {heroPhoto.caption} · <a href="/credits" class="underline">credit</a>
           </figcaption>
         </div>
       </figure>
     )}
     <div class="mt-6 max-w-prose">
-      <h1 class="font-display text-4xl font-bold text-ink sm:text-5xl">{county.name} local services</h1>
+      <h1 class="font-display text-4xl font-bold text-ink">{county.name} local services</h1>
       <p class="mt-3 text-lg leading-relaxed text-muted">{county.intro}</p>
     </div>
     <dl class="ledger mt-5 flex max-w-xl flex-wrap gap-x-8 gap-y-1 rounded-card border border-line bg-surface px-4 py-2">

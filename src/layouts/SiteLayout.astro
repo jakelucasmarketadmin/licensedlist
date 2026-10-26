@@ -51,14 +51,8 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_ID;
     <meta name="twitter:title" content={seo.title} />
     <meta name="twitter:description" content={seo.description} />
 
-    {/* Icons live under /assets/brand: Wix intercepts every /favicon.* path and
-        serves its own default .ico, so a root favicon never reaches the browser.
-        PNG sizes are multiples of 48 for Google's search-result favicon. */}
-    <link rel="icon" href="/assets/brand/icon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/assets/brand/icon-48.png" type="image/png" sizes="48x48" />
-    <link rel="icon" href="/assets/brand/icon-96.png" type="image/png" sizes="96x96" />
-    <link rel="icon" href="/assets/brand/icon-192.png" type="image/png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" sizes="180x180" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/og-default.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://static.wixstatic.com" />
