@@ -76,10 +76,6 @@ export interface DirectoryBusiness {
   optOutAt?: string | Date;
   /** Comma list from the HIGHLIGHT_DEFS vocabulary (lib/reviews.ts). */
   highlights?: string;
-  /** Singular search term ("barber") that replaces the category name in the
-   * profile's <title> and meta description, where the category label is plural
-   * or compound ("Hair Salons & Barbers"). */
-  seoLabel?: string;
   /** JSON array [{title, town, date, description, photos: [], beforePhoto?, afterPhoto?}]. */
   projectsJson?: string | ProjectEntry[];
   /** JSON array [{name, role, bio?, photo?}]. */

@@ -128,13 +128,9 @@ for (const [i, r] of raw.entries()) {
     problems.push(`licenseStatus "${r.licenseStatus}" not in ${[...LICENSE_STATUSES].join("|")}`);
   if (r.licenseStatus?.trim() === "credential-only" && !r.licenseHolder?.trim())
     problems.push("credential-only requires licenseHolder to name whose credential it is");
-  for (const col of ["hoursJson", "faqJson", "teamJson"]) {
-    if (r[col]) {
-      try { JSON.parse(r[col]); } catch { problems.push(`${col} is not valid JSON`); }
-    }
+  if (r.hoursJson) {
+    try { JSON.parse(r.hoursJson); } catch { problems.push("hoursJson is not valid JSON"); }
   }
-  if ((r.lat || r.lng) && !(Number.isFinite(Number(r.lat)) && Number.isFinite(Number(r.lng)) && r.lat && r.lng))
-    problems.push("lat/lng must both be numbers when either is set");
 
   if (problems.length) {
     rejects.push({ row: rowNo, slug: r.slug, name: r.name, reason: problems.join("; ") });
@@ -193,9 +189,9 @@ for (const [i, r] of raw.entries()) {
     city: r.city,
     state: r.state,
     zip: r.zip,
-    // Optional storefront geocode; else the town centroid (Census gazetteer).
-    lat: r.lat || (homeTown?.lat ?? ""),
-    lng: r.lng || (homeTown?.lng ?? ""),
+    // Town centroid (Census gazetteer) as the default coordinate.
+    lat: homeTown?.lat ?? "",
+    lng: homeTown?.lng ?? "",
     phone: r.phone,
     website: r.website,
     email: r.email,
@@ -223,13 +219,6 @@ for (const [i, r] of raw.entries()) {
     responseTimeHours: r.responseTimeHours,
     lastVerifiedAt: r.licenseVerifiedAt || "",
     sourceNotes: r.sourceNotes,
-    // Owner-editable profile fields: only sent when the CSV carries them, so an
-    // API re-import never blanks values edited in the dashboard.
-    ...Object.fromEntries(
-      (["seoLabel", "highlights", "faqJson", "teamJson"] as const)
-        .filter((k) => r[k])
-        .map((k) => [k, r[k]]),
-    ),
   };
   valid.push({ fields, needsVerification: !published });
 }
@@ -249,7 +238,6 @@ const MERGE_HEADER = [
   "licenseStatus","licenseNumber","licenseSource","licenseHolder","additionalLicensesJson","licenseVerifiedAt","insuredStatus",
   "ratingGoogle","ratingGoogleCount","ratingYelp","ratingYelpCount","ratingFacebook",
   "ratingFacebookCount","responseTimeHours","lastVerifiedAt","sourceNotes",
-  "seoLabel","highlights","faqJson","teamJson",
 ];
 writeCsv(join(root, "data/businesses-merge.csv"), MERGE_HEADER, valid.map((v) => v.fields));
 

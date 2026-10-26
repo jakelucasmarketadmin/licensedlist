@@ -14,12 +14,6 @@ partially imported):
   row's own state.
 - `licenseVerifiedAt` (a real date) is required whenever `licenseSource` is set.
 - `hoursJson` must be valid JSON; `tier` one of free|verified|featured|sponsor.
-- Optional SEO columns: `seoLabel` (singular search term, e.g. `barber` — replaces the
-  category name in the profile `<title>`/meta description when the category label is
-  compound like "Hair Salons & Barbers"), `highlights`, `faqJson`, `teamJson` (valid JSON,
-  shapes in `src/lib/businesses.ts`), and `lat`/`lng` (storefront geocode; overrides the
-  town centroid). Blank cells are never sent, so an API re-import keeps dashboard edits.
-  `seoLabel` is a new CMS field: add it as Text when the dashboard importer offers it.
 
 The importer derives the rest: `pathKey`, town-centroid lat/lng (Census), `photosJson` from
 `photoUrls`, and `licenseStatus` (verified ⇢ number+source+date present; else unverified for
