@@ -1,5 +1,7 @@
 # Runbook — importing real businesses
 
+> Repo: `viralmarketingfirm-glitch/directory-new` is the GitHub repo linked to the Wix Vibe editor since 2026-10-26. The old `Tri-state-directory` repo is disconnected and no longer syncs.
+
 ## 1. Prepare the CSV
 
 Fill `data/clients-import.csv` in the exact shape of
