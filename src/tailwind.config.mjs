@@ -44,7 +44,6 @@ export default {
                     hover: 'var(--accent-hover)',
                     ink: 'var(--accent-ink)',
                 },
-                gold: { DEFAULT: 'var(--gold)', soft: 'var(--gold-soft)' },
                 ok: { DEFAULT: 'var(--ok)', wash: 'var(--ok-wash)' },
                 warn: { DEFAULT: 'var(--warn)', wash: 'var(--warn-wash)' },
                 danger: { DEFAULT: 'var(--danger)', wash: 'var(--danger-wash)' },
@@ -64,7 +63,7 @@ export default {
                 primary: 'var(--brand-deep)',
             },
             borderRadius: {
-                card: '10px',
+                card: '14px',
                 chip: '999px',
             },
             maxWidth: {
