@@ -8,6 +8,5 @@ pages_build_output_dir = "./dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "licensedlist"
-# Replaced with the real id once the D1 database is created in Cloudflare.
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "13dc84b4-65b9-4fb0-bd1c-b79a3e4a9477"
 migrations_dir = "migrations"
