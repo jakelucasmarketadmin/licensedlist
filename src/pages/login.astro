@@ -1,0 +1,65 @@
+---
+import SiteLayout from "@/layouts/SiteLayout.astro";
+import "@/styles/global.css";
+import { SITE_NAME } from "@/lib/site";
+
+// Only send people back to pages on this site.
+const raw = Astro.url.searchParams.get("next") || "/owner";
+const next = raw.startsWith("/") && !raw.startsWith("//") ? raw : "/owner";
+const seo = { title: `Sign in · ${SITE_NAME}`, description: `Sign in to manage your ${SITE_NAME} listing.`, path: "/login", robots: "noindex, nofollow" };
+const input = "w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-none";
+const button = "rounded-chip bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover disabled:opacity-60";
+---
+<SiteLayout seo={seo}>
+  <section class="mx-auto max-w-md px-4 py-12 sm:px-6 lg:py-16">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">Business owners</p>
+    <h1 class="mt-3 font-display text-3xl font-bold text-ink">Sign in</h1>
+    <p class="mt-3 text-sm text-muted">We'll email you a 6-digit code. No password needed.</p>
+
+    <form id="step-email" class="mt-6 space-y-3">
+      <label for="login-email" class="block text-sm font-medium text-ink">Email</label>
+      <input id="login-email" type="email" required autocomplete="email" class={input} />
+      <button class={button} type="submit">Email me a code</button>
+    </form>
+
+    <form id="step-code" class="mt-6 space-y-3" hidden>
+      <p class="text-sm text-muted">We sent a code to <strong id="sent-to" class="text-ink"></strong>. It works for 10 minutes.</p>
+      <label for="login-code" class="block text-sm font-medium text-ink">Code</label>
+      <input id="login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required class={input} />
+      <div class="flex flex-wrap items-center gap-3">
+        <button class={button} type="submit">Sign in</button>
+        <button type="button" id="change-email" class="text-sm text-brand underline">Use a different email</button>
+      </div>
+    </form>
+
+    <p id="login-error" role="alert" class="mt-4 rounded-[10px] bg-danger-wash px-3 py-2 text-sm text-danger" hidden></p>
+    <p class="mt-8 text-xs text-faint">Signing in only shows you listings you've claimed. To claim your business, open its listing and choose "Claim this listing".</p>
+  </section>
+</SiteLayout>
+
+<script define:vars={{ next }}>
+  const $ = (id) => document.getElementById(id);
+  const fail = (msg) => { $("login-error").textContent = msg; $("login-error").hidden = !msg; };
+  const post = async (path, body) => {
+    const res = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || "Something went wrong. Please try again.");
+    return data;
+  };
+  let email = "";
+  $("step-email").addEventListener("submit", async (e) => {
+    e.preventDefault(); fail("");
+    const btn = e.submitter; btn.disabled = true;
+    email = $("login-email").value.trim();
+    try { await post("/api/auth/start", { email }); $("sent-to").textContent = email; $("step-email").hidden = true; $("step-code").hidden = false; $("login-code").focus(); }
+    catch (err) { fail(err.message); }
+    finally { btn.disabled = false; }
+  });
+  $("step-code").addEventListener("submit", async (e) => {
+    e.preventDefault(); fail("");
+    const btn = e.submitter; btn.disabled = true;
+    try { const r = await post("/api/auth/verify", { email, code: $("login-code").value }); location.href = r.role === "admin" && next === "/owner" ? "/admin" : next; }
+    catch (err) { fail(err.message); btn.disabled = false; }
+  });
+  $("change-email").addEventListener("click", () => { $("step-code").hidden = true; $("step-email").hidden = false; fail(""); });
+</script>

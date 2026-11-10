@@ -45,6 +45,7 @@ function Portal() {
   const { isAuthenticated, isLoading, actions } = useMember() as any;
   const [listing, setListing] = useState<Listing | null | 'loading'>('loading');
   const [saved, setSaved] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [pending, setPending] = useState<string[]>([]);
   const [linkNote, setLinkNote] = useState('');
 
   useEffect(() => {
@@ -136,6 +137,7 @@ function Portal() {
         }),
       });
       const out = await res.json();
+      setPending(out.ok && Array.isArray(out.pending) ? out.pending : []);
       setSaved(out.ok ? 'saved' : 'error');
     } catch {
       setSaved('error');
@@ -227,6 +229,7 @@ function Portal() {
         {saved === 'saved' && (
           <p className="rounded-[10px] bg-ok-wash px-3 py-2 text-xs text-ok" role="status">
             Saved. Changes appear on your public listing within a minute.
+            {pending.length > 0 && ` Your new ${pending.join(' and ')} will show once our team approves it, usually within a day.`}
           </p>
         )}
         <div className="flex items-center gap-3">

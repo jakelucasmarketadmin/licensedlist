@@ -1,0 +1,152 @@
+---
+import SiteLayout from "@/layouts/SiteLayout.astro";
+import "@/styles/global.css";
+import { SITE_NAME } from "@/lib/site";
+import { items } from "@/platform/wix/data";
+import { getDb } from "@/platform/db";
+
+// The middleware already turned away anyone who isn't an admin.
+const admin = (globalThis as any).__currentMember?.();
+const list = async (collection: string, field: string, value: string, max = 100) =>
+  (await items.query(collection).eq(field, value).limit(max).find()).items as any[];
+
+const [claims, edits, reviews, leads] = await Promise.all([
+  list("claims", "status", "new"),
+  list("edits", "status", "pending"),
+  list("reviews", "moderationStatus", "pending"),
+  items.query("leads").limit(15).find().then((r: any) => r.items as any[]),
+]);
+const owners = (await getDb().prepare("SELECT email, role, created, last_login FROM users ORDER BY created DESC LIMIT 50").bind().all<any>()).results;
+const names = new Map<string, string>();
+for (const slug of new Set([...claims, ...edits, ...reviews].map((x) => x.businessSlug).filter(Boolean))) {
+  const r: any = await items.query("businesses").eq("slug", slug).limit(1).find();
+  if (r.items[0]) names.set(slug, r.items[0].name);
+}
+const KIND: Record<string, string> = { phone: "Claim (phone check)", email: "Claim (domain email)", document: "Claim (document)", form: "Get listed", "featured-request": "Featured request", waitlist: "Featured waitlist" };
+const when = (d?: string) => (d ? new Date(d).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "");
+const seo = { title: `Admin · ${SITE_NAME}`, description: "Approvals", path: "/admin", robots: "noindex, nofollow" };
+const card = "rounded-card border border-line bg-surface p-4";
+const btn = "rounded-chip px-3 py-1.5 text-xs font-semibold";
+---
+<SiteLayout seo={seo}>
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">Admin</p>
+        <h1 class="mt-2 font-display text-3xl font-bold text-ink">Approvals</h1>
+        <p class="mt-1 text-sm text-muted">Signed in as {admin?.email}.</p>
+      </div>
+      <form method="post" action="/api/auth/logout"><button class="text-sm text-brand underline">Sign out</button></form>
+    </div>
+
+    <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {[["Claims and requests", claims.length], ["Owner edits", edits.length], ["Reviews", reviews.length], ["Owners", owners.length]].map(([label, n]) => (
+        <div class={card}><p class="font-display text-2xl font-bold text-ink">{n}</p><p class="text-xs text-muted">{label}</p></div>
+      ))}
+    </div>
+
+    <p id="admin-error" role="alert" class="mt-4 rounded-[10px] bg-danger-wash px-3 py-2 text-sm text-danger" hidden></p>
+
+    <h2 class="mt-10 font-display text-xl font-bold text-ink">Claims and requests</h2>
+    {claims.length === 0 ? <p class="mt-2 text-sm text-muted">Nothing waiting.</p> : (
+      <div class="mt-3 space-y-3">
+        {claims.map((c) => (
+          <div class={card}>
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted">{KIND[c.method] ?? "Claim"} · {when(c._createdDate)}</p>
+                <p class="mt-1 font-semibold text-ink">{names.get(c.businessSlug) ?? c.businessName ?? c.businessSlug ?? "New business"}</p>
+                <p class="text-sm text-muted">{[c.claimantName, c.claimantEmail, c.claimantPhone].filter(Boolean).join(" · ")}</p>
+                {c.businessSlug && <a class="text-sm text-brand underline" href={`/business/${c.businessSlug}`} target="_blank">Open listing</a>}
+                {c.notes && <p class="mt-1 text-sm text-ink">{c.notes}</p>}
+              </div>
+              <div class="flex gap-2">
+                <button class={`${btn} bg-accent text-accent-ink`} data-kind="claim" data-id={c._id} data-action="approve">Approve</button>
+                <button class={`${btn} border border-line text-ink`} data-kind="claim" data-id={c._id} data-action="reject">Reject</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <h2 class="mt-10 font-display text-xl font-bold text-ink">Owner edits waiting for approval</h2>
+    <p class="text-sm text-muted">Phone and website changes wait here. Descriptions, hours, services and photos go live right away.</p>
+    {edits.length === 0 ? <p class="mt-2 text-sm text-muted">Nothing waiting.</p> : (
+      <div class="mt-3 space-y-3">
+        {edits.map((e) => (
+          <div class={card}>
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted">{e.email} · {when(e._createdDate)}</p>
+                <p class="mt-1 font-semibold text-ink">{names.get(e.businessSlug) ?? e.businessSlug}</p>
+                <dl class="mt-1 text-sm">
+                  {Object.entries(e.changes ?? {}).map(([field, ch]: [string, any]) => (
+                    <div class="flex flex-wrap gap-2"><dt class="font-medium text-ink">{field}:</dt><dd class="text-muted"><s>{ch.from || "(empty)"}</s> → <span class="text-ink">{ch.to || "(empty)"}</span></dd></div>
+                  ))}
+                </dl>
+              </div>
+              <div class="flex gap-2">
+                <button class={`${btn} bg-accent text-accent-ink`} data-kind="edit" data-id={e._id} data-action="approve">Approve</button>
+                <button class={`${btn} border border-line text-ink`} data-kind="edit" data-id={e._id} data-action="reject">Reject</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <h2 class="mt-10 font-display text-xl font-bold text-ink">Reviews waiting for moderation</h2>
+    {reviews.length === 0 ? <p class="mt-2 text-sm text-muted">Nothing waiting.</p> : (
+      <div class="mt-3 space-y-3">
+        {reviews.map((r) => (
+          <div class={card}>
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted">{r.rating ? `${r.rating}★` : ""} · {r.reviewerName ?? ""} · {when(r._createdDate)}</p>
+                <p class="mt-1 font-semibold text-ink">{names.get(r.businessSlug) ?? r.businessSlug}</p>
+                <p class="text-sm text-ink">{r.body ?? r.text ?? ""}</p>
+              </div>
+              <div class="flex gap-2">
+                <button class={`${btn} bg-accent text-accent-ink`} data-kind="review" data-id={r._id} data-action="approve">Publish</button>
+                <button class={`${btn} border border-line text-ink`} data-kind="review" data-id={r._id} data-action="reject">Reject</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <div>
+        <h2 class="font-display text-xl font-bold text-ink">Latest quote requests</h2>
+        {leads.length === 0 ? <p class="mt-2 text-sm text-muted">None yet.</p> : (
+          <ul class="mt-3 space-y-2 text-sm">
+            {leads.map((l) => <li class={card}><span class="font-medium text-ink">{l.name ?? "Someone"}</span> <span class="text-muted">· {l.businessSlug ?? l.categorySlug ?? ""} · {when(l._createdDate)}</span></li>)}
+          </ul>
+        )}
+      </div>
+      <div>
+        <h2 class="font-display text-xl font-bold text-ink">Accounts</h2>
+        {owners.length === 0 ? <p class="mt-2 text-sm text-muted">None yet.</p> : (
+          <ul class="mt-3 space-y-2 text-sm">
+            {owners.map((o: any) => <li class={card}><span class="font-medium text-ink">{o.email}</span> <span class="text-muted">· {o.role} · last signed in {when(o.last_login)}</span></li>)}
+          </ul>
+        )}
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<script>
+  document.addEventListener("click", async (e) => {
+    const b = (e.target as HTMLElement).closest("button[data-kind]") as HTMLButtonElement | null;
+    if (!b) return;
+    const err = document.getElementById("admin-error")!;
+    b.disabled = true;
+    const res = await fetch("/api/admin/act", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: b.dataset.kind, id: b.dataset.id, action: b.dataset.action }) });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) location.reload();
+    else { err.textContent = data.error || "That didn't work. Try again."; err.hidden = false; b.disabled = false; }
+  });
+</script>

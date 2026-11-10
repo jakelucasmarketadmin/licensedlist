@@ -4,7 +4,8 @@ import type { APIRoute } from "astro";
  * Owner self-service, enforced server-side.
  *
  * GET  → the signed-in member's approved business listing (whitelisted fields)
- * POST → update ONLY the whitelisted fields on that listing
+ * POST → update ONLY the whitelisted fields on that listing. Phone and website
+ *        changes wait for an admin in the `edits` collection; the rest apply now.
  *
  * Authorization model: the caller must be a signed-in Wix member, and there
  * must be a `claims` record with `memberId == member._id` and
@@ -26,6 +27,9 @@ const EDITABLE_FIELDS = [
   "teamJson",
   "faqJson",
 ] as const;
+// Changes to how customers reach the business wait for an admin (see /admin),
+// so a hijacked account can't redirect a listing's calls or clicks.
+const REVIEWED_FIELDS = new Set(["phone", "website"]);
 
 // Shared elevated tools — the query chain runs inside one elevated closure
 // (elevating the builder factory directly breaks; see lib/server-data.ts).
@@ -111,13 +115,30 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const found = await approvedBusinessFor(memberId);
     if (!found) return json({ ok: false, error: "no-approved-claim" }, 403);
-    const { updateItem } = await elevatedTools();
-    const itemId = found.raw._id ?? found.data._id;
-    await updateItem(itemId, {
-      dataCollectionId: "businesses",
-      dataItem: { data: { ...found.data, ...updates } },
-    });
-    return json({ ok: true });
+    const { updateItem, insertItem } = await elevatedTools();
+    const instant: Record<string, string> = {};
+    const reviewed: Record<string, { from: string; to: string }> = {};
+    for (const [field, value] of Object.entries(updates)) {
+      if (REVIEWED_FIELDS.has(field)) {
+        if ((found.data[field] ?? "") !== value) reviewed[field] = { from: found.data[field] ?? "", to: value };
+      } else instant[field] = value;
+    }
+    if (Object.keys(instant).length) {
+      const itemId = found.raw._id ?? found.data._id;
+      await updateItem(itemId, {
+        dataCollectionId: "businesses",
+        dataItem: { data: { ...found.data, ...instant } },
+      });
+    }
+    const pending = Object.keys(reviewed);
+    if (pending.length) {
+      const member = (globalThis as any).__currentMember?.();
+      await insertItem({
+        dataCollectionId: "edits",
+        dataItem: { data: { businessSlug: found.data.slug, memberId, email: member?.email ?? "", changes: reviewed, status: "pending" } },
+      });
+    }
+    return json({ ok: true, pending });
   } catch (err: any) {
     console.error("owner-listing POST failed", err);
     return json({ ok: false, error: "server" }, 500);

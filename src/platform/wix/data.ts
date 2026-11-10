@@ -131,6 +131,13 @@ export const items: any = {
   get: isServer
     ? async (collection: string, id: string) => { const r = await getDb().prepare("SELECT data FROM items WHERE collection = ? AND id = ?").bind(collection, id).first<{ data: string }>(); return r ? JSON.parse(r.data) : null; }
     : serverOnly("get"),
+  // Older call shapes some routes still use.
+  getDataItem: isServer
+    ? async (id: string, opts: { dataCollectionId: string }) => { const r = await getDb().prepare("SELECT data FROM items WHERE collection = ? AND id = ?").bind(opts.dataCollectionId, id).first<{ data: string }>(); return r ? JSON.parse(r.data) : null; }
+    : serverOnly("getDataItem"),
+  updateDataItem: isServer
+    ? (id: string, opts: { dataCollectionId: string; dataItem: { data: Record<string, any> } }) => serverUpdate(opts.dataCollectionId, { ...opts.dataItem.data, _id: id })
+    : serverOnly("updateDataItem"),
   queryReferenced: async () => ({ items: [], totalCount: 0, hasNext: () => false }),
   insertReference: async () => {},
   removeReference: async () => {},

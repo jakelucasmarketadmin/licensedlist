@@ -40,6 +40,12 @@ export const SHOWCASE_BUSINESS_SLUG = "hofmeister-plumbing";
 /** Contact for business onboarding until the claim flow ships (M4). */
 export const BUSINESS_CONTACT_EMAIL = "admin@tier201.com";
 
+/**
+ * Who can sign in to /admin to approve claims, edits, listings and reviews.
+ * Everyone else who signs in is an owner. Checked on every sign-in.
+ */
+export const ADMIN_EMAILS = ["jakelucasmarket@gmail.com"];
+
 /** Where "Report" links on reviews deliver (docs/REVIEWS.md moderation). */
 export const REVIEW_REPORT_EMAIL = "admin@tier201.com";
 

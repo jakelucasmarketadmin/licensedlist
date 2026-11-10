@@ -1,16 +1,21 @@
 /**
  * Stand-ins for the Wix services that have no Cloudflare equivalent yet.
- * Each one fails safely: logins read as signed out until self-serve accounts
- * ship (phase 2), and the template's unused shop code never runs.
+ * Each one fails safely, and the template's unused shop code never runs.
  */
 
 // @wix/essentials: elevation was Wix's admin mode. Server code here already
 // runs with full database access, so it passes the function through.
 export const auth = { elevate: <T>(fn: T): T => fn };
 
-// @wix/members: nobody is signed in until the new account system exists.
+// @wix/members: the signed-in owner or admin. On the server the middleware
+// knows who it is; in the browser it asks /api/auth/me.
 export const members = {
-  getCurrentMember: async () => ({ member: null }),
+  getCurrentMember: async () => {
+    if (typeof window === "undefined") return { member: (globalThis as any).__currentMember?.() ?? null };
+    const res = await fetch("/api/auth/me", { credentials: "same-origin" }).catch(() => null);
+    const body = res?.ok ? await res.json().catch(() => ({})) : {};
+    return { member: body.member ?? null };
+  },
 };
 
 // @wix/ecom and @wix/redirects: template shop code, not used by any page.
