@@ -1,0 +1,13 @@
+# Cloudflare Pages project for LicensedList. The site runs as Pages Functions
+# (server-rendered Astro) with its data in D1.
+name = "licensedlist"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "licensedlist"
+# Replaced with the real id once the D1 database is created in Cloudflare.
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"

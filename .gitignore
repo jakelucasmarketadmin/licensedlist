@@ -64,3 +64,7 @@ data/outreach-targets.csv
 !docs/PUBLISH-LOG.md
 !docs/outreach
 !docs/outreach/**
+
+# Cloudflare local state
+.wrangler
+.dev.vars

@@ -1,83 +1,36 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import { fileURLToPath } from "node:url";
 import tailwind from "@astrojs/tailwind";
-import cloudProviderFetchAdapter from "@wix/cloud-provider-fetch-adapter";
-import wix from "@wix/astro";
-import monitoring from "@wix/monitoring-astro";
 import react from "@astrojs/react";
-import sourceAttrsPlugin from "@wix/babel-plugin-jsx-source-attrs";
-import dynamicDataPlugin from "@wix/babel-plugin-jsx-dynamic-data";
-import customErrorOverlayPlugin from "./vite-error-overlay-plugin.js";
-import postcssPseudoToData from "@wix/postcss-pseudo-to-data";
+import cloudflare from "@astrojs/cloudflare";
 
-const isBuild = process.env.NODE_ENV == "production";
+// The Wix packages are replaced by small stand-ins backed by Cloudflare D1, so
+// the pages and lib code keep their imports unchanged (see src/platform/).
+const shim = (file) => fileURLToPath(new URL(`./src/platform/wix/${file}`, import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  integrations: [
-    {
-      name: "framewire",
-      hooks: {
-        "astro:config:setup": ({ injectScript, command }) => {
-          if (command === "dev") {
-            injectScript(
-              "page",
-              `import loadFramewire from "framewire.js";
-              loadFramewire(true);`
-            );
-          }
-        },
-      },
-    },
-    tailwind(),
-    wix({
-      htmlEmbeds: isBuild,
-      auth: true,
-    }),
-    ...(isBuild ? [monitoring()] : []),
-    react(isBuild ? {} : {
-      babel: { plugins: [sourceAttrsPlugin, dynamicDataPlugin] },
-    }),
-  ],
+  adapter: cloudflare({ platformProxy: { enabled: true }, imageService: "passthrough" }),
+  integrations: [tailwind(), react()],
   vite: {
-    plugins: [customErrorOverlayPlugin()],
-    cacheDir: 'node_modules/.cache/.vite',
-    optimizeDeps: {
-      include: [
-        'react',
-        'react-dom',
-        'zustand',
-        'framer-motion',
-        'date-fns',
-        'clsx',
-        'class-variance-authority',
-        'tailwind-merge',
-        '@radix-ui/*',
-        '@wix/*',
-        'zod',
-      ],
-    },
-    css: !isBuild ? {
-      postcss: {
-        plugins: [
-          postcssPseudoToData(),
-        ],
+    resolve: {
+      alias: {
+        "@wix/data": shim("data.ts"),
+        "@wix/essentials": shim("stubs.ts"),
+        "@wix/members": shim("stubs.ts"),
+        "@wix/ecom": shim("stubs.ts"),
+        "@wix/redirects": shim("stubs.ts"),
+        "@wix/astro-pages": shim("stubs.ts"),
       },
-    } : undefined,
+    },
+    cacheDir: "node_modules/.cache/.vite",
   },
-  ...(isBuild && { adapter: cloudProviderFetchAdapter({}) }),
   devToolbar: {
     enabled: false,
   },
   image: {
     domains: ["static.wixstatic.com"],
   },
-  server: {
-    allowedHosts: true,
-    host: true,
-  },
-  security: {
-    checkOrigin: false
-  }
 });

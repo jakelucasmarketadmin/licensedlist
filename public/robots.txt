@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Block PetalBot
+User-agent: PetalBot
+Disallow: /
+
+# Crawl delay for overly enthusiastic bots
+User-agent: dotbot
+Crawl-delay: 10
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+# On Wix this pointed at the old temporary host. It belongs on the real domain.
+Sitemap: https://www.licensedlist.com/sitemap.xml
